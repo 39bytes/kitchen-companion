@@ -1,0 +1,11 @@
+{
+  "folders": [
+	{
+		"path": "fridge-app-server"
+	},
+	{
+		"path": "fridge-app-web"
+	}
+],
+  "settings": {}
+}
