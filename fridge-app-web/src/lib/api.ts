@@ -1,5 +1,5 @@
 import { expirationTimes } from "./testData";
-import { IngredientSearchResponse, IngredientSearchResult } from "@backend/types/ingredient-types"
+import { ExpirationData, IngredientSearchResult } from "@backend/types/ingredient-types"
 
 export const IngredientSearch = async (query: string, number: number) => {
     const res = await fetch(`http://localhost:8080/ingredient-search?query=${query}&number=${number}`);
@@ -7,10 +7,11 @@ export const IngredientSearch = async (query: string, number: number) => {
     return data;
 }
 
-export const GetIngredientExpiration = (id: number, storageType: "pantry" | "fridge" | "frozen") => {
-    return expirationTimes[id][storageType];
+export const IngredientExpiration = async (query: string) => {
+    const res = await fetch(`http://localhost:8080/ingredient-expiration?query=${query}`);
+    const data = await res.json() as ExpirationData;
+    return data;
 }
-
 
 // const LoadTop1kIngrdients = () => {
 //     const data = fs.readFileSync("top-1k-ingredients.csv").toString().split('\n');

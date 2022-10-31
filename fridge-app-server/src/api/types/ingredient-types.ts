@@ -2,11 +2,13 @@ export type Ingredient = {
     id: number;
     name: string;
     image: string;
+    category: string;
+    possibleUnits: string[];
+
+    expirationData?: ExpirationData;
     quantity: number;
     unit: string;
-    possibleUnits: string[]
-    category: string;
-    //dateAdded: Date;
+    dateAdded: number;
 }
 
 export type Category = {
@@ -19,13 +21,12 @@ export type IngredientSearchResult = {
     name: string,
     image: string,
     aisle: string,
-    possibleUnits: string[]
+    possibleUnits: string[],
 }
 
-export type IngredientSearchResponse = {
-    results: IngredientSearchResult[],
-    offset: number,
-    number: number,
-    totalResults: number
+export type ExpirationData = {
+    pantry: number;
+    fridge: number;
+    freezer: number;
 }
 

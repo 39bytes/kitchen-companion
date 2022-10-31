@@ -11,6 +11,7 @@ import { Ingredient } from "@backend/types/ingredient-types";
 import { getImageUrl } from "../utils/getImageUrl";
 import { toTitleCase } from "../utils/toTitleCase";
 import AddRemoveButton from "./AddRemoveButton";
+import { timeBetween } from "src/utils/timeBetween";
 
 type FridgeItemProps = {
   ingredient: Ingredient;
@@ -18,6 +19,16 @@ type FridgeItemProps = {
 };
 
 const FridgeItem = ({ ingredient, onAddButtonClick }: FridgeItemProps) => {
+  const expirationTime = ingredient.expirationData?.pantry ?? -1;
+  let expiresIn: string | undefined;
+
+  if (expirationTime !== -1) {
+    expiresIn = `Expires in ${timeBetween(
+      Date.now(),
+      ingredient.dateAdded + expirationTime
+    )}`;
+  }
+
   return (
     <>
       <ListItem
@@ -42,7 +53,7 @@ const FridgeItem = ({ ingredient, onAddButtonClick }: FridgeItemProps) => {
               </Typography>
             </Typography>
           }
-          secondary="Expires in..."
+          secondary={expiresIn ?? ""}
         />
       </ListItem>
     </>
