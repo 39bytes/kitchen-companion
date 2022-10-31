@@ -46,7 +46,7 @@ export const IngredientSearchDialog = ({
 
     // Return 10 results
     IngredientSearch(value, 10).then((data) => {
-      setSearchResults(data.results);
+      setSearchResults(data);
     });
   };
 

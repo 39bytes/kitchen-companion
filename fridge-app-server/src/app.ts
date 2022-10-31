@@ -5,7 +5,9 @@ import { IngredientSearch } from './api/ingredient-search';
 
 dotenv.config()
 const app = express();
-app.use(cors());
+app.use(cors({
+    origin: process.env.CORS_ORIGIN
+}));
 const PORT = 8080;
 
 app.get('/', (req, res) => {
@@ -13,7 +15,6 @@ app.get('/', (req, res) => {
 });
 
 app.get('/ingredient-search', async (req, res) => {
-    console.log("get");
     const result = await IngredientSearch(req.query.query as string, 10);
     res.send(result)
 });

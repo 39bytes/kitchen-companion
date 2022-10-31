@@ -11,10 +11,9 @@ export const IngredientSearch = async (query: string, number: number) => {
             "Access-Control-Allow-Origin": "*"
         }
     });
-    // Sort r
+    
+    // Sort results
     const resp = await res.json() as IngredientSearchResponse;
-    console.log(resp);
-    return resp;
 
     const resultsSorted = SortIngredientResults(query, resp.results);
     return resultsSorted;

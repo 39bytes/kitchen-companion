@@ -10,8 +10,8 @@ const MainContainer = ({ children }: MainContainerProps) => {
   return (
     <Container
       sx={{
-        width: `calc(100vw - ${theme.spacing(35)})`,
-        left: theme.spacing(16),
+        width: `calc(100vw - ${theme.spacing(30)})`,
+        left: theme.spacing(28),
         height: "100vh",
         position: "relative",
       }}

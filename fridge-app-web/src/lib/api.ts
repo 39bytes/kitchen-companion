@@ -3,8 +3,7 @@ import { IngredientSearchResponse, IngredientSearchResult } from "@backend/types
 
 export const IngredientSearch = async (query: string, number: number) => {
     const res = await fetch(`http://localhost:8080/ingredient-search?query=${query}&number=${number}`);
-    const data = await res.json() as IngredientSearchResponse;
-    console.log(data);
+    const data = await res.json() as IngredientSearchResult[];
     return data;
 }
 

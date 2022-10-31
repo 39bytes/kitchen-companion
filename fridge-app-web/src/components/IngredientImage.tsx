@@ -14,7 +14,7 @@ const IngredientImage = ({
   return (
     <Box
       component="img"
-      sx={{ maxWidth: 40 }}
+      sx={{ maxWidth: 40, maxHeight: 40, mx: "auto" }}
       src={getImageUrl(imageName)}
       alt={alt}
     />

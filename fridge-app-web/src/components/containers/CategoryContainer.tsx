@@ -10,7 +10,6 @@ const CategoryContainer = ({ children }: CategoryContainerProps) => {
     <Box
       sx={{
         display: "flex",
-        justifyContent: "space-between",
         flexWrap: "wrap",
       }}
     >
