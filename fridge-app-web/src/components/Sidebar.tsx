@@ -15,7 +15,7 @@ const Sidebar = () => {
   return (
     <Paper
       sx={{
-        width: theme.spacing(35),
+        width: theme.spacing(30),
         height: "100vh",
         bgcolor: "background.paper",
         position: "fixed",

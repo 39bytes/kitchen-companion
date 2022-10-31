@@ -89,34 +89,36 @@ const Fridge = () => {
   };
 
   return (
-    <MainContainer>
-      <CategoryContainer>
-        {fridgeItems.map((c) => (
-          <FridgeCategory
-            key={c.name}
-            name={c.name}
-            items={c.items}
-            color="#2196f3"
-            icon={<AcUnit />}
-            onAddButtonClick={addButtonClick}
-          />
-        ))}
-      </CategoryContainer>
-      <IngredientSearchDialog open={searchOpen} onClose={handleSearchClose} />
-      <IngredientQuantityDialog
-        open={quantityOpen}
-        ingredient={selectedIngredient}
-        handleClose={handleQuantityClose}
-      />
-      <Fab
-        color="primary"
-        aria-label="add"
-        sx={{ position: "sticky", left: 1000, bottom: 30 }} // FIXME: The positioning on this button doesn't work properly
-        onClick={() => setSearchOpen(true)}
-      >
-        <Add />
-      </Fab>
-    </MainContainer>
+    <div>
+      <MainContainer>
+        <CategoryContainer>
+          {fridgeItems.map((c) => (
+            <FridgeCategory
+              key={c.name}
+              name={c.name}
+              items={c.items}
+              color="#2196f3"
+              icon={<AcUnit />}
+              onAddButtonClick={addButtonClick}
+            />
+          ))}
+        </CategoryContainer>
+        <IngredientSearchDialog open={searchOpen} onClose={handleSearchClose} />
+        <IngredientQuantityDialog
+          open={quantityOpen}
+          ingredient={selectedIngredient}
+          handleClose={handleQuantityClose}
+        />
+        <Fab
+          color="primary"
+          aria-label="add"
+          sx={{ position: "sticky", bottom: 20, left: 1150 }} // FIXME: The positioning on this button doesn't work properly
+          onClick={() => setSearchOpen(true)}
+        >
+          <Add />
+        </Fab>
+      </MainContainer>
+    </div>
   );
 };
 
