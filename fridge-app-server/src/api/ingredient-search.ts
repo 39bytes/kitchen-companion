@@ -1,8 +1,15 @@
-import { IngredientSearchResponse, IngredientSearchResult } from './types/ingredient-types';
+import { ExpirationData, Ingredient, IngredientSearchResult } from './types/ingredient-types';
 import toTime from 'to-time';
 import fuzzysort from 'fuzzysort';
+import { durationToMs } from '../utils/duration-to-ms';
 
-// TODO: Fix CORS
+type IngredientSearchResponse = {
+    results: IngredientSearchResult[],
+    offset: number,
+    number: number,
+    totalResults: number
+}
+
 export const IngredientSearch = async (query: string, number: number) => {
     const res = await fetch(`https://api.spoonacular.com/food/ingredients/search?query=${query}&number=${number}&metaInformation=true`, {
         method: "GET",
@@ -11,49 +18,49 @@ export const IngredientSearch = async (query: string, number: number) => {
             "Access-Control-Allow-Origin": "*"
         }
     });
-    
+
     // Sort results
     const resp = await res.json() as IngredientSearchResponse;
 
-    const resultsSorted = SortIngredientResults(query, resp.results);
-    return resultsSorted;
+    const results = ProcessIngredientResults(query, resp.results);
+    return results;
 }
 
-const SortIngredientResults = (query: string, results: IngredientSearchResult[]) => {
+export const IngredientExpiration = (query: string) => {
+    // Get all food names from expiration database
+    const names = Object.keys(expirations);
+    // Fuzzy string match
+    const scores = fuzzysort.go(query, names);
+    const foodName = scores[0].target;
+
+    // Get matching expiration data
+    return expirations[foodName];
+}
+
+const USEFUL_UNITS = ["g", "oz", "kg", "mL", "L", "large", "small", "slice", "piece", "cup", "bunch"]
+
+const ProcessIngredientResults = (query: string, results: IngredientSearchResult[]) => {
+    // Sorts by name (because spoonacular does not already do this by default for some reason)
     const names = results.map(ing => ing.name);
     const scores = fuzzysort.go(query, names);
 
     let sorted: IngredientSearchResult[] = [];
     scores.forEach(obj => {
-        sorted.push(results.find(result => result.name === obj.target));
+        const result = results.find(r => r.name === obj.target);
+
+        // Throw out useless units that just take up space
+        const filteredUnits = USEFUL_UNITS.filter((unit) => result.possibleUnits.includes(unit));
+        sorted.push({ ...result, possibleUnits: filteredUnits });
     })
     return sorted;
 }
 
 // Times in milliseconds
-type ExpirationData = {
-    pantry: number;
-    fridge: number;
-    freezer: number;
-}
-
-const expirations = {
-    "apple": {
-        pantry: toTime("3d"),
-        fridge: toTime("2w"),
-        freezer: toTime("26w")
+const expirations: { [name: string]: ExpirationData } = {
+    "banana": {
+        pantry: durationToMs("3d"),
+        fridge: durationToMs("2w"),
+        freezer: durationToMs("6m"),
     }
 }
 
-// const allFoodNames = fuzzysort.prepare();
-
-
-const GetIngredientExpirationData = (query: string) => {
-    // Get all food names from expiration database
-    const names = Object.keys(expirations);
-    // Fuzzy string match
-    const foodName = fuzzysort.go(query, names);
-
-    // Get matching expiration data
-
-}

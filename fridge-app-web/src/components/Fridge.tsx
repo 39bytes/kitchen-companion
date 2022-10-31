@@ -6,6 +6,7 @@ import {
 import { AcUnit, Add } from "@mui/icons-material";
 import { Fab } from "@mui/material";
 import { useEffect, useState } from "react";
+import { IngredientExpiration } from "src/lib/api";
 import { testData } from "../lib/testData";
 import CategoryContainer from "./containers/CategoryContainer";
 import MainContainer from "./containers/MainContainer";
@@ -24,6 +25,7 @@ const Fridge = () => {
     unit: "",
     quantity: 0,
     possibleUnits: [],
+    dateAdded: Date.now(),
   });
   const [fridgeItems, setFridgeItems] = useState<Category[]>([]);
 
@@ -45,7 +47,6 @@ const Fridge = () => {
       setQuantityOpen(false);
       return;
     }
-    console.log(value);
 
     // Add the selected food into the fridge
     // TODO: Autodetermine category
@@ -58,7 +59,12 @@ const Fridge = () => {
       // Replace the item
       newFridge[0].items.splice(index, 1, value);
     } else {
-      newFridge[0].items = newFridge[0].items.concat(value);
+      // REWRITE THIS: Does not update immediately
+      IngredientExpiration(value.name).then((data) => {
+        const newIngredient = { expirationData: data, ...value };
+        console.log(newIngredient);
+        newFridge[0].items = newFridge[0].items.concat(newIngredient);
+      });
     }
 
     setFridgeItems(newFridge);
@@ -74,6 +80,7 @@ const Fridge = () => {
 
     let ingredientObj: Ingredient = {
       category: value.aisle,
+      dateAdded: Date.now(),
       unit: "",
       quantity: 0,
       ...value,

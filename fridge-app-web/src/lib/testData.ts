@@ -22,6 +22,7 @@ export const testData: Ingredient[] = [
             "cup",
             "serving",
         ],
+        dateAdded: Date.now()
     },
     {
         id: 11398,
@@ -31,6 +32,8 @@ export const testData: Ingredient[] = [
         category: "pantry",
         unit: "g",
         possibleUnits: ["piece", "g", "bag", "oz", "cup"],
+        dateAdded: Date.now()
+
     },
     {
         id: 11090,
@@ -55,6 +58,7 @@ export const testData: Ingredient[] = [
             "cup",
             "crown",
         ],
+        dateAdded: Date.now()
     },
 ];
 
