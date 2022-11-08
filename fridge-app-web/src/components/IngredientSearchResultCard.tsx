@@ -1,4 +1,4 @@
-import { IngredientSearchResult } from "@backend/types/ingredient-types";
+import { IngredientSearchResult } from "@backend/ingredient";
 import {
   ListItem,
   ListItemAvatar,

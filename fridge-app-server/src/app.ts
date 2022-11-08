@@ -1,30 +1,110 @@
+import cors from 'cors';
 import * as dotenv from 'dotenv';
 import express from 'express';
-import cors from 'cors';
-import { IngredientExpiration, IngredientSearch } from './api/ingredient-search';
+import bcrypt from 'bcrypt';
+import flash from 'express-flash';
+import session from 'express-session';
+import cookieParser from 'cookie-parser';
+import mongoose from 'mongoose';
+import passport from 'passport';
+import passportLocal from 'passport-local';
+import User, { UserDocument } from './models/user';
+import ApiRoute from './routes/api';
+import AuthRoute from './routes/auth';
+
+import * as passportConfig from "./passport-config";
+
+declare global {
+    namespace Express {
+        interface User {
+            id?: string
+        }
+    }
+}
 
 dotenv.config()
 const app = express();
-app.use(cors({
-    origin: process.env.CORS_ORIGIN
-}));
-const PORT = 8080;
 
+mongoose.connect(process.env.MONGO_URL).then(() => {
+    console.log("Connected to MongoDB.")
+}).catch(err => {
+    console.log(`MongoDB connection error: Ensure that MongoDB is running. ${err}`)
+})
+
+// Middleware -----------------------------------------------------------
+app.use(cors({
+    origin: process.env.CORS_ORIGIN,
+    credentials: true
+}));
+
+app.use(flash());
+app.use(session({
+    secret: process.env.SESSION_SECRET,
+    resave: false,
+    saveUninitialized: false,
+    cookie: { maxAge: 365 * 24 * 60 * 60 * 1000, sameSite: "lax" }
+}))
+app.use(cookieParser(process.env.SESSION_SECRET))
+
+app.use(express.urlencoded({ extended: false }));
+app.use(express.json());
+
+app.use((req, res, next) => {
+    //console.log('req.session', req.session);
+    return next();
+})
+
+app.use(passport.initialize());
+app.use(passport.session());
+
+const LocalStrategy = passportLocal.Strategy;
+
+passport.serializeUser((user, done) => {
+    done(null, user.id);
+})
+
+passport.deserializeUser((id, done) => {
+    User.findOne(
+        { _id: id },
+        (err: NativeError, user: UserDocument) => {
+            done(null, user)
+        }
+    )
+})
+
+passport.use(new LocalStrategy({ usernameField: "email" }, (email, password, done) => {
+    User.findOne({ email: email }, (err: NativeError, user: UserDocument) => {
+        if (err) {
+            return done(err);
+        }
+        if (!user) {
+            return done(null, false, { message: "Email not found." })
+        }
+
+        bcrypt.compare(password, user.password, (err, isMatch) => {
+            if (err) {
+                return done(err);
+            }
+            if (isMatch) {
+                return done(null, user);
+            }
+            return done(null, false, { message: "Invalid password." });
+        });
+
+    })
+}));
+
+// End Middleware --------------------------------------------------------
+
+// API Endpoints
 app.get('/', (req, res) => {
     res.send('Hello World!');
 });
 
-app.get('/ingredient-search', async (req, res) => {
-    const result = await IngredientSearch(req.query.query as string, 10);
-    res.send(result)
-});
-
-app.get('/ingredient-expiration', async (req, res) => {
-    const result = IngredientExpiration(req.query.query as string);
-    res.send(result)
-});
+app.use('/api', ApiRoute);
+app.use("/auth", AuthRoute);
 
 
-app.listen(PORT, () => {
-    return console.log(`Server started on localhost:${PORT}`);
+app.listen(process.env.PORT, () => {
+    return console.log(`Server started on localhost:${process.env.PORT}`);
 });

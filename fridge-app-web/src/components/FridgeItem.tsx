@@ -7,7 +7,7 @@ import {
   ListItemText,
   Typography,
 } from "@mui/material";
-import { Ingredient } from "@backend/types/ingredient-types";
+import { Ingredient } from "@backend/ingredient";
 import { getImageUrl } from "../utils/getImageUrl";
 import { toTitleCase } from "../utils/toTitleCase";
 import AddRemoveButton from "./AddRemoveButton";

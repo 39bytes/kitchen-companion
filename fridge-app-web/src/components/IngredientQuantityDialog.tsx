@@ -14,7 +14,7 @@ import { useEffect, useState } from "react";
 import {
   Ingredient,
   IngredientSearchResult,
-} from "@backend/types/ingredient-types";
+} from "@backend/ingredient";
 import { getImageUrl } from "../utils/getImageUrl";
 import { toTitleCase } from "../utils/toTitleCase";
 import IngredientImage from "./IngredientImage";

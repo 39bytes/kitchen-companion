@@ -1,14 +1,14 @@
 import { expirationTimes } from "./testData";
-import { ExpirationData, IngredientSearchResult } from "@backend/types/ingredient-types"
+import { ExpirationData, IngredientSearchResult } from "@backend/ingredient"
 
 export const IngredientSearch = async (query: string, number: number) => {
-    const res = await fetch(`http://localhost:8080/ingredient-search?query=${query}&number=${number}`);
+    const res = await fetch(`http://localhost:8080/ingredient/search?query=${query}&number=${number}`);
     const data = await res.json() as IngredientSearchResult[];
     return data;
 }
 
 export const IngredientExpiration = async (query: string) => {
-    const res = await fetch(`http://localhost:8080/ingredient-expiration?query=${query}`);
+    const res = await fetch(`http://localhost:8080/ingredient/expiration?query=${query}`);
     const data = await res.json() as ExpirationData;
     return data;
 }
