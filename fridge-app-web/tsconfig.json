@@ -7,7 +7,7 @@
       "esnext"
     ],
     "baseUrl": "./",
-    "paths": { "@backend/*": ["../fridge-app-server/src/api/*"], },
+    "paths": { "@backend/*": ["../fridge-app-server/src/models/*"], },
     "allowJs": true,
     "skipLibCheck": true,
     "esModuleInterop": true,

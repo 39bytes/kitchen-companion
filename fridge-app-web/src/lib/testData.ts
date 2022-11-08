@@ -1,4 +1,4 @@
-import { Ingredient } from "@backend/types/ingredient-types";
+import { Ingredient } from "@backend/ingredient";
 
 export const testData: Ingredient[] = [
     {

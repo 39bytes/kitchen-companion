@@ -6,12 +6,30 @@ import {
   ListItemText,
   Paper,
 } from "@mui/material";
-import { Kitchen, Restaurant, CalendarMonth } from "@mui/icons-material";
+import {
+  Kitchen,
+  Restaurant,
+  CalendarMonth,
+  Logout,
+} from "@mui/icons-material";
 import { Box } from "@mui/system";
 import React from "react";
 import theme from "../theme";
+import { useNavigate } from "react-router-dom";
+import { useAuth } from "src/AuthProvider";
 
 const Sidebar = () => {
+  const logout = () => {
+    fetch("/auth/logout", {
+      method: "POST",
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+      },
+    }).then((res) => {
+      window.location.href = "/";
+    });
+  };
   return (
     <Paper
       sx={{
@@ -44,6 +62,14 @@ const Sidebar = () => {
               <CalendarMonth />
             </ListItemIcon>
             <ListItemText primary="Meal Planner" />
+          </ListItemButton>
+        </ListItem>
+        <ListItem disablePadding>
+          <ListItemButton onClick={logout}>
+            <ListItemIcon>
+              <Logout />
+            </ListItemIcon>
+            <ListItemText primary="Log out" />
           </ListItemButton>
         </ListItem>
       </List>

@@ -1,19 +1,32 @@
-import React from "react";
-import logo from "./logo.svg";
+import { useEffect, useState } from "react";
+import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
 import "./App.css";
 import Fridge from "./components/Fridge";
-import { IngredientSearch } from "./lib/api";
-import { Box } from "@mui/material";
-import { Container } from "@mui/system";
-import Header from "./components/Header";
 import Sidebar from "./components/Sidebar";
+import Main from "./Main";
+import AuthProvider from "./AuthProvider";
+import LoginPage from "./pages/Login";
+import RegisterPage from "./pages/Register";
+import RequireAuth from "./RequireAuth";
 
 function App() {
   return (
-    <div className="App">
-      <Sidebar />
-      <Fridge />
-    </div>
+    <AuthProvider>
+      <BrowserRouter>
+        <Routes>
+          <Route path="/login" element={<LoginPage />} />
+          <Route path="/register" element={<RegisterPage />} />
+          <Route
+            path="/"
+            element={
+              <RequireAuth redirectTo="/login">
+                <Fridge />
+              </RequireAuth>
+            }
+          />
+        </Routes>
+      </BrowserRouter>
+    </AuthProvider>
   );
 }
 

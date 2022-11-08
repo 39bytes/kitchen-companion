@@ -2,7 +2,7 @@ import {
   Category,
   Ingredient,
   IngredientSearchResult,
-} from "@backend/types/ingredient-types";
+} from "@backend/ingredient";
 import { AcUnit, Add } from "@mui/icons-material";
 import { Fab } from "@mui/material";
 import { useEffect, useState } from "react";
@@ -13,6 +13,7 @@ import MainContainer from "./containers/MainContainer";
 import FridgeCategory from "./FridgeCategory";
 import IngredientQuantityDialog from "./IngredientQuantityDialog";
 import { IngredientSearchDialog } from "./IngredientSearchDialog";
+import Sidebar from "./Sidebar";
 
 const Fridge = () => {
   const [searchOpen, setSearchOpen] = useState(false);
@@ -97,6 +98,7 @@ const Fridge = () => {
 
   return (
     <div>
+      <Sidebar />
       <MainContainer>
         <CategoryContainer>
           {fridgeItems.map((c) => (

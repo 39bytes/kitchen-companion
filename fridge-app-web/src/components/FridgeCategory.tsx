@@ -1,6 +1,6 @@
 import { Box, List, Paper, Typography } from "@mui/material";
 import { ReactNode } from "react";
-import { Ingredient } from "@backend/types/ingredient-types";
+import { Ingredient } from "@backend/ingredient";
 import FridgeItem from "./FridgeItem";
 
 type FridgeCategoryProps = {
