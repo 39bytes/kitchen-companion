@@ -7,9 +7,10 @@ import {
   TextFieldProps,
   Typography,
 } from "@mui/material";
+import axios from "axios";
 import { Form, Formik, Field, useFormik } from "formik";
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import Layout from "src/components/containers/Layout";
 import { FormTextField } from "src/components/FormTextField";
 import { jsonPost } from "src/utils/jsonPost";
@@ -18,10 +19,14 @@ const Register = () => {
   const formik = useFormik({
     initialValues: { email: "", password: "" },
     onSubmit: async (values, { setSubmitting }) => {
-      const response = await jsonPost("/auth/register", values);
-      const json = await response.json();
-      console.log(json);
-      if (json.success) {
+      const res = await axios.post("/auth/register", values, {
+        withCredentials: true,
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json",
+        },
+      });
+      if (res.data.success) {
         window.location.href = "/login";
       }
     },
@@ -32,7 +37,7 @@ const Register = () => {
     <Layout>
       <Paper sx={{ width: 400 }}>
         <Typography variant="h4">Register</Typography>
-        <Box component="form" onSubmit={formik.handleSubmit}>
+        <Box component="form" p={2} onSubmit={formik.handleSubmit}>
           <FormTextField
             id="email"
             name="email"
@@ -54,9 +59,17 @@ const Register = () => {
             helperText={formik.touched.password && formik.errors.password}
           />
           <br />
-          <Button color="primary" variant="contained" type="submit">
+          <br />
+          <Button
+            color="primary"
+            sx={{ mt: 2 }}
+            variant="contained"
+            type="submit"
+          >
             Register
           </Button>
+          <br />
+          <Link to="/login">Login instead</Link>
         </Box>
       </Paper>
     </Layout>

@@ -1,20 +1,22 @@
 import { Box, Button, Paper, Typography } from "@mui/material";
-import { Form, useFormik } from "formik";
-import { useState } from "react";
+import axios from "axios";
+import { useFormik } from "formik";
 import { Link } from "react-router-dom";
-import { useNavigate } from "react-router-dom";
-import { useAuth } from "src/AuthProvider";
 import Layout from "src/components/containers/Layout";
 import { FormTextField } from "src/components/FormTextField";
-import { jsonPost } from "src/utils/jsonPost";
 
 const Login = () => {
   const formik = useFormik({
     initialValues: { email: "", password: "" },
     onSubmit: async (values, { setSubmitting }) => {
-      const response = await jsonPost("/auth/login", values);
-      const json = await response.json();
-      if (json.success) {
+      const res = await axios.post("/auth/login", values, {
+        withCredentials: true,
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json",
+        },
+      });
+      if (res.data.success) {
         window.location.href = "/";
       }
     },
@@ -33,7 +35,7 @@ const Login = () => {
     <Layout>
       <Paper sx={{ width: 400 }}>
         <Typography variant="h4">Sign in</Typography>
-        <Box component="form" onSubmit={formik.handleSubmit}>
+        <Box component="form" p={2} onSubmit={formik.handleSubmit}>
           <FormTextField
             id="email"
             name="email"
@@ -60,17 +62,12 @@ const Login = () => {
             color="primary"
             variant="contained"
             type="submit"
+            sx={{ mt: 2 }}
           >
             Login
           </Button>
-          <Button
-            color="secondary"
-            variant="contained"
-            onClick={() => getLoggedIn()}
-          >
-            Get Logged In
-          </Button>
-          <Link to="/register">Register</Link>
+          <br />
+          <Link to="/register">Don't have an account? Register</Link>
         </Box>
       </Paper>
     </Layout>
