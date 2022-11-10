@@ -1,3 +1,4 @@
+import axios from "axios";
 import {
   createContext,
   PropsWithChildren,
@@ -32,11 +33,9 @@ const AuthProvider = ({ children }: PropsWithChildren<any>) => {
   // Maybe hook useEffect to location.key?
   useEffect(() => {
     setStatus("pending");
-    fetch("/auth/user", { credentials: "include" }).then((res) => {
-      res.json().then((data) => {
-        setUser(data.user);
-        setStatus("success");
-      });
+    axios.get("/auth/user", { withCredentials: true }).then((res) => {
+      setUser(res.data.user);
+      setStatus("success");
     });
   }, []);
 
