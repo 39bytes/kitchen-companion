@@ -1,16 +1,15 @@
 import { expirationTimes } from "./testData";
 import { ExpirationData, IngredientSearchResult } from "@backend/ingredient"
+import axios from 'axios';
 
-export const IngredientSearch = async (query: string, number: number) => {
-    const res = await fetch(`http://localhost:8080/ingredient/search?query=${query}&number=${number}`);
-    const data = await res.json() as IngredientSearchResult[];
-    return data;
+export const getIngredientSearch = async (query: string, number: number) => {
+    const res = await axios.get(`http://localhost:8080/api/ingredient/search?query=${query}&number=${number}`);
+    return res.data as IngredientSearchResult[];
 }
 
-export const IngredientExpiration = async (query: string) => {
-    const res = await fetch(`http://localhost:8080/ingredient/expiration?query=${query}`);
-    const data = await res.json() as ExpirationData;
-    return data;
+export const getIngredientExpiration = async (query: string) => {
+    const res = await axios.get(`http://localhost:8080/api/ingredient/expiration?query=${query}`);
+    return res.data as ExpirationData;
 }
 
 // const LoadTop1kIngrdients = () => {

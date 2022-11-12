@@ -1,4 +1,5 @@
-import { AcUnit, Add, Remove } from "@mui/icons-material";
+import { Ingredient } from "@backend/ingredient";
+import { AcUnit } from "@mui/icons-material";
 import {
   Avatar,
   IconButton,
@@ -7,11 +8,10 @@ import {
   ListItemText,
   Typography,
 } from "@mui/material";
-import { Ingredient } from "@backend/ingredient";
+import { timeBetween } from "src/utils/timeBetween";
 import { getImageUrl } from "../../utils/getImageUrl";
 import { toTitleCase } from "../../utils/toTitleCase";
 import AddRemoveButton from "../buttons/AddRemoveButton";
-import { timeBetween } from "src/utils/timeBetween";
 
 type FridgeItemProps = {
   ingredient: Ingredient;

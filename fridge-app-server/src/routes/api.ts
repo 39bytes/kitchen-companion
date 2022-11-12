@@ -3,6 +3,7 @@ import fuzzysort from 'fuzzysort';
 import { durationToMs } from '../utils/duration-to-ms';
 import { ProcessIngredientResults } from '../utils/process-ingredient-results';
 import express, { application } from 'express';
+import axios from 'axios';
 
 const router = express.Router();
 
@@ -19,9 +20,9 @@ type IngredientSearchResponse = {
  */
 router.get('/ingredient/search', async (req, res) => {
     const query = req.query.query as string;
+    const number = req.query.number ?? "10"
 
-    const data = await fetch(`https://api.spoonacular.com/food/ingredients/search?query=${query}&number=10&metaInformation=true`, {
-        method: "GET",
+    const resp = await axios.get(`https://api.spoonacular.com/food/ingredients/search?query=${query}&number=${number}&metaInformation=true`, {
         headers: {
             "x-api-key": process.env.SPOONACULAR_API_KEY,
             "Access-Control-Allow-Origin": "*"
@@ -29,9 +30,9 @@ router.get('/ingredient/search', async (req, res) => {
     });
 
     // Sort results
-    const json = await data.json() as IngredientSearchResponse;
+    const data = await resp.data as IngredientSearchResponse;
 
-    const processedResults = ProcessIngredientResults(query, json.results);
+    const processedResults = ProcessIngredientResults(query, data.results);
     res.json(processedResults);
 })
 

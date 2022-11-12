@@ -1,4 +1,4 @@
-export type Ingredient = {
+export interface Ingredient {
     id: number;
     name: string;
     image: string;
@@ -9,11 +9,18 @@ export type Ingredient = {
     quantity: number;
     unit: string;
     dateAdded: number;
+    section?: "pantry" | "fridge" | "freezer";
 }
 
-export type Category = {
+export interface Category {
     name: string;
     items: Ingredient[];
+}
+
+export interface ExpirationData {
+    pantry: number;
+    fridge: number;
+    freezer: number;
 }
 
 export type IngredientSearchResult = {
@@ -24,9 +31,5 @@ export type IngredientSearchResult = {
     possibleUnits: string[],
 }
 
-export type ExpirationData = {
-    pantry: number;
-    fridge: number;
-    freezer: number;
-}
+
 

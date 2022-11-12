@@ -8,7 +8,7 @@ import { AcUnit, Add } from "@mui/icons-material";
 import { Fab } from "@mui/material";
 import axios from "axios";
 import { useEffect, useState } from "react";
-import { IngredientExpiration } from "src/lib/api";
+import { getIngredientExpiration } from "src/lib/api";
 import { testData } from "../../lib/testData";
 import CategoryContainer from "../containers/CategoryContainer";
 import MainContainer from "../containers/MainContainer";
@@ -32,6 +32,7 @@ const Fridge = () => {
   });
   const [fridgeItems, setFridgeItems] = useState<Category[]>([]);
   const [userFridge, setUserFridge] = useState<UserFridgeDocument>();
+
   // Load ingredient data
   // TODO: Replace this with fetching from local storage/a backend
   useEffect(() => {
@@ -66,7 +67,7 @@ const Fridge = () => {
       newFridge[0].items.splice(index, 1, value);
     } else {
       // REWRITE THIS: Does not update immediately
-      IngredientExpiration(value.name).then((data) => {
+      getIngredientExpiration(value.name).then((data) => {
         const newIngredient = { expirationData: data, ...value };
         console.log(newIngredient);
         newFridge[0].items = newFridge[0].items.concat(newIngredient);

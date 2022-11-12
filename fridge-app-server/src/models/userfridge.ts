@@ -1,4 +1,5 @@
 import mongoose, { Schema, Types } from 'mongoose';
+import { Ingredient, Category } from './ingredient';
 
 const ExpirationDataSchema = new Schema({
     pantry: Number,
@@ -16,7 +17,7 @@ const IngredientSchema = new Schema({
     quantity: { type: Number, required: true },
     unit: { type: String, required: true },
     dateAdded: Number,
-    section: String,
+    section: { type: String, required: true }
 });
 
 const CategorySchema = new Schema({
@@ -24,43 +25,14 @@ const CategorySchema = new Schema({
     items: [IngredientSchema],
 });
 
-type Ingredient = {
-    id: number;
-    name: string;
-    image: string;
-    category: string;
-    possibleUnits: string[];
-
-    expirationData?: ExpirationData;
-    quantity: number;
-    unit: string;
-    dateAdded: number;
-    section: "pantry" | "fridge" | "freezer"
-}
-
-type Category = {
-    name: string;
-    items: Ingredient[];
-}
-
-type ExpirationData = {
-    pantry: number;
-    fridge: number;
-    freezer: number;
-}
-
 export interface UserFridgeDocument {
     userId: Types.ObjectId,
-    pantryContents: Category[];
-    fridgeContents: Category[];
-    freezerContents: Category[];
+    contents: Category[];
 }
 
 const UserFridgeSchema = new Schema<UserFridgeDocument>({
     userId: Schema.Types.ObjectId,
-    pantryContents: [CategorySchema],
-    fridgeContents: [CategorySchema],
-    freezerContents: [CategorySchema],
+    contents: [CategorySchema],
 });
 
 const userFridgeModel = mongoose.model<UserFridgeDocument>("UserFridge", UserFridgeSchema, "user_fridge");
