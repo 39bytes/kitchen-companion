@@ -1,9 +1,9 @@
 import { Search } from "@mui/icons-material";
-import { Box, Dialog, List } from "@mui/material";
+import { Box, Dialog, List, Typography } from "@mui/material";
 import TextField from "@mui/material/TextField";
 import { useEffect, useState } from "react";
 import { IngredientSearchResult } from "@backend/ingredient";
-import { IngredientSearch } from "../../lib/api";
+import { getIngredientSearch } from "../../lib/api";
 import { IngredientSearchResultCard } from "./IngredientSearchResultCard";
 
 type IngredientSearchDialogProps = {
@@ -30,11 +30,13 @@ export const IngredientSearchDialog = ({
   // These two are for closing the dialog
   const handleClose = () => {
     setSearchResults([]);
+    setSearchQuery("");
     onClose(undefined);
   };
 
   const handleListItemClick = (value: IngredientSearchResult) => {
     setSearchResults([]);
+    setSearchQuery("");
     onClose(value);
   };
 
@@ -45,7 +47,7 @@ export const IngredientSearchDialog = ({
     }
 
     // Return 10 results
-    IngredientSearch(value, 10).then((data) => {
+    getIngredientSearch(value, 10).then((data) => {
       setSearchResults(data);
     });
   };
@@ -68,16 +70,28 @@ export const IngredientSearchDialog = ({
               setSearchQuery((e.target as HTMLInputElement).value)
             }
           />
-          <List>
-            {searchResults.map((result) => {
-              return (
-                <IngredientSearchResultCard
-                  ingredient={result}
-                  handleClick={handleListItemClick}
-                />
-              );
-            })}
-          </List>
+          {searchResults.length > 0 ? (
+            <List>
+              {searchResults.map((result) => {
+                return (
+                  <IngredientSearchResultCard
+                    ingredient={result}
+                    handleClick={handleListItemClick}
+                  />
+                );
+              })}
+            </List>
+          ) : (
+            <>
+              {searchQuery !== "" ? (
+                <Box key="no-results" textAlign="center">
+                  <Typography>No results found :(</Typography>
+                </Box>
+              ) : (
+                <></>
+              )}
+            </>
+          )}
         </Box>
       </Dialog>
     </Box>
