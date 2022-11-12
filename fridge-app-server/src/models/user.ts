@@ -1,8 +1,6 @@
-import mongoose, { PassportLocalSchema } from 'mongoose';
-import passportLocalMongoose from 'passport-local-mongoose';
-import bcrypt from 'bcrypt';
+import mongoose from 'mongoose';
 
-export type UserDocument = mongoose.Document & {
+export type UserDocument = {
     email: string,
     password: string,
 }

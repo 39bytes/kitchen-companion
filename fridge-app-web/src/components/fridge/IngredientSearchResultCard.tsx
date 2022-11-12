@@ -6,7 +6,7 @@ import {
   ListItemText,
   Typography,
 } from "@mui/material";
-import { toTitleCase } from "../utils/toTitleCase";
+import { toTitleCase } from "../../utils/toTitleCase";
 import IngredientImage from "./IngredientImage";
 
 type IngredientSearchResultCardProps = {

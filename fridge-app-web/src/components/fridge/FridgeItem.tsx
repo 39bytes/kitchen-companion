@@ -8,9 +8,9 @@ import {
   Typography,
 } from "@mui/material";
 import { Ingredient } from "@backend/ingredient";
-import { getImageUrl } from "../utils/getImageUrl";
-import { toTitleCase } from "../utils/toTitleCase";
-import AddRemoveButton from "./AddRemoveButton";
+import { getImageUrl } from "../../utils/getImageUrl";
+import { toTitleCase } from "../../utils/toTitleCase";
+import AddRemoveButton from "../buttons/AddRemoveButton";
 import { timeBetween } from "src/utils/timeBetween";
 
 type FridgeItemProps = {

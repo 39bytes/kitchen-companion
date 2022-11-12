@@ -3,7 +3,7 @@ import { Box, Dialog, List } from "@mui/material";
 import TextField from "@mui/material/TextField";
 import { useEffect, useState } from "react";
 import { IngredientSearchResult } from "@backend/ingredient";
-import { IngredientSearch } from "../lib/api";
+import { IngredientSearch } from "../../lib/api";
 import { IngredientSearchResultCard } from "./IngredientSearchResultCard";
 
 type IngredientSearchDialogProps = {

@@ -1,6 +1,6 @@
 import { Box, SxProps, Theme } from "@mui/material";
 import React from "react";
-import { getImageUrl } from "../utils/getImageUrl";
+import { getImageUrl } from "../../utils/getImageUrl";
 
 type ImageProps = {
   imageName: string;

@@ -11,13 +11,14 @@ import passportLocal from 'passport-local';
 import User, { UserDocument } from './models/user';
 import ApiRoute from './routes/api';
 import AuthRoute from './routes/auth';
+import FridgeRoute from './routes/fridge';
 
 import * as passportConfig from "./passport-config";
 
 declare global {
     namespace Express {
         interface User {
-            id?: string
+            id: mongoose.Types.ObjectId;
         }
     }
 }
@@ -67,7 +68,7 @@ passport.deserializeUser((id, done) => {
     User.findOne(
         { _id: id },
         (err: NativeError, user: UserDocument) => {
-            done(null, user)
+            done(null, user as any);
         }
     )
 })
@@ -103,6 +104,7 @@ app.get('/', (req, res) => {
 
 app.use('/api', ApiRoute);
 app.use("/auth", AuthRoute);
+app.use("/fridge", FridgeRoute);
 
 
 app.listen(process.env.PORT, () => {

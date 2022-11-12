@@ -1,13 +1,13 @@
 import { useEffect, useState } from "react";
 import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
 import "./App.css";
-import Fridge from "./components/Fridge";
+import Fridge from "./components/fridge/Fridge";
 import Sidebar from "./components/Sidebar";
 import Main from "./Main";
 import AuthProvider from "./AuthProvider";
 import LoginPage from "./pages/Login";
 import RegisterPage from "./pages/Register";
-import RequireAuth from "./RequireAuth";
+import RequireAuth from "./components/RequireAuth";
 
 function App() {
   return (

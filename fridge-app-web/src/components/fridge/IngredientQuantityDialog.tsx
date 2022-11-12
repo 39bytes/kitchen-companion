@@ -1,5 +1,5 @@
+import { Ingredient } from "@backend/ingredient";
 import {
-  Avatar,
   Box,
   Button,
   Container,
@@ -11,12 +11,7 @@ import {
   TextField,
 } from "@mui/material";
 import { useEffect, useState } from "react";
-import {
-  Ingredient,
-  IngredientSearchResult,
-} from "@backend/ingredient";
-import { getImageUrl } from "../utils/getImageUrl";
-import { toTitleCase } from "../utils/toTitleCase";
+import { toTitleCase } from "../../utils/toTitleCase";
 import IngredientImage from "./IngredientImage";
 
 type IngredientQuantityDialogProps = {
@@ -32,6 +27,7 @@ const IngredientQuantityDialog = ({
 }: IngredientQuantityDialogProps) => {
   const [quantity, setQuantity] = useState(0);
   const [unit, setUnit] = useState("");
+  const [section, setSection] = useState("");
 
   const handleUnitChange = (event: SelectChangeEvent) => {
     setUnit(event.target.value);
