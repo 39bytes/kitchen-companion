@@ -11,7 +11,6 @@ const router = express.Router();
  * @route POST /register
  */
 router.post('/register', async (req, res) => {
-
     if (!req.body.email || !req.body.password) {
         res.json({ success: false, errors: "Fields cannot be empty" });
         return;
@@ -26,7 +25,7 @@ router.post('/register', async (req, res) => {
             await user.save();
             res.json({ success: true, errors: "" });
         }
-    })
+    });
 })
 
 /**
