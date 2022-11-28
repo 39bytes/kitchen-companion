@@ -1,5 +1,5 @@
 import { Ingredient, IngredientSearchResult } from "@backend/ingredient";
-import { FridgeContents, UserFridgeDocument } from "@backend/userfridge";
+import { UserFridgeDocument } from "@backend/userfridge";
 import { AcUnit, Add, Kitchen } from "@mui/icons-material";
 import { Alert, Box, Fab, IconButton } from "@mui/material";
 import axios from "axios";
@@ -17,23 +17,55 @@ const Fridge = () => {
   const [quantityOpen, setQuantityOpen] = useState(false);
   const [addingNew, setAddingNew] = useState(false);
   const [selectedIngredient, setSelectedIngredient] = useState<Ingredient>();
-  const [fridgeContents, setFridgeContents] = useState<FridgeContents>();
+  const [fridgeContents, setFridgeContents] = useState<Ingredient[]>();
+  const [sortedFridgeContents, setSortedFridgeContents] =
+    useState<Map<string, Ingredient[]>>();
+  const [sortKey, setSortKey] = useState<"section" | "category">("section");
   const [error, setError] = useState("");
+
+  const groupIngredientsBy = (
+    key: "section" | "category",
+    contents: Ingredient[]
+  ) => {
+    let sections = new Map<string, Ingredient[]>();
+
+    for (const ingredient of contents) {
+      let arr = sections.get(ingredient[key]);
+      if (arr) {
+        arr.push(ingredient);
+      } else {
+        sections.set(ingredient[key], [ingredient]);
+      }
+    }
+
+    return sections;
+  };
 
   // Load ingredient data
   useEffect(() => {
     axios.get("/fridge", { withCredentials: true }).then((res) => {
       const userFridge = res.data as UserFridgeDocument;
-      const contents = new Map(
-        Object.entries(userFridge.contents)
-      ) as FridgeContents;
+      const contents = userFridge.contents;
       setFridgeContents(contents);
     });
   }, []);
 
-  if (!fridgeContents) {
+  useEffect(() => {
+    if (!fridgeContents) return;
+    setSortedFridgeContents(groupIngredientsBy(sortKey, fridgeContents));
+  }, [fridgeContents, sortKey]);
+
+  if (!fridgeContents || !sortedFridgeContents) {
     return <div>Loading...</div>;
   }
+
+  const handleSortButtonClick = () => {
+    if (sortKey === "category") {
+      setSortKey("section");
+    } else {
+      setSortKey("category");
+    }
+  };
 
   const handleQuantityClose = async (
     ingredient: Ingredient,
@@ -45,9 +77,7 @@ const Fridge = () => {
     }
 
     // Make a copy of the old contents
-    const newFridgeContents = new Map(
-      JSON.parse(JSON.stringify(Array.from(fridgeContents)))
-    ) as typeof fridgeContents;
+    let newFridgeContents = fridgeContents.slice();
 
     // User added new ingredient
     if (addingNew) {
@@ -61,52 +91,34 @@ const Fridge = () => {
       const data = await getIngredientExpiration(ingredient.name);
       const newIngredient = { ...ingredient, expirationData: data };
 
-      // Adds the element to the category
-      // Creates the category if it doesn't already exist
-      const categoryContents = newFridgeContents.get(ingredient.category) ?? [];
-      newFridgeContents.set(
-        ingredient.category,
-        categoryContents.concat(newIngredient)
-      );
+      newFridgeContents.push(newIngredient);
     }
     // User editing an existing ingredient
     else {
       // User set quantity to 0 when editing an ingredient quantity
       if (ingredient.quantity === 0) {
-        const newCategoryContents = newFridgeContents // Remove that ingredient
-          .get(ingredient.category)!
-          .filter(
-            (item) =>
-              !(
-                item.id === ingredient.id &&
-                item.dateAdded === ingredient.dateAdded
-              )
-          );
-        if (newCategoryContents.length > 0) {
-          newFridgeContents.set(ingredient.category, newCategoryContents);
-        } else {
-          newFridgeContents.delete(ingredient.category);
-        }
-      } else {
-        const index = fridgeContents.get(ingredient.category)!.findIndex(
+        newFridgeContents = newFridgeContents.filter(
           (item) =>
-            item.id === ingredient.id && item.dateAdded === ingredient.dateAdded //and i.section === value.section
+            !(
+              item.id === ingredient.id &&
+              item.dateAdded === ingredient.dateAdded
+            )
         );
-        const newCategoryContents = newFridgeContents
-          .get(ingredient.category)!
-          .slice();
-        newCategoryContents[index] = ingredient;
-        newFridgeContents.set(ingredient.category, newCategoryContents);
+      } else {
+        const index = fridgeContents.findIndex(
+          (item) =>
+            item.id === ingredient.id && item.dateAdded === ingredient.dateAdded
+        );
+        newFridgeContents[index] = ingredient;
       }
     }
 
-    const res = await axios.post(
-      "/fridge",
-      Object.fromEntries(newFridgeContents),
-      { withCredentials: true }
-    );
+    const res = await axios.post("/fridge", newFridgeContents, {
+      withCredentials: true,
+    });
     if (res.data.error) {
       setError("An error occured when adding the ingredient.");
+      console.log(res.data.error);
     } else {
       setFridgeContents(newFridgeContents);
       console.log(fridgeContents);
@@ -145,10 +157,10 @@ const Fridge = () => {
       <Sidebar />
       <MainContainer>
         <CategoryContainer>
-          {Array.from(fridgeContents, ([category, contents]) => (
+          {Array.from(sortedFridgeContents, ([key, contents]) => (
             <FridgeCategory
-              key={category}
-              name={category}
+              key={key}
+              name={key}
               items={contents}
               color="#2196f3"
               icon={<AcUnit />}
@@ -173,6 +185,12 @@ const Fridge = () => {
             {error}
           </Alert>
         )}
+        <IconButton
+          aria-label="sort by section"
+          onClick={handleSortButtonClick}
+        >
+          <Kitchen />
+        </IconButton>
       </MainContainer>
       <Fab
         color="primary"
