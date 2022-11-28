@@ -9,12 +9,7 @@ export interface Ingredient {
     quantity: number;
     unit: string;
     dateAdded: number;
-    section?: "pantry" | "fridge" | "freezer";
-}
-
-export interface Category {
-    name: string;
-    items: Ingredient[];
+    section: string;
 }
 
 export interface ExpirationData {

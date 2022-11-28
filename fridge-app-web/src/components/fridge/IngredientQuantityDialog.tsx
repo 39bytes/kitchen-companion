@@ -16,12 +16,14 @@ import IngredientImage from "./IngredientImage";
 
 type IngredientQuantityDialogProps = {
   open: boolean;
-  handleClose: (value: Ingredient | undefined) => void;
+  addingNew: boolean;
+  handleClose: (value: Ingredient, addingNew: boolean) => void;
   ingredient: Ingredient;
 };
 
-const IngredientQuantityDialog = ({
+export const IngredientQuantityDialog = ({
   open,
+  addingNew,
   ingredient,
   handleClose,
 }: IngredientQuantityDialogProps) => {
@@ -33,26 +35,26 @@ const IngredientQuantityDialog = ({
     setUnit(event.target.value);
   };
 
+  const handleSectionChange = (event: SelectChangeEvent) => {
+    setSection(event.target.value);
+  };
+
   useEffect(() => {
     setQuantity(ingredient.quantity);
     setUnit(ingredient.unit || ingredient.possibleUnits[0]);
+    setSection(ingredient.section);
   }, [open]);
 
   const onClose = () => {
-    // The user decides not to add a new ingredient, so dont add a new item to the fridge
-    if (quantity === 0) {
-      handleClose(undefined);
-      return;
-    }
-
     // Add a new item to the fridge
     const newIngredient = {
       ...ingredient,
       unit,
       quantity,
+      section,
     };
     setQuantity(0); // Reset quantity for future dialog opens
-    handleClose(newIngredient);
+    handleClose(newIngredient, addingNew);
   };
 
   return (
@@ -71,20 +73,45 @@ const IngredientQuantityDialog = ({
             size="small"
             type="number"
             InputProps={{ inputProps: { min: 0, max: 99999 } }}
-            defaultValue={1}
             onChange={(e) => {
               setQuantity(parseInt(e.target.value));
+            }}
+            sx={{
+              width: 100,
             }}
           />
           <Select
             defaultValue={ingredient.unit || ingredient.possibleUnits[0]}
+            size="small"
             label="Unit"
             onChange={handleUnitChange}
           >
             {ingredient.possibleUnits.map((u) => {
-              return <MenuItem value={u}>{u}</MenuItem>;
+              return (
+                <MenuItem key={u} value={u}>
+                  {u}
+                </MenuItem>
+              );
             })}
           </Select>
+          <Box display="flex" marginTop={1} justifyContent="center">
+            <Select
+              defaultValue={ingredient.section}
+              size="small"
+              label="Section"
+              onChange={handleSectionChange}
+            >
+              <MenuItem key="pantry" value="pantry">
+                Pantry
+              </MenuItem>
+              <MenuItem key="fridge" value="fridge">
+                Fridge
+              </MenuItem>
+              <MenuItem key="freezer" value="freezer">
+                Freezer
+              </MenuItem>
+            </Select>
+          </Box>
         </Container>
         <Button
           onClick={onClose}
@@ -98,5 +125,3 @@ const IngredientQuantityDialog = ({
     </Dialog>
   );
 };
-
-export default IngredientQuantityDialog;

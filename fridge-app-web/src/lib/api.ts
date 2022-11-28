@@ -2,15 +2,15 @@ import { expirationTimes } from "./testData";
 import { ExpirationData, IngredientSearchResult } from "@backend/ingredient"
 import axios from 'axios';
 
-export const getIngredientSearch = async (query: string, number: number) => {
-    const res = await axios.get(`http://localhost:8080/api/ingredient/search?query=${query}&number=${number}`);
-    return res.data as IngredientSearchResult[];
+const getFromAPI = async<ResDataType>(endpoint: string, params: object) => {
+    const res = await axios.get(process.env.REACT_APP_API_URL + endpoint, { params });
+    return res.data as ResDataType;
 }
 
-export const getIngredientExpiration = async (query: string) => {
-    const res = await axios.get(`http://localhost:8080/api/ingredient/expiration?query=${query}`);
-    return res.data as ExpirationData;
-}
+export const getIngredientSearch = async (query: string, number: number) => getFromAPI<IngredientSearchResult[]>("ingredient/search", { query, number });
+
+export const getIngredientExpiration = async (query: string) => getFromAPI<ExpirationData>("ingredient/expiration", { query });
+
 
 // const LoadTop1kIngrdients = () => {
 //     const data = fs.readFileSync("top-1k-ingredients.csv").toString().split('\n');

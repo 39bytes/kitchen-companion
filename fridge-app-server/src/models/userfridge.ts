@@ -1,5 +1,5 @@
 import mongoose, { Schema, Types } from 'mongoose';
-import { Ingredient, Category } from './ingredient';
+import { Ingredient } from './ingredient';
 
 const ExpirationDataSchema = new Schema({
     pantry: Number,
@@ -20,19 +20,16 @@ const IngredientSchema = new Schema({
     section: { type: String, required: true }
 });
 
-const CategorySchema = new Schema({
-    name: { type: String, required: true },
-    items: [IngredientSchema],
-});
+export type FridgeContents = Map<string, Ingredient[]>;
 
 export interface UserFridgeDocument {
     userId: Types.ObjectId,
-    contents: Category[];
+    contents: FridgeContents
 }
 
 const UserFridgeSchema = new Schema<UserFridgeDocument>({
     userId: Schema.Types.ObjectId,
-    contents: [CategorySchema],
+    contents: { type: Map, of: [IngredientSchema], required: true },
 });
 
 const userFridgeModel = mongoose.model<UserFridgeDocument>("UserFridge", UserFridgeSchema, "user_fridge");

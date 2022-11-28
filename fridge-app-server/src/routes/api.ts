@@ -59,6 +59,16 @@ const expirations: { [name: string]: ExpirationData } = {
         pantry: durationToMs("3d"),
         fridge: durationToMs("2w"),
         freezer: durationToMs("6m"),
+    },
+    "apple": {
+        pantry: durationToMs("5d"),
+        fridge: durationToMs("3w"),
+        freezer: durationToMs("6m"),
+    },
+    "chicken breast": {
+        pantry: durationToMs("2d"),
+        fridge: durationToMs("3w"),
+        freezer: durationToMs("6m"),
     }
 }
 
