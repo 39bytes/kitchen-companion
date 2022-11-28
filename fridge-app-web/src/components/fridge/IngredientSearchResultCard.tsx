@@ -1,4 +1,4 @@
-import { IngredientSearchResult } from "@backend/types/ingredient-types";
+import { IngredientSearchResult } from "@backend/ingredient";
 import {
   ListItem,
   ListItemAvatar,
@@ -6,7 +6,7 @@ import {
   ListItemText,
   Typography,
 } from "@mui/material";
-import { toTitleCase } from "../utils/toTitleCase";
+import { toTitleCase } from "../../utils/toTitleCase";
 import IngredientImage from "./IngredientImage";
 
 type IngredientSearchResultCardProps = {

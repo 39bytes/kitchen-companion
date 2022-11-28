@@ -1,15 +1,15 @@
 import { expirationTimes } from "./testData";
-import { IngredientSearchResponse, IngredientSearchResult } from "@backend/types/ingredient-types"
+import { ExpirationData, IngredientSearchResult } from "@backend/ingredient"
+import axios from 'axios';
 
-export const IngredientSearch = async (query: string, number: number) => {
-    const res = await fetch(`http://localhost:8080/ingredient-search?query=${query}&number=${number}`);
-    const data = await res.json() as IngredientSearchResult[];
-    return data;
+const getFromAPI = async<ResDataType>(endpoint: string, params: object) => {
+    const res = await axios.get(process.env.REACT_APP_API_URL + endpoint, { params });
+    return res.data as ResDataType;
 }
 
-export const GetIngredientExpiration = (id: number, storageType: "pantry" | "fridge" | "frozen") => {
-    return expirationTimes[id][storageType];
-}
+export const getIngredientSearch = async (query: string, number: number) => getFromAPI<IngredientSearchResult[]>("ingredient/search", { query, number });
+
+export const getIngredientExpiration = async (query: string) => getFromAPI<ExpirationData>("ingredient/expiration", { query });
 
 
 // const LoadTop1kIngrdients = () => {

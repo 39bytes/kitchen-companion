@@ -1,6 +1,6 @@
 import { Box, List, Paper, Typography } from "@mui/material";
 import { ReactNode } from "react";
-import { Ingredient } from "@backend/types/ingredient-types";
+import { Ingredient } from "@backend/ingredient";
 import FridgeItem from "./FridgeItem";
 
 type FridgeCategoryProps = {
@@ -32,7 +32,7 @@ const FridgeCategory = ({
       <List>
         {items.map((item) => (
           <FridgeItem
-            key={item.id}
+            key={`${item.id}-${item.dateAdded}`}
             ingredient={item}
             onAddButtonClick={onAddButtonClick}
           />
