@@ -75,6 +75,7 @@ export const IngredientSearchDialog = ({
               {searchResults.map((result) => {
                 return (
                   <IngredientSearchResultCard
+                    key={result.id}
                     ingredient={result}
                     handleClick={handleListItemClick}
                   />

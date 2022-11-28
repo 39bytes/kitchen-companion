@@ -14,7 +14,8 @@ export const ProcessIngredientResults = (query: string, results: IngredientSearc
 
         // Throw out useless units that just take up space
         const filteredUnits = USEFUL_UNITS.filter((unit) => result.possibleUnits.includes(unit));
-        sorted.push({ ...result, possibleUnits: filteredUnits });
+        const firstAisle = result.aisle.split(";")[0];
+        sorted.push({ ...result, aisle: firstAisle, possibleUnits: filteredUnits });
     })
     return sorted;
 }

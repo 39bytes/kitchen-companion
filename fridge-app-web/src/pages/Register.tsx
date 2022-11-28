@@ -1,19 +1,9 @@
-import {
-  Box,
-  Button,
-  Container,
-  Paper,
-  TextField,
-  TextFieldProps,
-  Typography,
-} from "@mui/material";
+import { Box, Button, Paper, Typography } from "@mui/material";
 import axios from "axios";
-import { Form, Formik, Field, useFormik } from "formik";
-import { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { useFormik } from "formik";
+import { Link } from "react-router-dom";
 import Layout from "src/components/containers/Layout";
 import { FormTextField } from "src/components/FormTextField";
-import { jsonPost } from "src/utils/jsonPost";
 
 const Register = () => {
   const formik = useFormik({

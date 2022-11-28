@@ -32,7 +32,7 @@ const FridgeCategory = ({
       <List>
         {items.map((item) => (
           <FridgeItem
-            key={item.id}
+            key={`${item.id}-${item.dateAdded}`}
             ingredient={item}
             onAddButtonClick={onAddButtonClick}
           />

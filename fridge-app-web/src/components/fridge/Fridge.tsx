@@ -1,117 +1,155 @@
-import {
-  Category,
-  Ingredient,
-  IngredientSearchResult,
-} from "@backend/ingredient";
-import { UserFridgeDocument } from "@backend/userfridge";
-import { AcUnit, Add } from "@mui/icons-material";
-import { Fab } from "@mui/material";
+import { Ingredient, IngredientSearchResult } from "@backend/ingredient";
+import { FridgeContents, UserFridgeDocument } from "@backend/userfridge";
+import { AcUnit, Add, Kitchen } from "@mui/icons-material";
+import { Alert, Box, Fab, IconButton } from "@mui/material";
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { getIngredientExpiration } from "src/lib/api";
-import { testData } from "../../lib/testData";
 import CategoryContainer from "../containers/CategoryContainer";
 import MainContainer from "../containers/MainContainer";
-import FridgeCategory from "./FridgeCategory";
-import IngredientQuantityDialog from "./IngredientQuantityDialog";
-import { IngredientSearchDialog } from "./IngredientSearchDialog";
 import Sidebar from "../Sidebar";
+import FridgeCategory from "./FridgeCategory";
+import { IngredientQuantityDialog } from "./IngredientQuantityDialog";
+import { IngredientSearchDialog } from "./IngredientSearchDialog";
 
 const Fridge = () => {
   const [searchOpen, setSearchOpen] = useState(false);
   const [quantityOpen, setQuantityOpen] = useState(false);
-  const [selectedIngredient, setSelectedIngredient] = useState<Ingredient>({
-    id: 0,
-    name: "",
-    image: "",
-    category: "",
-    unit: "",
-    quantity: 0,
-    possibleUnits: [],
-    dateAdded: Date.now(),
-  });
-  const [fridgeItems, setFridgeItems] = useState<Category[]>([]);
-  const [userFridge, setUserFridge] = useState<UserFridgeDocument>();
+  const [addingNew, setAddingNew] = useState(false);
+  const [selectedIngredient, setSelectedIngredient] = useState<Ingredient>();
+  const [fridgeContents, setFridgeContents] = useState<FridgeContents>();
+  const [error, setError] = useState("");
 
   // Load ingredient data
-  // TODO: Replace this with fetching from local storage/a backend
   useEffect(() => {
-    setFridgeItems([
-      { name: "Staples", items: testData },
-      { name: "Proteins", items: testData.slice() },
-      { name: "Fruits & Vegetables", items: testData.slice() },
-      { name: "Pantry", items: testData.slice() },
-      { name: "Freezer", items: testData.slice() },
-      { name: "Spices", items: testData.slice() },
-    ]);
     axios.get("/fridge", { withCredentials: true }).then((res) => {
-      setUserFridge(res.data as UserFridgeDocument);
+      const userFridge = res.data as UserFridgeDocument;
+      const contents = new Map(
+        Object.entries(userFridge.contents)
+      ) as FridgeContents;
+      setFridgeContents(contents);
     });
   }, []);
 
-  const handleQuantityClose = (value: Ingredient | undefined) => {
-    if (!value) {
+  if (!fridgeContents) {
+    return <div>Loading...</div>;
+  }
+
+  const handleQuantityClose = async (
+    ingredient: Ingredient,
+    addingNew: boolean
+  ) => {
+    if (!fridgeContents) {
       setQuantityOpen(false);
       return;
     }
 
-    // Add the selected food into the fridge
-    // TODO: Autodetermine category
-    const newFridge = fridgeItems.slice();
+    // Make a copy of the old contents
+    const newFridgeContents = new Map(
+      JSON.parse(JSON.stringify(Array.from(fridgeContents)))
+    ) as typeof fridgeContents;
 
-    // If modifying the quantity of an existing ingredient
-    // FIXME: This doesn't work properly
-    let index = newFridge[0].items.findIndex((i) => i.id === value.id);
-    if (index !== -1) {
-      // Replace the item
-      newFridge[0].items.splice(index, 1, value);
-    } else {
-      // REWRITE THIS: Does not update immediately
-      getIngredientExpiration(value.name).then((data) => {
-        const newIngredient = { expirationData: data, ...value };
-        console.log(newIngredient);
-        newFridge[0].items = newFridge[0].items.concat(newIngredient);
-      });
+    // User added new ingredient
+    if (addingNew) {
+      // User cancelled adding a new ingredient
+      if (ingredient.quantity === 0) {
+        setQuantityOpen(false);
+        return;
+      }
+
+      // User added new ingredient
+      const data = await getIngredientExpiration(ingredient.name);
+      const newIngredient = { ...ingredient, expirationData: data };
+
+      // Adds the element to the category
+      // Creates the category if it doesn't already exist
+      const categoryContents = newFridgeContents.get(ingredient.category) ?? [];
+      newFridgeContents.set(
+        ingredient.category,
+        categoryContents.concat(newIngredient)
+      );
+    }
+    // User editing an existing ingredient
+    else {
+      // User set quantity to 0 when editing an ingredient quantity
+      if (ingredient.quantity === 0) {
+        const newCategoryContents = newFridgeContents // Remove that ingredient
+          .get(ingredient.category)!
+          .filter(
+            (item) =>
+              !(
+                item.id === ingredient.id &&
+                item.dateAdded === ingredient.dateAdded
+              )
+          );
+        if (newCategoryContents.length > 0) {
+          newFridgeContents.set(ingredient.category, newCategoryContents);
+        } else {
+          newFridgeContents.delete(ingredient.category);
+        }
+      } else {
+        const index = fridgeContents.get(ingredient.category)!.findIndex(
+          (item) =>
+            item.id === ingredient.id && item.dateAdded === ingredient.dateAdded //and i.section === value.section
+        );
+        const newCategoryContents = newFridgeContents
+          .get(ingredient.category)!
+          .slice();
+        newCategoryContents[index] = ingredient;
+        newFridgeContents.set(ingredient.category, newCategoryContents);
+      }
     }
 
-    setFridgeItems(newFridge);
+    const res = await axios.post(
+      "/fridge",
+      Object.fromEntries(newFridgeContents),
+      { withCredentials: true }
+    );
+    if (res.data.error) {
+      setError("An error occured when adding the ingredient.");
+    } else {
+      setFridgeContents(newFridgeContents);
+      console.log(fridgeContents);
+    }
     setQuantityOpen(false);
   };
 
-  const handleSearchClose = (value: IngredientSearchResult | undefined) => {
+  const handleSearchClose = (result: IngredientSearchResult | undefined) => {
     setSearchOpen(false);
-
-    if (!value) {
+    if (!result) {
       return;
     }
 
     let ingredientObj: Ingredient = {
-      category: value.aisle,
+      category: result.aisle,
       dateAdded: Date.now(),
       unit: "",
       quantity: 0,
-      ...value,
+      section: "pantry",
+      ...result,
     };
 
+    setAddingNew(true);
     setSelectedIngredient(ingredientObj);
     setQuantityOpen(true);
   };
 
   const addButtonClick = (ingredient: Ingredient) => {
+    setAddingNew(false);
     setSelectedIngredient(ingredient);
     setQuantityOpen(true);
   };
 
   return (
-    <div>
+    <Box overflow="visible">
       <Sidebar />
       <MainContainer>
         <CategoryContainer>
-          {fridgeItems.map((c) => (
+          {Array.from(fridgeContents, ([category, contents]) => (
             <FridgeCategory
-              key={c.name}
-              name={c.name}
-              items={c.items}
+              key={category}
+              name={category}
+              items={contents}
               color="#2196f3"
               icon={<AcUnit />}
               onAddButtonClick={addButtonClick}
@@ -119,21 +157,38 @@ const Fridge = () => {
           ))}
         </CategoryContainer>
         <IngredientSearchDialog open={searchOpen} onClose={handleSearchClose} />
-        <IngredientQuantityDialog
-          open={quantityOpen}
-          ingredient={selectedIngredient}
-          handleClose={handleQuantityClose}
-        />
-        <Fab
-          color="primary"
-          aria-label="add"
-          sx={{ position: "sticky", bottom: 20, left: 1150 }} // FIXME: The positioning on this button doesn't work properly
-          onClick={() => setSearchOpen(true)}
-        >
-          <Add />
-        </Fab>
+        {selectedIngredient ? (
+          <IngredientQuantityDialog
+            open={quantityOpen}
+            addingNew={addingNew}
+            ingredient={selectedIngredient}
+            handleClose={handleQuantityClose}
+          />
+        ) : (
+          <></>
+        )}
+
+        {error && (
+          <Alert variant="filled" severity="error" onClose={() => setError("")}>
+            {error}
+          </Alert>
+        )}
       </MainContainer>
-    </div>
+      <Fab
+        color="primary"
+        aria-label="add"
+        sx={{
+          position: "fixed",
+          bottom: 20,
+          right: 20,
+          left: "auto",
+          top: "auto",
+        }} // FIXME: The positioning on this button doesn't work properly
+        onClick={() => setSearchOpen(true)}
+      >
+        <Add />
+      </Fab>
+    </Box>
   );
 };
 

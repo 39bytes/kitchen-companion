@@ -19,7 +19,20 @@ type FridgeItemProps = {
 };
 
 const FridgeItem = ({ ingredient, onAddButtonClick }: FridgeItemProps) => {
-  const expirationTime = ingredient.expirationData?.pantry ?? -1;
+  let expirationTime: number = -1;
+  if (ingredient.expirationData) {
+    switch (ingredient.section) {
+      case "pantry":
+        expirationTime = ingredient.expirationData.pantry;
+        break;
+      case "fridge":
+        expirationTime = ingredient.expirationData.fridge;
+        break;
+      case "freezer":
+        expirationTime = ingredient.expirationData.freezer;
+        break;
+    }
+  }
   let expiresIn: string | undefined;
 
   if (expirationTime !== -1) {
@@ -49,7 +62,9 @@ const FridgeItem = ({ ingredient, onAddButtonClick }: FridgeItemProps) => {
             <Typography>
               {toTitleCase(ingredient.name)}
               <Typography variant="caption" sx={{ ml: 0.5, display: "inline" }}>
-                {`${ingredient.quantity} ${ingredient.unit}`}
+                {`${ingredient.quantity} ${ingredient.unit}${
+                  ingredient.quantity !== 1 ? "s" : "" //plural
+                }`}
               </Typography>
             </Typography>
           }
