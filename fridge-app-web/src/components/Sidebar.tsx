@@ -1,4 +1,10 @@
 import {
+  CalendarMonth,
+  Kitchen,
+  Logout,
+  Restaurant,
+} from "@mui/icons-material";
+import {
   List,
   ListItem,
   ListItemButton,
@@ -6,12 +12,23 @@ import {
   ListItemText,
   Paper,
 } from "@mui/material";
-import { Kitchen, Restaurant, CalendarMonth } from "@mui/icons-material";
-import { Box } from "@mui/system";
-import React from "react";
 import theme from "../theme";
+import axios from "axios";
 
 const Sidebar = () => {
+  // TODO: Switch to axios
+  const logout = () => {
+    axios.post("/auth/logout").then((data) => (window.location.href = "/"));
+    // fetch("/auth/logout", {
+    //   method: "POST",
+    //   headers: {
+    //     Accept: "application/json",
+    //     "Content-Type": "application/json",
+    //   },
+    // }).then((res) => {
+    //   window.location.href = "/";
+    // });
+  };
   return (
     <Paper
       sx={{
@@ -44,6 +61,14 @@ const Sidebar = () => {
               <CalendarMonth />
             </ListItemIcon>
             <ListItemText primary="Meal Planner" />
+          </ListItemButton>
+        </ListItem>
+        <ListItem disablePadding>
+          <ListItemButton onClick={logout}>
+            <ListItemIcon>
+              <Logout />
+            </ListItemIcon>
+            <ListItemText primary="Log out" />
           </ListItemButton>
         </ListItem>
       </List>
