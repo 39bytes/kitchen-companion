@@ -8,7 +8,7 @@ const ExpirationDataSchema = new Schema({
 })
 
 const IngredientSchema = new Schema({
-    ingredientId: { type: Number, required: true },
+    id: { type: Number, required: true },
     name: { type: String, required: true },
     image: { type: String, required: true },
     category: { type: String, required: true },
@@ -20,16 +20,16 @@ const IngredientSchema = new Schema({
     section: { type: String, required: true }
 });
 
-export type FridgeContents = Map<string, Ingredient[]>;
+//export type FridgeContents = Map<string, Ingredient[]>;
 
 export interface UserFridgeDocument {
     userId: Types.ObjectId,
-    contents: FridgeContents
+    contents: Ingredient[]
 }
 
 const UserFridgeSchema = new Schema<UserFridgeDocument>({
     userId: Schema.Types.ObjectId,
-    contents: { type: Map, of: [IngredientSchema], required: true },
+    contents: { type: [IngredientSchema], required: true }
 });
 
 const userFridgeModel = mongoose.model<UserFridgeDocument>("UserFridge", UserFridgeSchema, "user_fridge");

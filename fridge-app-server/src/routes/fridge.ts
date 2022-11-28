@@ -1,6 +1,7 @@
 import express from "express";
 import { Error, UpdateWriteOpResult } from "mongoose";
-import UserFridge, { FridgeContents, UserFridgeDocument } from "../models/userfridge";
+import { Ingredient } from "../models/ingredient";
+import UserFridge, { UserFridgeDocument } from "../models/userfridge";
 
 const router = express.Router();
 
@@ -16,7 +17,7 @@ router.get("/", async (req, res) => {
             res.json(doc);
         }
         else {
-            const userFridge = new UserFridge({ userId: req.user.id, contents: {} });
+            const userFridge = new UserFridge({ userId: req.user.id, contents: [] });
             await userFridge.save();
             console.log("created user fridge", userFridge);
             res.json(userFridge);
@@ -31,7 +32,7 @@ router.post("/", async (req, res) => {
         return;
     }
 
-    const contents = req.body as FridgeContents;
+    const contents = req.body as Ingredient[];
     UserFridge.updateOne({ userId: req.user.id },
         { $set: { contents: contents } },
         { runValidators: true },
