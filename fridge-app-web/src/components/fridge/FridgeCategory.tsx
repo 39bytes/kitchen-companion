@@ -2,6 +2,7 @@ import { Box, List, Paper, Typography } from "@mui/material";
 import { ReactNode } from "react";
 import { Ingredient } from "@backend/ingredient";
 import FridgeItem from "./FridgeItem";
+import { toTitleCase } from "src/utils/toTitleCase";
 
 type FridgeCategoryProps = {
   name: string;
@@ -25,7 +26,7 @@ const FridgeCategory = ({
     >
       <Box>
         <Typography variant="h5" textAlign="left" mt={2} sx={{ px: 2 }}>
-          {name}
+          {toTitleCase(name)}
         </Typography>
       </Box>
 
