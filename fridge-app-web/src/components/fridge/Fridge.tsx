@@ -5,6 +5,8 @@ import { Alert, Box, Fab, IconButton } from "@mui/material";
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { getIngredientExpiration } from "src/lib/api";
+import { groupIngredientsBy } from "src/utils/groupIngredientsBy";
+
 import CategoryContainer from "../containers/CategoryContainer";
 import MainContainer from "../containers/MainContainer";
 import Sidebar from "../Sidebar";
@@ -20,26 +22,8 @@ const Fridge = () => {
   const [fridgeContents, setFridgeContents] = useState<Ingredient[]>();
   const [sortedFridgeContents, setSortedFridgeContents] =
     useState<Map<string, Ingredient[]>>();
-  const [sortKey, setSortKey] = useState<"section" | "category">("section");
+  const [groupKey, setGroupKey] = useState<"section" | "category">("section");
   const [error, setError] = useState("");
-
-  const groupIngredientsBy = (
-    key: "section" | "category",
-    contents: Ingredient[]
-  ) => {
-    let sections = new Map<string, Ingredient[]>();
-
-    for (const ingredient of contents) {
-      let arr = sections.get(ingredient[key]);
-      if (arr) {
-        arr.push(ingredient);
-      } else {
-        sections.set(ingredient[key], [ingredient]);
-      }
-    }
-
-    return sections;
-  };
 
   // Load ingredient data
   useEffect(() => {
@@ -52,18 +36,20 @@ const Fridge = () => {
 
   useEffect(() => {
     if (!fridgeContents) return;
-    setSortedFridgeContents(groupIngredientsBy(sortKey, fridgeContents));
-  }, [fridgeContents, sortKey]);
+    setSortedFridgeContents(
+      groupIngredientsBy(fridgeContents, groupKey, "name")
+    );
+  }, [fridgeContents, groupKey]);
 
   if (!fridgeContents || !sortedFridgeContents) {
     return <div>Loading...</div>;
   }
 
   const handleSortButtonClick = () => {
-    if (sortKey === "category") {
-      setSortKey("section");
+    if (groupKey === "category") {
+      setGroupKey("section");
     } else {
-      setSortKey("category");
+      setGroupKey("category");
     }
   };
 
@@ -89,6 +75,7 @@ const Fridge = () => {
 
       // User added new ingredient
       const data = await getIngredientExpiration(ingredient.name);
+      console.log(data);
       const newIngredient = { ...ingredient, expirationData: data };
 
       newFridgeContents.push(newIngredient);
@@ -201,7 +188,7 @@ const Fridge = () => {
           right: 20,
           left: "auto",
           top: "auto",
-        }} // FIXME: The positioning on this button doesn't work properly
+        }}
         onClick={() => setSearchOpen(true)}
       >
         <Add />
