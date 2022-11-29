@@ -22,10 +22,15 @@ router.get('/ingredient/search', async (req, res) => {
     const query = req.query.query as string;
     const number = req.query.number ?? "10"
 
-    const resp = await axios.get(`https://api.spoonacular.com/food/ingredients/search?query=${query}&number=${number}&metaInformation=true`, {
+    const resp = await axios.get(`https://api.spoonacular.com/food/ingredients/search`, {
         headers: {
             "x-api-key": process.env.SPOONACULAR_API_KEY,
             "Access-Control-Allow-Origin": "*"
+        },
+        params: {
+            query,
+            number,
+            metaInformation: true
         }
     });
 
