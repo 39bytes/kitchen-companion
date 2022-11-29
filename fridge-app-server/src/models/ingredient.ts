@@ -1,3 +1,5 @@
+export type FridgeSection = "pantry" | "fridge" | "freezer";
+
 export interface Ingredient {
     id: number;
     name: string;
@@ -9,7 +11,7 @@ export interface Ingredient {
     quantity: number;
     unit: string;
     dateAdded: number;
-    section: string;
+    section: FridgeSection;
 }
 
 export interface ExpirationData {
