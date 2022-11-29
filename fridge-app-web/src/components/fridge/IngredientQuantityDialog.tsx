@@ -1,4 +1,4 @@
-import { Ingredient } from "@backend/ingredient";
+import { FridgeSection, Ingredient } from "@backend/ingredient";
 import {
   Box,
   Button,
@@ -11,6 +11,7 @@ import {
   TextField,
 } from "@mui/material";
 import { useEffect, useState } from "react";
+import { isFridgeSection } from "src/utils/isFridgeSection";
 import { toTitleCase } from "../../utils/toTitleCase";
 import IngredientImage from "./IngredientImage";
 
@@ -29,14 +30,14 @@ export const IngredientQuantityDialog = ({
 }: IngredientQuantityDialogProps) => {
   const [quantity, setQuantity] = useState(0);
   const [unit, setUnit] = useState("");
-  const [section, setSection] = useState("");
+  const [section, setSection] = useState<FridgeSection>("pantry");
 
   const handleUnitChange = (event: SelectChangeEvent) => {
     setUnit(event.target.value);
   };
 
   const handleSectionChange = (event: SelectChangeEvent) => {
-    setSection(event.target.value);
+    setSection(event.target.value as FridgeSection);
   };
 
   useEffect(() => {
@@ -46,6 +47,9 @@ export const IngredientQuantityDialog = ({
   }, [open]);
 
   const onClose = () => {
+    if (!isFridgeSection(section)) {
+      setSection("pantry");
+    }
     // Add a new item to the fridge
     const newIngredient = {
       ...ingredient,
