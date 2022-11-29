@@ -62,9 +62,7 @@ const FridgeItem = ({ ingredient, onAddButtonClick }: FridgeItemProps) => {
             <Typography>
               {toTitleCase(ingredient.name)}
               <Typography variant="caption" sx={{ ml: 0.5, display: "inline" }}>
-                {`${ingredient.quantity} ${ingredient.unit}${
-                  ingredient.quantity !== 1 ? "s" : "" //plural
-                }`}
+                {`${ingredient.quantity} ${ingredient.unit}`}
               </Typography>
             </Typography>
           }
