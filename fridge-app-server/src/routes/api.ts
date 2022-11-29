@@ -52,10 +52,15 @@ router.get('/ingredient/expiration', (req, res) => {
     const names = Object.keys(expirations);
     // Fuzzy string match
     const scores = fuzzysort.go(query, names);
-    const foodName = scores[0].target;
+    const foodName = scores[0] ? scores[0].target : "";
 
     // Get matching expiration data
-    res.json(expirations[foodName]);
+    if (foodName in expirations) {
+        res.json(expirations[foodName]);
+    }
+    else {
+        res.json({ pantry: -1, fridge: -1, freezer: -1 });
+    }
 })
 
 // Times in milliseconds
