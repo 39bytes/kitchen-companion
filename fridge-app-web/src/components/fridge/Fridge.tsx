@@ -54,10 +54,10 @@ const Fridge = () => {
   };
 
   const handleQuantityClose = async (
-    ingredient: Ingredient,
+    ingredient: Ingredient | undefined,
     addingNew: boolean
   ) => {
-    if (!fridgeContents) {
+    if (!fridgeContents || !ingredient) {
       setQuantityOpen(false);
       return;
     }
