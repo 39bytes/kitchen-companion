@@ -18,7 +18,7 @@ import IngredientImage from "./IngredientImage";
 type IngredientQuantityDialogProps = {
   open: boolean;
   addingNew: boolean;
-  handleClose: (value: Ingredient, addingNew: boolean) => void;
+  handleClose: (value: Ingredient | undefined, addingNew: boolean) => void;
   ingredient: Ingredient;
 };
 
@@ -46,7 +46,16 @@ export const IngredientQuantityDialog = ({
     setSection(ingredient.section);
   }, [open]);
 
-  const onClose = () => {
+  const onClose = (
+    event: {},
+    reason: "" | "backdropClick" | "escapeKeyDown"
+  ) => {
+    if (reason === "backdropClick" || reason === "escapeKeyDown") {
+      setQuantity(0);
+      handleClose(undefined, addingNew);
+      return;
+    }
+
     if (!isFridgeSection(section)) {
       setSection("pantry");
     }
@@ -59,6 +68,10 @@ export const IngredientQuantityDialog = ({
     };
     setQuantity(0); // Reset quantity for future dialog opens
     handleClose(newIngredient, addingNew);
+  };
+
+  const handleConfirmButtonClick = () => {
+    onClose({}, "");
   };
 
   return (
@@ -118,12 +131,12 @@ export const IngredientQuantityDialog = ({
           </Box>
         </Container>
         <Button
-          onClick={onClose}
+          onClick={handleConfirmButtonClick}
           color="primary"
           variant="contained"
           sx={{ width: "auto", my: 1 }}
         >
-          Confirm
+          Add
         </Button>
       </Box>
     </Dialog>
