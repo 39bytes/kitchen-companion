@@ -1,4 +1,3 @@
-import { expirationTimes } from "./testData";
 import { ExpirationData, IngredientSearchResult } from "@backend/ingredient"
 import axios from 'axios';
 
