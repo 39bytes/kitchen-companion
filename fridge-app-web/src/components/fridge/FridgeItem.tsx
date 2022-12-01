@@ -48,9 +48,6 @@ const FridgeItem = ({ ingredient, onAddButtonClick }: FridgeItemProps) => {
         secondaryAction={
           <>
             <AddRemoveButton onClick={() => onAddButtonClick(ingredient)} />
-            <IconButton edge="end" aria-label="Freeze">
-              <AcUnit color="secondary" />
-            </IconButton>
           </>
         }
       >

@@ -59,6 +59,7 @@ export const IngredientQuantityDialog = ({
     if (!isFridgeSection(section)) {
       setSection("pantry");
     }
+    
     // Add a new item to the fridge
     const newIngredient = {
       ...ingredient,
@@ -66,6 +67,7 @@ export const IngredientQuantityDialog = ({
       quantity,
       section,
     };
+
     setQuantity(0); // Reset quantity for future dialog opens
     handleClose(newIngredient, addingNew);
   };
