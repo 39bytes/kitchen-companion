@@ -25,6 +25,4 @@ export const msToDurationString = (duration: number) => {
         return `${weeks}w`;
     }
     return `${days}d`;
-    // What if the food is already expired?
-
 }
