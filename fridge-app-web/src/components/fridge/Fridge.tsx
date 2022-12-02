@@ -16,8 +16,9 @@ import { IngredientSearchDialog } from "./IngredientSearchDialog";
 
 const Fridge = () => {
   const [searchOpen, setSearchOpen] = useState(false);
+  const [editOpen, setEditOpen] = useState(false);
   const [quantityOpen, setQuantityOpen] = useState(false);
-  const [addingNew, setAddingNew] = useState(false);
+
   const [selectedIngredient, setSelectedIngredient] = useState<Ingredient>();
   const [fridgeContents, setFridgeContents] = useState<Ingredient[]>();
   const [sortedFridgeContents, setSortedFridgeContents] =
@@ -53,10 +54,18 @@ const Fridge = () => {
     }
   };
 
-  const handleQuantityClose = async (
-    ingredient: Ingredient | undefined,
-    addingNew: boolean
-  ) => {
+  const updateFridgeContents = async (newFridgeContents: Ingredient[]) => {
+    const res = await axios.post("/fridge", newFridgeContents, {
+      withCredentials: true,
+    });
+    if (res.data.error) {
+      setError("An error occured when adding the ingredient.");
+    } else {
+      setFridgeContents(newFridgeContents);
+    }
+  };
+
+  const handleQuantityClose = async (ingredient: Ingredient | undefined) => {
     if (!fridgeContents || !ingredient) {
       setQuantityOpen(false);
       return;
@@ -65,52 +74,51 @@ const Fridge = () => {
     // Make a copy of the old contents
     let newFridgeContents = fridgeContents.slice();
 
+    // User cancelled adding a new ingredient
+    if (ingredient.quantity === 0) {
+      setQuantityOpen(false);
+      return;
+    }
+
     // User added new ingredient
-    if (addingNew) {
-      // User cancelled adding a new ingredient
-      if (ingredient.quantity === 0) {
-        setQuantityOpen(false);
-        return;
-      }
+    const data = await getIngredientExpiration(ingredient.name);
+    const newIngredient = { ...ingredient, expirationData: data };
 
-      // User added new ingredient
-      const data = await getIngredientExpiration(ingredient.name);
-      console.log(data);
-      const newIngredient = { ...ingredient, expirationData: data };
+    newFridgeContents.push(newIngredient);
 
-      newFridgeContents.push(newIngredient);
-    }
-    // User editing an existing ingredient
-    else {
-      // User set quantity to 0 when editing an ingredient quantity
-      if (ingredient.quantity === 0) {
-        newFridgeContents = newFridgeContents.filter(
-          (item) =>
-            !(
-              item.id === ingredient.id &&
-              item.dateAdded === ingredient.dateAdded
-            )
-        );
-      } else {
-        const index = fridgeContents.findIndex(
-          (item) =>
-            item.id === ingredient.id && item.dateAdded === ingredient.dateAdded
-        );
-        newFridgeContents[index] = ingredient;
-      }
-    }
-
-    const res = await axios.post("/fridge", newFridgeContents, {
-      withCredentials: true,
-    });
-    if (res.data.error) {
-      setError("An error occured when adding the ingredient.");
-      console.log(res.data.error);
-    } else {
-      setFridgeContents(newFridgeContents);
-      console.log(fridgeContents);
-    }
+    await updateFridgeContents(newFridgeContents);
     setQuantityOpen(false);
+  };
+
+  // User editing an existing ingredient
+  const handleEditClose = async (ingredient: Ingredient | undefined) => {
+    if (!fridgeContents || !ingredient) {
+      setEditOpen(false);
+      return;
+    }
+
+    let newFridgeContents = fridgeContents.slice();
+
+    // User set quantity to 0 when editing an ingredient quantity
+    if (ingredient.quantity === 0) {
+      newFridgeContents = newFridgeContents.filter(
+        // Remove that ingredient
+        (item) =>
+          !(
+            item.id === ingredient.id && item.dateAdded === ingredient.dateAdded
+          )
+      );
+    } else {
+      // Immutably update the ingredient
+      const index = fridgeContents.findIndex(
+        (item) =>
+          item.id === ingredient.id && item.dateAdded === ingredient.dateAdded
+      );
+      newFridgeContents[index] = ingredient;
+    }
+
+    await updateFridgeContents(newFridgeContents);
+    setEditOpen(false);
   };
 
   const handleSearchClose = (result: IngredientSearchResult | undefined) => {
@@ -123,21 +131,21 @@ const Fridge = () => {
       category: result.aisle,
       dateAdded: Date.now(),
       unit: "",
-      quantity: 0,
+      quantity: 1,
       section: "pantry",
       ...result,
     };
 
-    setAddingNew(true);
     setSelectedIngredient(ingredientObj);
     setQuantityOpen(true);
   };
 
-  const addButtonClick = (ingredient: Ingredient) => {
-    setAddingNew(false);
+  const editButtonClick = (ingredient: Ingredient) => {
     setSelectedIngredient(ingredient);
-    setQuantityOpen(true);
+    setEditOpen(true);
   };
+
+  const IngredientEditDialog = IngredientQuantityDialog;
 
   return (
     <Box overflow="visible">
@@ -151,18 +159,24 @@ const Fridge = () => {
               items={contents}
               color="#2196f3"
               icon={<AcUnit />}
-              onAddButtonClick={addButtonClick}
+              onAddButtonClick={editButtonClick}
             />
           ))}
         </CategoryContainer>
         <IngredientSearchDialog open={searchOpen} onClose={handleSearchClose} />
         {selectedIngredient ? (
-          <IngredientQuantityDialog
-            open={quantityOpen}
-            addingNew={addingNew}
-            ingredient={selectedIngredient}
-            handleClose={handleQuantityClose}
-          />
+          <>
+            <IngredientQuantityDialog
+              open={quantityOpen}
+              ingredient={selectedIngredient}
+              handleClose={handleQuantityClose}
+            />
+            <IngredientEditDialog
+              open={editOpen}
+              ingredient={selectedIngredient}
+              handleClose={handleEditClose}
+            />
+          </>
         ) : (
           <></>
         )}
@@ -172,6 +186,7 @@ const Fridge = () => {
             {error}
           </Alert>
         )}
+
         <IconButton
           aria-label="sort by section"
           onClick={handleSortButtonClick}
