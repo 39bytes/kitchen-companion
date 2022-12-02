@@ -17,14 +17,12 @@ import IngredientImage from "./IngredientImage";
 
 type IngredientQuantityDialogProps = {
   open: boolean;
-  addingNew: boolean;
-  handleClose: (value: Ingredient | undefined, addingNew: boolean) => void;
+  handleClose: (value: Ingredient | undefined) => void;
   ingredient: Ingredient;
 };
 
 export const IngredientQuantityDialog = ({
   open,
-  addingNew,
   ingredient,
   handleClose,
 }: IngredientQuantityDialogProps) => {
@@ -52,14 +50,14 @@ export const IngredientQuantityDialog = ({
   ) => {
     if (reason === "backdropClick" || reason === "escapeKeyDown") {
       setQuantity(0);
-      handleClose(undefined, addingNew);
+      handleClose(undefined);
       return;
     }
 
     if (!isFridgeSection(section)) {
       setSection("pantry");
     }
-    
+
     // Add a new item to the fridge
     const newIngredient = {
       ...ingredient,
@@ -69,7 +67,7 @@ export const IngredientQuantityDialog = ({
     };
 
     setQuantity(0); // Reset quantity for future dialog opens
-    handleClose(newIngredient, addingNew);
+    handleClose(newIngredient);
   };
 
   const handleConfirmButtonClick = () => {
