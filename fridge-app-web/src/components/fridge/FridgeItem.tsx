@@ -8,6 +8,7 @@ import {
   ListItemText,
   Typography,
 } from "@mui/material";
+import { msToDurationString } from "src/utils/msToDurationString";
 import { timeBetween } from "src/utils/timeBetween";
 import { getImageUrl } from "../../utils/getImageUrl";
 import { toTitleCase } from "../../utils/toTitleCase";
@@ -33,13 +34,16 @@ const FridgeItem = ({ ingredient, onAddButtonClick }: FridgeItemProps) => {
         break;
     }
   }
-  let expiresIn: string | undefined;
+  let expirationStr: string | undefined;
 
   if (expirationTime !== -1) {
-    expiresIn = `Expires in ${timeBetween(
-      Date.now(),
-      ingredient.dateAdded + expirationTime
-    )}`;
+    const timeLeft = ingredient.dateAdded + expirationTime - Date.now();
+
+    if (timeLeft > 0) {
+      expirationStr = `Expires in ${msToDurationString(timeLeft)}`;
+    } else {
+      expirationStr = "Might be expired";
+    }
   }
 
   return (
@@ -63,7 +67,7 @@ const FridgeItem = ({ ingredient, onAddButtonClick }: FridgeItemProps) => {
               </Typography>
             </Typography>
           }
-          secondary={expiresIn ?? ""}
+          secondary={expirationStr ?? ""}
         />
       </ListItem>
     </>
