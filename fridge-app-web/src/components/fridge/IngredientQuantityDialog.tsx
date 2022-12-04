@@ -12,6 +12,7 @@ import {
   SelectChangeEvent,
   TextField,
 } from "@mui/material";
+import { setDefaultResultOrder } from "dns/promises";
 import { useEffect, useReducer, useState } from "react";
 import { isFridgeSection } from "src/utils/isFridgeSection";
 import { toTitleCase } from "../../utils/toTitleCase";
@@ -34,6 +35,8 @@ export const IngredientQuantityDialog = ({
   const [unit, setUnit] = useState("");
   const [section, setSection] = useState<FridgeSection>("pantry");
 
+  const [deleting, setDeleting] = useState<boolean>(false);
+
   const handleUnitChange = (event: SelectChangeEvent) => {
     setUnit(event.target.value);
   };
@@ -47,6 +50,13 @@ export const IngredientQuantityDialog = ({
     setUnit(ingredient.unit || ingredient.possibleUnits[0]);
     setSection(ingredient.section);
   }, [open]);
+
+  // A bit hacky but it works
+  useEffect(() => {
+    if (deleting) {
+      onClose({}, "");
+    }
+  }, [deleting]);
 
   const onClose = (
     event: {},
@@ -71,6 +81,7 @@ export const IngredientQuantityDialog = ({
       section,
     };
 
+    setDeleting(false);
     setQuantity(0); // Reset quantity for future dialog opens
     handleClose(newIngredient);
   };
@@ -81,8 +92,7 @@ export const IngredientQuantityDialog = ({
 
   const handleDeleteButtonClick = () => {
     setQuantity(0);
-    console.log("set quantity to 0");
-    onClose({}, "");
+    setDeleting(true);
   };
 
   return (
