@@ -145,8 +145,6 @@ const Fridge = () => {
     setEditOpen(true);
   };
 
-  const IngredientEditDialog = IngredientQuantityDialog;
-
   return (
     <Box overflow="visible">
       <Sidebar />
@@ -170,11 +168,13 @@ const Fridge = () => {
               open={quantityOpen}
               ingredient={selectedIngredient}
               handleClose={handleQuantityClose}
+              variant="create"
             />
-            <IngredientEditDialog
+            <IngredientQuantityDialog
               open={editOpen}
               ingredient={selectedIngredient}
               handleClose={handleEditClose}
+              variant="edit"
             />
           </>
         ) : (

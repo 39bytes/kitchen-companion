@@ -1,16 +1,18 @@
 import { FridgeSection, Ingredient } from "@backend/ingredient";
+import { Delete } from "@mui/icons-material";
 import {
   Box,
   Button,
   Container,
   Dialog,
   DialogTitle,
+  IconButton,
   MenuItem,
   Select,
   SelectChangeEvent,
   TextField,
 } from "@mui/material";
-import { useEffect, useState } from "react";
+import { useEffect, useReducer, useState } from "react";
 import { isFridgeSection } from "src/utils/isFridgeSection";
 import { toTitleCase } from "../../utils/toTitleCase";
 import IngredientImage from "./IngredientImage";
@@ -19,12 +21,14 @@ type IngredientQuantityDialogProps = {
   open: boolean;
   handleClose: (value: Ingredient | undefined) => void;
   ingredient: Ingredient;
+  variant: "create" | "edit";
 };
 
 export const IngredientQuantityDialog = ({
   open,
   ingredient,
   handleClose,
+  variant,
 }: IngredientQuantityDialogProps) => {
   const [quantity, setQuantity] = useState(0);
   const [unit, setUnit] = useState("");
@@ -58,7 +62,8 @@ export const IngredientQuantityDialog = ({
       setSection("pantry");
     }
 
-    // Add a new item to the fridge
+    console.log(quantity);
+    // Create new ingredient object
     const newIngredient = {
       ...ingredient,
       unit,
@@ -74,9 +79,26 @@ export const IngredientQuantityDialog = ({
     onClose({}, "");
   };
 
+  const handleDeleteButtonClick = () => {
+    setQuantity(0);
+    console.log("set quantity to 0");
+    onClose({}, "");
+  };
+
   return (
     <Dialog open={open} onClose={onClose}>
-      <DialogTitle>{toTitleCase(ingredient.name)}</DialogTitle>
+      <DialogTitle>
+        <Box display="flex" justifyContent="space-between">
+          {toTitleCase(ingredient.name)}
+          {variant === "edit" ? (
+            <IconButton onClick={handleDeleteButtonClick}>
+              <Delete />
+            </IconButton>
+          ) : (
+            <></>
+          )}
+        </Box>
+      </DialogTitle>
       <Box
         display="flex"
         flexDirection="column"
@@ -136,7 +158,7 @@ export const IngredientQuantityDialog = ({
           variant="contained"
           sx={{ width: "auto", my: 1 }}
         >
-          Add
+          {variant === "create" ? "Add" : "Edit"}
         </Button>
       </Box>
     </Dialog>
