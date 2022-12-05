@@ -49,11 +49,11 @@ const FridgeItem = ({ ingredient, onAddButtonClick }: FridgeItemProps) => {
   return (
     <>
       <ListItem
-        secondaryAction={
-          <>
-            <AddRemoveButton onClick={() => onAddButtonClick(ingredient)} />
-          </>
-        }
+      // secondaryAction={
+      //   <>
+      //     <AddRemoveButton onClick={() => onAddButtonClick(ingredient)} />
+      //   </>
+      // }
       >
         <ListItemAvatar>
           <Avatar src={getImageUrl(ingredient.image)} />
