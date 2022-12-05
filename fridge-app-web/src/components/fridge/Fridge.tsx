@@ -1,18 +1,29 @@
 import { Ingredient, IngredientSearchResult } from "@backend/ingredient";
 import { UserFridgeDocument } from "@backend/userfridge";
-import { AcUnit, Add, Kitchen } from "@mui/icons-material";
-import { Alert, Box, Fab, IconButton } from "@mui/material";
+import { Add } from "@mui/icons-material";
+import {
+  Box,
+  Fab,
+  FormControl,
+  Grid,
+  InputLabel,
+  MenuItem,
+  Select,
+  SelectChangeEvent,
+} from "@mui/material";
+import Masonry from "@mui/lab/Masonry";
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { getIngredientExpiration } from "src/lib/api";
 import { groupIngredientsBy } from "src/utils/groupIngredientsBy";
 
-import CategoryContainer from "../containers/CategoryContainer";
-import MainContainer from "../containers/MainContainer";
-import Sidebar from "../Sidebar";
+import Layout from "../containers/Layout";
 import FridgeCategory from "./FridgeCategory";
 import { IngredientQuantityDialog } from "./IngredientQuantityDialog";
 import { IngredientSearchDialog } from "./IngredientSearchDialog";
+
+type GroupKey = "section" | "category";
+type SortKey = "name" | "expiration";
 
 const Fridge = () => {
   const [searchOpen, setSearchOpen] = useState(false);
@@ -23,7 +34,8 @@ const Fridge = () => {
   const [fridgeContents, setFridgeContents] = useState<Ingredient[]>();
   const [sortedFridgeContents, setSortedFridgeContents] =
     useState<Map<string, Ingredient[]>>();
-  const [groupKey, setGroupKey] = useState<"section" | "category">("section");
+  const [groupKey, setGroupKey] = useState<GroupKey>("section");
+  const [sortKey, setSortKey] = useState<SortKey>("name");
   const [error, setError] = useState("");
 
   // Load ingredient data
@@ -38,9 +50,10 @@ const Fridge = () => {
   useEffect(() => {
     if (!fridgeContents) return;
     setSortedFridgeContents(
-      groupIngredientsBy(fridgeContents, groupKey, "name")
+      groupIngredientsBy(fridgeContents, groupKey, sortKey)
     );
-  }, [fridgeContents, groupKey]);
+    console.log(fridgeContents);
+  }, [fridgeContents, groupKey, sortKey]);
 
   if (!fridgeContents || !sortedFridgeContents) {
     return <div>Loading...</div>;
@@ -145,55 +158,85 @@ const Fridge = () => {
     setEditOpen(true);
   };
 
+  const handleGroupByChange = (event: SelectChangeEvent) => {
+    setGroupKey(event.target.value as GroupKey);
+  };
+
+  const handleSortByChange = (event: SelectChangeEvent) => {
+    setSortKey(event.target.value as SortKey);
+  };
+
   return (
-    <Box overflow="visible">
-      <Sidebar />
-      <MainContainer>
-        <CategoryContainer>
-          {Array.from(sortedFridgeContents, ([key, contents]) => (
+    <Layout>
+      <Box display="flex" justifyContent="end">
+        <FormControl variant="standard" sx={{ mr: 2 }}>
+          <InputLabel id="group-by-label">Group by</InputLabel>
+          <Select
+            labelId="group-by-label"
+            value={groupKey}
+            label="Group by"
+            onChange={handleGroupByChange}
+            color="primary"
+          >
+            <MenuItem value="section">Section</MenuItem>
+            <MenuItem value="category">Category</MenuItem>
+          </Select>
+        </FormControl>
+        <FormControl variant="standard">
+          <InputLabel id="sort-by-label">Sort by</InputLabel>
+          <Select
+            labelId="sort-by-label"
+            value={sortKey}
+            label="Sort by"
+            onChange={handleSortByChange}
+            color="primary"
+          >
+            <MenuItem value="name">Name</MenuItem>
+            <MenuItem value="expiration">Expiration</MenuItem>
+          </Select>
+        </FormControl>
+      </Box>
+      {/* <Grid container spacing={2} alignItems="start">
+        {Array.from(sortedFridgeContents, ([key, contents]) => (
+          <Grid item lg={4} md={6} sm={12}>
             <FridgeCategory
               key={key}
               name={key}
               items={contents}
-              color="#2196f3"
-              icon={<AcUnit />}
               onAddButtonClick={editButtonClick}
             />
-          ))}
-        </CategoryContainer>
-        <IngredientSearchDialog open={searchOpen} onClose={handleSearchClose} />
-        {selectedIngredient ? (
-          <>
-            <IngredientQuantityDialog
-              open={quantityOpen}
-              ingredient={selectedIngredient}
-              handleClose={handleQuantityClose}
-              variant="create"
-            />
-            <IngredientQuantityDialog
-              open={editOpen}
-              ingredient={selectedIngredient}
-              handleClose={handleEditClose}
-              variant="edit"
-            />
-          </>
-        ) : (
-          <></>
-        )}
-
-        {error && (
-          <Alert variant="filled" severity="error" onClose={() => setError("")}>
-            {error}
-          </Alert>
-        )}
-
-        <IconButton
-          aria-label="sort by section"
-          onClick={handleSortButtonClick}
-        >
-          <Kitchen />
-        </IconButton>
-      </MainContainer>
+          </Grid>
+        ))}
+      </Grid> */}
+      <Masonry columns={{ sm: 1, md: 2, lg: 3 }} spacing={2}>
+        {Array.from(sortedFridgeContents, ([key, contents]) => (
+          <FridgeCategory
+            key={key}
+            name={key}
+            items={contents}
+            onAddButtonClick={editButtonClick}
+          />
+        ))}
+      </Masonry>
+      <IngredientSearchDialog open={searchOpen} onClose={handleSearchClose} />
+      {selectedIngredient ? (
+        <>
+          <IngredientQuantityDialog
+            open={quantityOpen}
+            ingredient={selectedIngredient}
+            handleClose={handleQuantityClose}
+            variant="create"
+          />
+          <IngredientQuantityDialog
+            open={editOpen}
+            ingredient={selectedIngredient}
+            handleClose={handleEditClose}
+            variant="edit"
+          />
+        </>
+      ) : (
+        <></>
+      )}
       <Fab
         color="primary"
         aria-label="add"
@@ -208,7 +251,70 @@ const Fridge = () => {
       >
         <Add />
       </Fab>
-    </Box>
+    </Layout>
+    // <Box overflow="visible">
+    //   <Sidebar />
+    //   <MainContainer>
+    //     <CategoryContainer>
+    //       {Array.from(sortedFridgeContents, ([key, contents]) => (
+    //         <FridgeCategory
+    //           key={key}
+    //           name={key}
+    //           items={contents}
+    //           color="#2196f3"
+    //           icon={<AcUnit />}
+    //           onAddButtonClick={editButtonClick}
+    //         />
+    //       ))}
+    //     </CategoryContainer>
+    //     <IngredientSearchDialog open={searchOpen} onClose={handleSearchClose} />
+    //     {selectedIngredient ? (
+    //       <>
+    //         <IngredientQuantityDialog
+    //           open={quantityOpen}
+    //           ingredient={selectedIngredient}
+    //           handleClose={handleQuantityClose}
+    //           variant="create"
+    //         />
+    //         <IngredientQuantityDialog
+    //           open={editOpen}
+    //           ingredient={selectedIngredient}
+    //           handleClose={handleEditClose}
+    //           variant="edit"
+    //         />
+    //       </>
+    //     ) : (
+    //       <></>
+    //     )}
+
+    //     {error && (
+    //       <Alert variant="filled" severity="error" onClose={() => setError("")}>
+    //         {error}
+    //       </Alert>
+    //     )}
+
+    //     <IconButton
+    //       aria-label="sort by section"
+    //       onClick={handleSortButtonClick}
+    //     >
+    //       <Kitchen />
+    //     </IconButton>
+    //   </MainContainer>
+    //   <Fab
+    //     color="primary"
+    //     aria-label="add"
+    //     sx={{
+    //       position: "fixed",
+    //       bottom: 20,
+    //       right: 20,
+    //       left: "auto",
+    //       top: "auto",
+    //     }}
+    //     onClick={() => setSearchOpen(true)}
+    //   >
+    //     <Add />
+    //   </Fab>
+    // </Box>
   );
 };
 

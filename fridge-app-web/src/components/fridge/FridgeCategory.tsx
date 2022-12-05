@@ -7,25 +7,24 @@ import { toTitleCase } from "src/utils/toTitleCase";
 type FridgeCategoryProps = {
   name: string;
   items: Ingredient[];
-  color: string;
-  icon: ReactNode;
   onAddButtonClick: (ingredient: Ingredient) => void;
 };
 
 const FridgeCategory = ({
   name,
   items,
-  color,
-  icon,
   onAddButtonClick,
 }: FridgeCategoryProps) => {
   return (
-    <Paper
-      elevation={1}
-      sx={{ display: "inline-block", width: 400, mx: 2, my: 1 }}
-    >
+    <Paper elevation={1} sx={{ minWidth: 150 }}>
       <Box>
-        <Typography variant="h5" textAlign="left" mt={2} sx={{ px: 2 }}>
+        <Typography
+          variant="h6"
+          color="primary"
+          textAlign="left"
+          mt={2}
+          sx={{ px: 2 }}
+        >
           {toTitleCase(name)}
         </Typography>
       </Box>
