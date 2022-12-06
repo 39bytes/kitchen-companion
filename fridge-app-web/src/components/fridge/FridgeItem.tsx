@@ -2,12 +2,17 @@ import { Ingredient } from "@backend/ingredient";
 import { AcUnit } from "@mui/icons-material";
 import {
   Avatar,
+  Box,
   IconButton,
   ListItem,
   ListItemAvatar,
   ListItemText,
+  Tooltip,
+  TooltipProps,
   Typography,
+  useTheme,
 } from "@mui/material";
+import { forwardRef } from "react";
 import { msToDurationString } from "src/utils/msToDurationString";
 import { timeBetween } from "src/utils/timeBetween";
 import { getImageUrl } from "../../utils/getImageUrl";
@@ -20,6 +25,8 @@ type FridgeItemProps = {
 };
 
 const FridgeItem = ({ ingredient, onAddButtonClick }: FridgeItemProps) => {
+  const theme = useTheme();
+
   let expirationTime: number = -1;
   if (ingredient.expirationData) {
     switch (ingredient.section) {
@@ -35,10 +42,11 @@ const FridgeItem = ({ ingredient, onAddButtonClick }: FridgeItemProps) => {
     }
   }
   let expirationStr: string | undefined;
+  const timeLeft = ingredient.dateAdded + expirationTime - Date.now();
+  const expirationPercent = (timeLeft / expirationTime) * 100;
+  console.log(ingredient.name, expirationPercent);
 
   if (expirationTime !== -1) {
-    const timeLeft = ingredient.dateAdded + expirationTime - Date.now();
-
     if (timeLeft > 0) {
       expirationStr = `Expires in ${msToDurationString(timeLeft)}`;
     } else {
@@ -49,11 +57,11 @@ const FridgeItem = ({ ingredient, onAddButtonClick }: FridgeItemProps) => {
   return (
     <>
       <ListItem
-      // secondaryAction={
-      //   <>
-      //     <AddRemoveButton onClick={() => onAddButtonClick(ingredient)} />
-      //   </>
-      // }
+        secondaryAction={
+          <>
+            <AddRemoveButton onClick={() => onAddButtonClick(ingredient)} />
+          </>
+        }
       >
         <ListItemAvatar>
           <Avatar src={getImageUrl(ingredient.image)} />
@@ -67,7 +75,33 @@ const FridgeItem = ({ ingredient, onAddButtonClick }: FridgeItemProps) => {
               </Typography>
             </Typography>
           }
-          secondary={expirationStr ?? ""}
+          secondary={
+            <Box>
+              {expirationStr}{" "}
+              {expirationTime !== -1 && (
+                <Tooltip title={expirationStr}>
+                  <Box
+                    sx={{
+                      display: "inline-block",
+                      bgcolor: theme.palette.secondary.light,
+                      width: "40%",
+                      height: 4,
+                      boxSizing: "border-box",
+                      ml: 1,
+                    }}
+                  >
+                    <Box
+                      sx={{
+                        bgcolor: "green",
+                        width: `${expirationPercent}%`,
+                        height: "100%",
+                      }}
+                    ></Box>
+                  </Box>
+                </Tooltip>
+              )}
+            </Box>
+          }
         />
       </ListItem>
     </>
