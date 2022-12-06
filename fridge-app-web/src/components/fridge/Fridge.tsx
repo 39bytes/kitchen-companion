@@ -1,19 +1,25 @@
 import { Ingredient, IngredientSearchResult } from "@backend/ingredient";
 import { UserFridgeDocument } from "@backend/userfridge";
-import { Add } from "@mui/icons-material";
+import { Add, Close } from "@mui/icons-material";
 import {
+  Alert,
   Box,
+  Collapse,
   Fab,
   FormControl,
   Grid,
+  IconButton,
   InputLabel,
   MenuItem,
   Select,
   SelectChangeEvent,
+  styled,
+  useTheme,
 } from "@mui/material";
-import Masonry from "@mui/lab/Masonry";
+import MuiMasonry from "@mui/lab/Masonry";
 import axios from "axios";
 import { useEffect, useState } from "react";
+import { useSnackbar } from "notistack";
 import { getIngredientExpiration } from "src/lib/api";
 import { groupIngredientsBy } from "src/utils/groupIngredientsBy";
 
@@ -24,6 +30,8 @@ import { IngredientSearchDialog } from "./IngredientSearchDialog";
 
 type GroupKey = "section" | "category";
 type SortKey = "name" | "expiration";
+
+const Masonry = styled(MuiMasonry)(({ theme }) => ({}));
 
 const Fridge = () => {
   const [searchOpen, setSearchOpen] = useState(false);
@@ -36,7 +44,9 @@ const Fridge = () => {
     useState<Map<string, Ingredient[]>>();
   const [groupKey, setGroupKey] = useState<GroupKey>("section");
   const [sortKey, setSortKey] = useState<SortKey>("name");
-  const [error, setError] = useState("");
+
+  const snackbar = useSnackbar();
+  const theme = useTheme();
 
   // Load ingredient data
   useEffect(() => {
@@ -72,9 +82,15 @@ const Fridge = () => {
       withCredentials: true,
     });
     if (res.data.error) {
-      setError("An error occured when adding the ingredient.");
+      snackbar.enqueueSnackbar(
+        "An error occured when updating fridge contents.",
+        { variant: "error" }
+      );
     } else {
       setFridgeContents(newFridgeContents);
+      snackbar.enqueueSnackbar("Updated fridge contents successfully.", {
+        variant: "success",
+      });
     }
   };
 
@@ -237,6 +253,7 @@ const Fridge = () => {
       ) : (
         <></>
       )}
+
       <Fab
         color="primary"
         aria-label="add"

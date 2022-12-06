@@ -10,6 +10,7 @@ const theme = createTheme({
         },
         secondary: {
             main: blue[300],
+            light: grey[200]
         },
         background: {
 
@@ -46,6 +47,12 @@ const theme = createTheme({
             lg: 1000,
             xl: 1336
         }
+    },
+    zIndex: {
+        drawer: 1,
+    },
+    transitions: {
+
     }
 })
 

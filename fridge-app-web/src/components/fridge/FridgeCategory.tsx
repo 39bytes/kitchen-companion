@@ -1,8 +1,9 @@
-import { Box, List, Paper, Typography } from "@mui/material";
+import { Box, Collapse, List, Paper, Typography } from "@mui/material";
 import { ReactNode } from "react";
 import { Ingredient } from "@backend/ingredient";
 import FridgeItem from "./FridgeItem";
 import { toTitleCase } from "src/utils/toTitleCase";
+import { TransitionGroup } from "react-transition-group";
 
 type FridgeCategoryProps = {
   name: string;
@@ -30,13 +31,17 @@ const FridgeCategory = ({
       </Box>
 
       <List>
-        {items.map((item) => (
-          <FridgeItem
-            key={`${item.id}-${item.dateAdded}`}
-            ingredient={item}
-            onAddButtonClick={onAddButtonClick}
-          />
-        ))}
+        <TransitionGroup>
+          {items.map((item) => (
+            <Collapse key={`${item.id}-${item.dateAdded}`}>
+              <FridgeItem
+                key={`${item.id}-${item.dateAdded}`}
+                ingredient={item}
+                onAddButtonClick={onAddButtonClick}
+              />
+            </Collapse>
+          ))}
+        </TransitionGroup>
       </List>
     </Paper>
   );
