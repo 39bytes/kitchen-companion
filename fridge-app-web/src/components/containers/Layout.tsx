@@ -30,6 +30,7 @@ import {
 } from "@mui/icons-material";
 import axios from "axios";
 import { useState } from "react";
+import { Link } from "react-router-dom";
 
 type LayoutProps = {
   children: React.ReactNode;
@@ -180,31 +181,36 @@ const Layout = ({ children }: LayoutProps) => {
         </DrawerHeader>
         <List>
           {[
-            ["My Fridge", <Kitchen />],
-            ["Saved Recipes", <Restaurant />],
-            ["Meal Planner", <CalendarMonth />],
-            ["Grocery List", <NoteAlt />],
-          ].map(([text, icon]) => (
-            <ListItem key={text.toString()} disablePadding>
-              <ListItemButton
-                sx={{
-                  minHeight: 48,
-                  justifyContent: open ? "initial" : "center",
-                  px: 2.5,
-                }}
-              >
-                <ListItemIcon
+            ["My Fridge", <Kitchen />, "/"],
+            ["Saved Recipes", <Restaurant />, "/"],
+            ["Meal Planner", <CalendarMonth />, "/"],
+            ["Grocery List", <NoteAlt />, "/grocery"],
+          ].map(([text, icon, to]) => (
+            <Link
+              to={to.toString()}
+              style={{ textDecoration: "none", color: "inherit" }}
+            >
+              <ListItem key={text.toString()} disablePadding>
+                <ListItemButton
                   sx={{
-                    minWidth: 0,
-                    mr: open ? 3 : "auto",
-                    justifyContent: "center",
+                    minHeight: 48,
+                    justifyContent: open ? "initial" : "center",
+                    px: 2.5,
                   }}
                 >
-                  {icon}
-                </ListItemIcon>
-                <ListItemText primary={text} sx={{ opacity: open ? 1 : 0 }} />
-              </ListItemButton>
-            </ListItem>
+                  <ListItemIcon
+                    sx={{
+                      minWidth: 0,
+                      mr: open ? 3 : "auto",
+                      justifyContent: "center",
+                    }}
+                  >
+                    {icon}
+                  </ListItemIcon>
+                  <ListItemText primary={text} sx={{ opacity: open ? 1 : 0 }} />
+                </ListItemButton>
+              </ListItem>
+            </Link>
           ))}
         </List>
       </Drawer>

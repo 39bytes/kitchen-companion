@@ -17,7 +17,7 @@ const FridgeCategory = ({
   onAddButtonClick,
 }: FridgeCategoryProps) => {
   return (
-    <Paper elevation={1} sx={{ minWidth: 150 }}>
+    <Box>
       <Box>
         <Typography
           variant="h6"
@@ -43,7 +43,7 @@ const FridgeCategory = ({
           ))}
         </TransitionGroup>
       </List>
-    </Paper>
+    </Box>
   );
 };
 

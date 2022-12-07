@@ -14,15 +14,15 @@ export const msToDurationString = (duration: number) => {
     duration = duration % WEEK;
 
     const days = Math.floor(duration / DAY);
-    let durationStr = "";
+    // let durationStr = "";
     if (years > 0) {
-        return `${years}y`;
+        return `${years} year` + (years === 1 ? "" : "s");
     }
     if (months > 0) {
-        return `${months}mo`;
+        return `${months} month` + (months === 1 ? "" : "s");
     }
     if (weeks > 0) {
-        return `${weeks}w`;
+        return `${weeks} week` + (weeks === 1 ? "" : "s");
     }
-    return `${days}d`;
+    return `${days} day` + (days === 1 ? "" : "s");
 }
