@@ -11,7 +11,7 @@ const AddRemoveButton = ({ onClick }: AddRemoveButtonProps) => {
     <IconButton
       edge="end"
       aria-label="Add"
-      sx={{ p: 1, ml: 4, borderRadius: 2, transform: "scale(0.65)" }}
+      sx={{ p: 1, ml: 4, borderRadius: 2, transform: "scale(0.7)" }}
       onClick={onClick}
     >
       <Add color="primary" sx={{ mx: 0 }} />

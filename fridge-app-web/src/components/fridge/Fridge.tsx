@@ -8,9 +8,11 @@ import {
   Fab,
   FormControl,
   Grid,
+  Grow,
   IconButton,
   InputLabel,
   MenuItem,
+  Paper,
   Select,
   SelectChangeEvent,
   styled,
@@ -45,6 +47,8 @@ const Fridge = () => {
   const [groupKey, setGroupKey] = useState<GroupKey>("section");
   const [sortKey, setSortKey] = useState<SortKey>("name");
 
+  const [contentsChanged, setContentsChanged] = useState(false);
+
   const snackbar = useSnackbar();
   const theme = useTheme();
 
@@ -62,12 +66,12 @@ const Fridge = () => {
     setSortedFridgeContents(
       groupIngredientsBy(fridgeContents, groupKey, sortKey)
     );
-    console.log(fridgeContents);
+    setContentsChanged(true);
   }, [fridgeContents, groupKey, sortKey]);
 
-  if (!fridgeContents || !sortedFridgeContents) {
-    return <div>Loading...</div>;
-  }
+  // if (!fridgeContents || !sortedFridgeContents) {
+  //   return <div>Loading...</div>;
+  // }
 
   const handleSortButtonClick = () => {
     if (groupKey === "category") {
@@ -224,16 +228,28 @@ const Fridge = () => {
           </Grid>
         ))}
       </Grid> */}
-      <Masonry columns={{ sm: 1, md: 2, lg: 3 }} spacing={2}>
-        {Array.from(sortedFridgeContents, ([key, contents]) => (
-          <FridgeCategory
-            key={key}
-            name={key}
-            items={contents}
-            onAddButtonClick={editButtonClick}
-          />
-        ))}
-      </Masonry>
+      {sortedFridgeContents ? (
+        <Masonry columns={{ sm: 1, md: 2, lg: 3 }} spacing={2}>
+          {Array.from(sortedFridgeContents, ([key, contents]) => (
+            <Grow
+              in={contentsChanged}
+              {...(contentsChanged ? { timeout: 500 } : {})}
+            >
+              <Paper elevation={1} sx={{ minWidth: 150 }}>
+                <FridgeCategory
+                  key={key}
+                  name={key}
+                  items={contents}
+                  onAddButtonClick={editButtonClick}
+                />
+              </Paper>
+            </Grow>
+          ))}
+        </Masonry>
+      ) : (
+        <div>Loading...</div>
+      )}
+
       <IngredientSearchDialog open={searchOpen} onClose={handleSearchClose} />
       {selectedIngredient ? (
         <>
@@ -269,69 +285,6 @@ const Fridge = () => {
         <Add />
       </Fab>
     </Layout>
-    // <Box overflow="visible">
-    //   <Sidebar />
-    //   <MainContainer>
-    //     <CategoryContainer>
-    //       {Array.from(sortedFridgeContents, ([key, contents]) => (
-    //         <FridgeCategory
-    //           key={key}
-    //           name={key}
-    //           items={contents}
-    //           color="#2196f3"
-    //           icon={<AcUnit />}
-    //           onAddButtonClick={editButtonClick}
-    //         />
-    //       ))}
-    //     </CategoryContainer>
-    //     <IngredientSearchDialog open={searchOpen} onClose={handleSearchClose} />
-    //     {selectedIngredient ? (
-    //       <>
-    //         <IngredientQuantityDialog
-    //           open={quantityOpen}
-    //           ingredient={selectedIngredient}
-    //           handleClose={handleQuantityClose}
-    //           variant="create"
-    //         />
-    //         <IngredientQuantityDialog
-    //           open={editOpen}
-    //           ingredient={selectedIngredient}
-    //           handleClose={handleEditClose}
-    //           variant="edit"
-    //         />
-    //       </>
-    //     ) : (
-    //       <></>
-    //     )}
-
-    //     {error && (
-    //       <Alert variant="filled" severity="error" onClose={() => setError("")}>
-    //         {error}
-    //       </Alert>
-    //     )}
-
-    //     <IconButton
-    //       aria-label="sort by section"
-    //       onClick={handleSortButtonClick}
-    //     >
-    //       <Kitchen />
-    //     </IconButton>
-    //   </MainContainer>
-    //   <Fab
-    //     color="primary"
-    //     aria-label="add"
-    //     sx={{
-    //       position: "fixed",
-    //       bottom: 20,
-    //       right: 20,
-    //       left: "auto",
-    //       top: "auto",
-    //     }}
-    //     onClick={() => setSearchOpen(true)}
-    //   >
-    //     <Add />
-    //   </Fab>
-    // </Box>
   );
 };
 
