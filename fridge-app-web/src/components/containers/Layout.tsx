@@ -33,6 +33,7 @@ import { useState } from "react";
 import { Link } from "react-router-dom";
 
 type LayoutProps = {
+  title?: string;
   children: React.ReactNode;
 };
 
@@ -107,7 +108,7 @@ const Drawer = styled(MuiDrawer, {
   }),
 }));
 
-const Layout = ({ children }: LayoutProps) => {
+const Layout = ({ title, children }: LayoutProps) => {
   const theme = useTheme();
   const [open, setOpen] = useState(true);
   const [currentTab, setCurrentTab] = useState("My Fridge");
@@ -145,7 +146,7 @@ const Layout = ({ children }: LayoutProps) => {
           >
             <MenuIcon />
           </IconButton>
-          <Typography variant="h6">Fridge Friend</Typography>
+          <Typography variant="h6">{title ?? "Fridge Friend"}</Typography>
           <Tooltip title="Log out">
             <IconButton
               size="medium"

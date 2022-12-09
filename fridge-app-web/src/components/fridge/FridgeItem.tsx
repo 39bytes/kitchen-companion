@@ -31,7 +31,7 @@ const FillBar = ({ fillPercent, width, color }: FillBarProps) => {
     <Box
       sx={{
         display: "inline-block",
-        bgcolor: theme.palette.secondary.light,
+        bgcolor: theme.palette.grey[200],
         width: width,
         height: 4,
       }}
