@@ -4,6 +4,7 @@ import { Add, Close } from "@mui/icons-material";
 import {
   Alert,
   Box,
+  CircularProgress,
   Collapse,
   Fab,
   FormControl,
@@ -68,10 +69,6 @@ const Fridge = () => {
     );
     setContentsChanged(true);
   }, [fridgeContents, groupKey, sortKey]);
-
-  // if (!fridgeContents || !sortedFridgeContents) {
-  //   return <div>Loading...</div>;
-  // }
 
   const handleSortButtonClick = () => {
     if (groupKey === "category") {
@@ -247,7 +244,9 @@ const Fridge = () => {
           ))}
         </Masonry>
       ) : (
-        <div>Loading...</div>
+        <Box display="flex" justifyContent="center">
+          <CircularProgress color="primary" />
+        </Box>
       )}
 
       <IngredientSearchDialog open={searchOpen} onClose={handleSearchClose} />
