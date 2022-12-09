@@ -184,7 +184,7 @@ const Fridge = () => {
   };
 
   return (
-    <Layout>
+    <Layout title="My Fridge">
       <Box display="flex" justifyContent="end">
         <FormControl variant="standard" sx={{ mr: 2 }}>
           <InputLabel id="group-by-label">Group by</InputLabel>
