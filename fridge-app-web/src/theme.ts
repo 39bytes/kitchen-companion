@@ -10,15 +10,13 @@ const theme = createTheme({
         },
         secondary: {
             main: blue[300],
-            light: grey[200]
         },
         background: {
 
         },
         error: {
             main: red[600]
-        }
-
+        },
     },
     typography: {
         fontFamily: "Roboto",
