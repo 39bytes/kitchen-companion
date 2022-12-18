@@ -1,4 +1,4 @@
-import { FridgeSection, Ingredient } from "@backend/ingredient";
+import { FridgeSection, FridgeIngredient } from "@backend/userfridge";
 import { Delete } from "@mui/icons-material";
 import {
   Box,
@@ -20,8 +20,8 @@ import IngredientImage from "./IngredientImage";
 
 type IngredientQuantityDialogProps = {
   open: boolean;
-  handleClose: (value: Ingredient | undefined) => void;
-  ingredient: Ingredient;
+  handleClose: (value: FridgeIngredient | undefined) => void;
+  ingredient: FridgeIngredient;
   variant: "create" | "edit";
 };
 

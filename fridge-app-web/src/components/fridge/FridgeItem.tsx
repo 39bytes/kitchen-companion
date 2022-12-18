@@ -1,4 +1,4 @@
-import { Ingredient } from "@backend/ingredient";
+import { FridgeIngredient } from "@backend/userfridge";
 import {
   Avatar,
   Box,
@@ -15,8 +15,8 @@ import { toTitleCase } from "../../utils/toTitleCase";
 import AddRemoveButton from "../buttons/AddRemoveButton";
 
 type FridgeItemProps = {
-  ingredient: Ingredient;
-  onAddButtonClick: (ingredient: Ingredient) => void;
+  ingredient: FridgeIngredient;
+  onAddButtonClick: (ingredient: FridgeIngredient) => void;
 };
 
 type FillBarProps = {

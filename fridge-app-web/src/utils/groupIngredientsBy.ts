@@ -1,6 +1,6 @@
-import { Ingredient } from "@backend/ingredient";
+import { FridgeIngredient } from "@backend/userfridge";
 
-const sortIngredientByExpiration = (a: Ingredient, b: Ingredient) => {
+const expirationComparator = (a: FridgeIngredient, b: FridgeIngredient) => {
     if (!a.expirationData) return 1;
     if (!b.expirationData) return -1;
 
@@ -15,20 +15,30 @@ const sortIngredientByExpiration = (a: Ingredient, b: Ingredient) => {
     return 0;
 }
 
-const sortIngredientByName = (a: Ingredient, b: Ingredient) => {
+const nameComparator = (a: Ingredient, b: Ingredient) => {
     if (a.name < b.name) return -1;
     if (a.name > b.name) return 1;
     return 0;
 }
 
+interface Ingredient {
+    id: number;
+    name: string;
+    image: string;
+    category: string;
+    possibleUnits: string[];
+    quantity: number;
+    unit: string;
+}
+
 export const groupIngredientsBy = (
-    contents: Ingredient[],
+    items: FridgeIngredient[],
     key: "section" | "category",
     sortBy: "name" | "expiration" = "name"
 ) => {
-    let sections = new Map<string, Ingredient[]>();
+    let sections = new Map<string, FridgeIngredient[]>();
 
-    for (const ingredient of contents) {
+    for (const ingredient of items) {
         let arr = sections.get(ingredient[key]);
         if (arr) {
             arr.push(ingredient);
@@ -40,10 +50,10 @@ export const groupIngredientsBy = (
     let comparator;
     switch (sortBy) {
         case "name":
-            comparator = sortIngredientByName;
+            comparator = nameComparator;
             break;
         case "expiration":
-            comparator = sortIngredientByExpiration;
+            comparator = expirationComparator;
             break;
     }
 
@@ -53,3 +63,21 @@ export const groupIngredientsBy = (
 
     return sections;
 };
+
+
+export const groupIngredientsByCategory = (ingredients: Ingredient[]) => {
+    let sections = new Map<string, Ingredient[]>();
+
+    for (const ingredient of ingredients) {
+        let arr = sections.get(ingredient.category);
+        if (arr) {
+            arr.push(ingredient);
+        } else {
+            sections.set(ingredient.category, [ingredient]);
+        }
+    }
+
+    for (const arr of sections.values()) {
+        arr.sort(nameComparator);
+    }
+}

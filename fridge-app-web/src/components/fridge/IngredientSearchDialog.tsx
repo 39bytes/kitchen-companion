@@ -2,7 +2,7 @@ import { Search } from "@mui/icons-material";
 import { Box, Dialog, List, Typography } from "@mui/material";
 import TextField from "@mui/material/TextField";
 import { useEffect, useState } from "react";
-import { IngredientSearchResult } from "@backend/ingredient";
+import { IngredientSearchResult } from "@backend/userfridge";
 import { getIngredientSearch } from "../../lib/api";
 import { IngredientSearchResultCard } from "./IngredientSearchResultCard";
 

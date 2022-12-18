@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
 import "./App.css";
-import Fridge from "./components/fridge/Fridge";
+import Fridge from "./pages/Fridge";
 import Main from "./Main";
 import AuthProvider from "./AuthProvider";
 import LoginPage from "./pages/Login";

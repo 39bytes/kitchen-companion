@@ -1,4 +1,4 @@
-import { ExpirationData, Ingredient, IngredientSearchResult } from '../models/ingredient';
+import { ExpirationData, FridgeIngredient, IngredientSearchResult } from '../models/ingredient';
 import fuzzysort from 'fuzzysort';
 import { durationToMs } from '../utils/duration-to-ms';
 import { ProcessIngredientResults } from '../utils/process-ingredient-results';
