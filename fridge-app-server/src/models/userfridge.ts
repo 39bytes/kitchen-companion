@@ -1,5 +1,33 @@
 import mongoose, { Schema, Types } from 'mongoose';
-import { Ingredient } from './ingredient';
+export type FridgeSection = "pantry" | "fridge" | "freezer";
+
+export interface FridgeIngredient {
+    id: number;
+    name: string;
+    image: string;
+    category: string;
+    possibleUnits: string[];
+
+    expirationData?: ExpirationData;
+    quantity: number;
+    unit: string;
+    dateAdded: number;
+    section: FridgeSection;
+}
+
+export interface ExpirationData {
+    pantry: number;
+    fridge: number;
+    freezer: number;
+}
+
+export type IngredientSearchResult = {
+    id: number,
+    name: string,
+    image: string,
+    aisle: string,
+    possibleUnits: string[],
+}
 
 const ExpirationDataSchema = new Schema({
     pantry: Number,
@@ -24,7 +52,7 @@ const IngredientSchema = new Schema({
 
 export interface UserFridgeDocument {
     userId: Types.ObjectId,
-    contents: Ingredient[]
+    contents: FridgeIngredient[]
 }
 
 const UserFridgeSchema = new Schema<UserFridgeDocument>({

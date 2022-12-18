@@ -8,6 +8,7 @@ export interface GroceryItemDocument {
     possibleUnits: string[];
     quantity: number;
     unit: string;
+    purchased: boolean;
 }
 
 const GroceryItemSchema = new Schema<GroceryItemDocument>({
@@ -18,6 +19,7 @@ const GroceryItemSchema = new Schema<GroceryItemDocument>({
     possibleUnits: [String],
     quantity: { type: Number, required: true },
     unit: { type: String, required: true },
+    purchased: { type: Boolean, required: true },
 })
 
 export interface GroceryListDocument {
