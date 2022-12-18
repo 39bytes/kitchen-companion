@@ -1,6 +1,6 @@
 import express from "express";
 import { Error, UpdateWriteOpResult } from "mongoose";
-import { Ingredient } from "../models/ingredient";
+import { FridgeIngredient } from "../models/userfridge";
 import UserFridge, { UserFridgeDocument } from "../models/userfridge";
 
 const router = express.Router();
@@ -32,7 +32,7 @@ router.post("/", async (req, res) => {
         return;
     }
 
-    const contents = req.body as Ingredient[];
+    const contents = req.body as FridgeIngredient[];
     UserFridge.updateOne({ userId: req.user.id },
         { $set: { contents: contents } },
         { runValidators: true },

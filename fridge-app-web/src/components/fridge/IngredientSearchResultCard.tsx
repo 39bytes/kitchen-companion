@@ -1,4 +1,4 @@
-import { IngredientSearchResult } from "@backend/ingredient";
+import { IngredientSearchResult } from "@backend/userfridge";
 import {
   ListItem,
   ListItemAvatar,

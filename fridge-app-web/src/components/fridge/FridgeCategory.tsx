@@ -1,14 +1,14 @@
 import { Box, Collapse, List, Paper, Typography } from "@mui/material";
 import { ReactNode } from "react";
-import { Ingredient } from "@backend/ingredient";
+import { FridgeIngredient } from "@backend/userfridge";
 import FridgeItem from "./FridgeItem";
 import { toTitleCase } from "src/utils/toTitleCase";
 import { TransitionGroup } from "react-transition-group";
 
 type FridgeCategoryProps = {
   name: string;
-  items: Ingredient[];
-  onAddButtonClick: (ingredient: Ingredient) => void;
+  items: FridgeIngredient[];
+  onAddButtonClick: (ingredient: FridgeIngredient) => void;
 };
 
 const FridgeCategory = ({

@@ -1,4 +1,4 @@
-import { Ingredient, IngredientSearchResult } from "@backend/ingredient";
+import { FridgeIngredient, IngredientSearchResult } from "@backend/userfridge";
 import { UserFridgeDocument } from "@backend/userfridge";
 import { Add, Close } from "@mui/icons-material";
 import {
@@ -26,10 +26,10 @@ import { useSnackbar } from "notistack";
 import { getIngredientExpiration } from "src/lib/api";
 import { groupIngredientsBy } from "src/utils/groupIngredientsBy";
 
-import Layout from "../containers/Layout";
-import FridgeCategory from "./FridgeCategory";
-import { IngredientQuantityDialog } from "./IngredientQuantityDialog";
-import { IngredientSearchDialog } from "./IngredientSearchDialog";
+import Layout from "../components/containers/Layout";
+import FridgeCategory from "../components/fridge/FridgeCategory";
+import { IngredientQuantityDialog } from "../components/fridge/IngredientQuantityDialog";
+import { IngredientSearchDialog } from "../components/fridge/IngredientSearchDialog";
 
 type GroupKey = "section" | "category";
 type SortKey = "name" | "expiration";
@@ -41,10 +41,11 @@ const Fridge = () => {
   const [editOpen, setEditOpen] = useState(false);
   const [quantityOpen, setQuantityOpen] = useState(false);
 
-  const [selectedIngredient, setSelectedIngredient] = useState<Ingredient>();
-  const [fridgeContents, setFridgeContents] = useState<Ingredient[]>();
+  const [selectedIngredient, setSelectedIngredient] =
+    useState<FridgeIngredient>();
+  const [fridgeContents, setFridgeContents] = useState<FridgeIngredient[]>();
   const [sortedFridgeContents, setSortedFridgeContents] =
-    useState<Map<string, Ingredient[]>>();
+    useState<Map<string, FridgeIngredient[]>>();
   const [groupKey, setGroupKey] = useState<GroupKey>("section");
   const [sortKey, setSortKey] = useState<SortKey>("name");
 
@@ -78,7 +79,9 @@ const Fridge = () => {
     }
   };
 
-  const updateFridgeContents = async (newFridgeContents: Ingredient[]) => {
+  const updateFridgeContents = async (
+    newFridgeContents: FridgeIngredient[]
+  ) => {
     const res = await axios.post("/fridge", newFridgeContents, {
       withCredentials: true,
     });
@@ -95,7 +98,9 @@ const Fridge = () => {
     }
   };
 
-  const handleQuantityClose = async (ingredient: Ingredient | undefined) => {
+  const handleQuantityClose = async (
+    ingredient: FridgeIngredient | undefined
+  ) => {
     if (!fridgeContents || !ingredient) {
       setQuantityOpen(false);
       return;
@@ -121,7 +126,7 @@ const Fridge = () => {
   };
 
   // User editing an existing ingredient
-  const handleEditClose = async (ingredient: Ingredient | undefined) => {
+  const handleEditClose = async (ingredient: FridgeIngredient | undefined) => {
     if (!fridgeContents || !ingredient) {
       setEditOpen(false);
       return;
@@ -157,7 +162,7 @@ const Fridge = () => {
       return;
     }
 
-    let ingredientObj: Ingredient = {
+    let ingredientObj: FridgeIngredient = {
       category: result.aisle,
       dateAdded: Date.now(),
       unit: "",
@@ -170,7 +175,7 @@ const Fridge = () => {
     setQuantityOpen(true);
   };
 
-  const editButtonClick = (ingredient: Ingredient) => {
+  const editButtonClick = (ingredient: FridgeIngredient) => {
     setSelectedIngredient(ingredient);
     setEditOpen(true);
   };
