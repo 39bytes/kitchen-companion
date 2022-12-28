@@ -2,6 +2,7 @@ import { Box, Button, Paper, Typography } from "@mui/material";
 import axios from "axios";
 import { useFormik } from "formik";
 import { Link } from "react-router-dom";
+import AuthLayout from "src/components/containers/AuthLayout";
 import Layout from "src/components/containers/Layout";
 import { FormTextField } from "src/components/FormTextField";
 
@@ -23,16 +24,8 @@ const Login = () => {
     validate: () => {},
   });
 
-  const getLoggedIn = () => {
-    fetch("/auth/user").then((res) => {
-      res.json().then((data) => {
-        console.log(data);
-      });
-    });
-  };
-
   return (
-    <Layout>
+    <AuthLayout>
       <Paper sx={{ width: 400 }}>
         <Typography variant="h4">Sign in</Typography>
         <Box component="form" p={2} onSubmit={formik.handleSubmit}>
@@ -70,7 +63,7 @@ const Login = () => {
           <Link to="/register">Don't have an account? Register</Link>
         </Box>
       </Paper>
-    </Layout>
+    </AuthLayout>
   );
 };
 
