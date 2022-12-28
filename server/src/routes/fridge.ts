@@ -115,4 +115,30 @@ router.post("/updateIngredient", async (req, res) => {
   );
 });
 
+router.post("/deleteIngredient", async (req, res) => {
+  if (!req.user) {
+    res.sendStatus(401);
+    return;
+  }
+
+  // Just replace the ingredient instead of updating fields
+  const { id } = req.body as { id: string };
+
+  UserFridge.updateOne(
+    { userId: req.user.id },
+    {
+      $pull: {
+        contents: { _id: id },
+      },
+    },
+    (err: NativeError) => {
+      if (err) {
+        res.status(500).send(err);
+      } else {
+        res.send(id);
+      }
+    }
+  );
+});
+
 export default router;
