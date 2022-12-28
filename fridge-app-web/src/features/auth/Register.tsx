@@ -2,6 +2,7 @@ import { Box, Button, Paper, Typography } from "@mui/material";
 import axios from "axios";
 import { useFormik } from "formik";
 import { Link } from "react-router-dom";
+import AuthLayout from "src/components/containers/AuthLayout";
 import Layout from "src/components/containers/Layout";
 import { FormTextField } from "src/components/FormTextField";
 
@@ -24,7 +25,7 @@ const Register = () => {
   });
 
   return (
-    <Layout>
+    <AuthLayout>
       <Paper sx={{ width: 400 }}>
         <Typography variant="h4">Register</Typography>
         <Box component="form" p={2} onSubmit={formik.handleSubmit}>
@@ -62,7 +63,7 @@ const Register = () => {
           <Link to="/login">Login instead</Link>
         </Box>
       </Paper>
-    </Layout>
+    </AuthLayout>
   );
 };
 
