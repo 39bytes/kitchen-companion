@@ -82,6 +82,7 @@ const Fridge = () => {
   };
 
   const handleEditClose = () => {
+    setIngredientToEdit("");
     setEditOpen(false);
   };
 
