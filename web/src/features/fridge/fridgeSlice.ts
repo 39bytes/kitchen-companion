@@ -13,10 +13,10 @@ import {
 import axios from "axios";
 import { RootState } from "src/store";
 
+// Doesn't work
 const expirationComparator = (a: FridgeIngredient, b: FridgeIngredient) => {
   if (!a.expirationData) return 1;
   if (!b.expirationData) return -1;
-  console.log("a");
 
   const aTimeLeft = a.expirationData[a.section] - a.dateAdded;
   if (aTimeLeft < 0) return -1;
@@ -31,7 +31,7 @@ const expirationComparator = (a: FridgeIngredient, b: FridgeIngredient) => {
 
 const fridgeContentsAdapter = createEntityAdapter<FridgeIngredient>({
   selectId: (ingredient) => ingredient._id.toString(),
-  sortComparer: expirationComparator,
+  sortComparer: (a, b) => a.name.localeCompare(b.name),
 });
 
 interface FridgeState {
@@ -76,8 +76,24 @@ export const addNewIngredient = createAsyncThunk(
 export const updateIngredient = createAsyncThunk(
   "fridge/ingredientUpdated",
   async (data: UpdateIngredientPayload) => {
-    const response = await axios.post("/fridge/updateIngredient", data);
+    const response = await axios.post("/fridge/updateIngredient", data, {
+      withCredentials: true,
+    });
     return response.data as UpdateIngredientPayload;
+  }
+);
+
+export const deleteIngredient = createAsyncThunk(
+  "fridge/ingredientDeleted",
+  async (ingredientId: string) => {
+    const response = await axios.post(
+      "fridge/deleteIngredient",
+      { id: ingredientId },
+      {
+        withCredentials: true,
+      }
+    );
+    return response.data as string;
   }
 );
 
@@ -109,7 +125,8 @@ export const fridgeSlice = createSlice({
             section,
           },
         });
-      });
+      })
+      .addCase(deleteIngredient.fulfilled, fridgeContentsAdapter.removeOne);
   },
 });
 
