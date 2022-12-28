@@ -1,4 +1,4 @@
-import { ExpirationData, IngredientSearchResult } from "@backend/userfridge"
+import { ExpirationData, Ingredient } from "@backend/userfridge"
 import axios from 'axios';
 
 const getFromAPI = async (endpoint: string, params: object) => {
@@ -7,7 +7,7 @@ const getFromAPI = async (endpoint: string, params: object) => {
 }
 
 export const getIngredientSearch = async (query: string, number: number) => {
-    return await getFromAPI("ingredient/search", { query, number }) as IngredientSearchResult[];
+    return await getFromAPI("ingredient/search", { query, number }) as Ingredient[];
 }
 
 

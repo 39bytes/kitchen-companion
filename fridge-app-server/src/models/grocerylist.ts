@@ -1,21 +1,17 @@
 import mongoose, { Schema, Types } from 'mongoose';
+import { Ingredient } from './userfridge';
 
-export interface GroceryItemDocument {
-    id: number;
-    name: string;
-    image: string;
-    category: string;
-    possibleUnits: string[];
+export interface GroceryIngredient extends Ingredient {
     quantity: number;
     unit: string;
     purchased: boolean;
 }
 
-const GroceryItemSchema = new Schema<GroceryItemDocument>({
+const GroceryItemSchema = new Schema<GroceryIngredient>({
     id: { type: Number, required: true },
     name: { type: String, required: true },
     image: { type: String, required: true },
-    category: { type: String, required: true },
+    aisle: { type: String, required: true },
     possibleUnits: [String],
     quantity: { type: Number, required: true },
     unit: { type: String, required: true },
@@ -24,7 +20,7 @@ const GroceryItemSchema = new Schema<GroceryItemDocument>({
 
 export interface GroceryListDocument {
     userId: Types.ObjectId,
-    items: GroceryItemDocument[];
+    items: GroceryIngredient[];
 }
 
 const GroceryListSchema = new Schema<GroceryListDocument>({

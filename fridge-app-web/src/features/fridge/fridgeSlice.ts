@@ -1,0 +1,121 @@
+import {
+  FridgeIngredient,
+  FridgeSection,
+  Ingredient,
+  UserFridgeDocument,
+  UpdateIngredientPayload,
+} from "@backend/userfridge";
+import {
+  createAsyncThunk,
+  createEntityAdapter,
+  createSlice,
+} from "@reduxjs/toolkit";
+import axios from "axios";
+import { RootState } from "src/store";
+
+const expirationComparator = (a: FridgeIngredient, b: FridgeIngredient) => {
+  if (!a.expirationData) return 1;
+  if (!b.expirationData) return -1;
+  console.log("a");
+
+  const aTimeLeft = a.expirationData[a.section] - a.dateAdded;
+  if (aTimeLeft < 0) return -1;
+
+  const bTimeLeft = b.expirationData[b.section] - b.dateAdded;
+  if (bTimeLeft < 0) return 1;
+
+  if (aTimeLeft < bTimeLeft) return -1;
+  if (aTimeLeft > bTimeLeft) return 1;
+  return 0;
+};
+
+const fridgeContentsAdapter = createEntityAdapter<FridgeIngredient>({
+  selectId: (ingredient) => ingredient._id.toString(),
+  sortComparer: expirationComparator,
+});
+
+interface FridgeState {
+  status: "idle" | "loading" | "success" | "failed";
+  error: string | null;
+}
+
+const initialState = fridgeContentsAdapter.getInitialState<FridgeState>({
+  status: "idle",
+  error: null,
+});
+
+export const fetchContents = createAsyncThunk(
+  "fridge/fetchContents",
+  async () => {
+    const response = await axios.get("/fridge", { withCredentials: true });
+    const userFridge = response.data as UserFridgeDocument;
+    return userFridge.contents;
+  }
+);
+
+type NewIngredientPayload = {
+  ingredientData: Ingredient;
+  quantity: number;
+  unit: string;
+  section: FridgeSection;
+};
+
+export const addNewIngredient = createAsyncThunk(
+  "fridge/ingredientAdded",
+  async (data: NewIngredientPayload) => {
+    const { ingredientData, quantity, unit, section } = data;
+    const response = await axios.post(
+      "/fridge/addIngredient",
+      { ...ingredientData, quantity, unit, section },
+      { withCredentials: true }
+    );
+    return response.data as FridgeIngredient;
+  }
+);
+
+export const updateIngredient = createAsyncThunk(
+  "fridge/ingredientUpdated",
+  async (data: UpdateIngredientPayload) => {
+    const response = await axios.post("/fridge/updateIngredient", data);
+    return response.data as UpdateIngredientPayload;
+  }
+);
+
+export const fridgeSlice = createSlice({
+  name: "fridge",
+  initialState,
+  reducers: {},
+  extraReducers: (builder) => {
+    builder
+      .addCase(fetchContents.pending, (state, action) => {
+        state.status = "loading";
+      })
+      .addCase(fetchContents.fulfilled, (state, action) => {
+        state.status = "success";
+        fridgeContentsAdapter.setMany(state, action.payload);
+      })
+      .addCase(fetchContents.rejected, (state, action) => {
+        state.status = "failed";
+        state.error = "Failed to fetch fridge contents.";
+      })
+      .addCase(addNewIngredient.fulfilled, fridgeContentsAdapter.addOne)
+      .addCase(updateIngredient.fulfilled, (state, action) => {
+        const { ingredientId, quantity, unit, section } = action.payload;
+        fridgeContentsAdapter.updateOne(state, {
+          id: ingredientId,
+          changes: {
+            quantity,
+            unit,
+            section,
+          },
+        });
+      });
+  },
+});
+
+export default fridgeSlice.reducer;
+
+export const {
+  selectAll: selectAllFridgeIngredients,
+  selectById: selectFridgeIngredientById,
+} = fridgeContentsAdapter.getSelectors<RootState>((state) => state.fridge);

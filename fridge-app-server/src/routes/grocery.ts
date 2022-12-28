@@ -1,6 +1,6 @@
 import express from 'express';
 import { UpdateWriteOpResult } from 'mongoose';
-import GroceryList, { GroceryItemDocument } from '../models/grocerylist';
+import GroceryList, { GroceryIngredient } from '../models/grocerylist';
 import { GroceryListDocument } from '../models/grocerylist';
 
 const router = express.Router();
@@ -32,7 +32,7 @@ router.post("/", async (req, res) => {
         return;
     }
 
-    const contents = req.body as GroceryItemDocument[];
+    const contents = req.body as GroceryIngredient[];
     GroceryList.updateOne({ userId: req.user.id },
         { $set: { contents: contents } },
         { runValidators: true },
