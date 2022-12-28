@@ -9,6 +9,7 @@ import {
   Container,
   Dialog,
   DialogTitle,
+  IconButton,
   SelectChangeEvent,
   TextField,
 } from "@mui/material";
@@ -19,11 +20,13 @@ import IngredientImage from "./IngredientImage";
 import { toTitleCase } from "../../utils/toTitleCase";
 import {
   addNewIngredient,
+  deleteIngredient,
   selectFridgeIngredientById,
   updateIngredient,
 } from "./fridgeSlice";
 import { SectionSelect } from "./SectionSelect";
 import { UnitSelect } from "./UnitSelect";
+import { Delete } from "@mui/icons-material";
 
 type IngredientEditDialogProps = {
   open: boolean;
@@ -45,6 +48,16 @@ export const IngredientEditDialog = ({
   )!;
   const dispatch = useAppDispatch();
 
+  useEffect(() => {
+    setUnit(ingredient.unit);
+    setQuantity(ingredient.quantity);
+    setSection(ingredient.section);
+  }, [open]);
+
+  if (!ingredient) {
+    return <></>;
+  }
+
   const handleUnitChange = (event: SelectChangeEvent) => {
     setUnit(event.target.value);
   };
@@ -52,19 +65,6 @@ export const IngredientEditDialog = ({
   const handleSectionChange = (event: SelectChangeEvent) => {
     setSection(event.target.value as FridgeSection);
   };
-
-  useEffect(() => {
-    setUnit(ingredient.unit);
-    setQuantity(ingredient.quantity);
-    setSection(ingredient.section);
-  }, [open]);
-
-  // A bit hacky but it works
-  // useEffect(() => {
-  //   if (deleting) {
-  //     onClose({}, "");
-  //   }
-  // }, [deleting]);
 
   const canSave = quantity > 0;
 
@@ -90,6 +90,16 @@ export const IngredientEditDialog = ({
       } finally {
         handleClose();
       }
+    }
+  };
+
+  const handleDeleteButtonClick = async () => {
+    try {
+      await dispatch(deleteIngredient(ingredientId)).unwrap();
+    } catch (err) {
+      console.error(err);
+    } finally {
+      handleClose();
     }
   };
 
@@ -120,11 +130,18 @@ export const IngredientEditDialog = ({
     </Button>
   );
 
+  const DeleteButton = () => (
+    <IconButton onClick={handleDeleteButtonClick}>
+      <Delete />
+    </IconButton>
+  );
+
   return (
     <Dialog open={open} onClose={onClose}>
       <DialogTitle>
         <Box display="flex" justifyContent="space-between">
           {toTitleCase(ingredient.name)}
+          <DeleteButton />
         </Box>
       </DialogTitle>
       <Box
