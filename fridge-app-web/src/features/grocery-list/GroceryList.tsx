@@ -1,5 +1,5 @@
 import { Kitchen } from "@mui/icons-material";
-import { GroceryItemDocument, GroceryListDocument } from "@backend/grocerylist";
+import { GroceryIngredient, GroceryListDocument } from "@backend/grocerylist";
 import {
   Box,
   Button,
@@ -18,7 +18,7 @@ import Layout from "src/components/containers/Layout";
 import axios from "axios";
 
 type GroceryListItemProps = {
-  item?: GroceryItemDocument;
+  item?: GroceryIngredient;
 };
 
 const GroceryListItem = ({ item }: GroceryListItemProps) => {
@@ -52,9 +52,9 @@ const GroceryListItem = ({ item }: GroceryListItemProps) => {
 // How can I refactor it to reduce repetition?
 const GroceryList = () => {
   const [groceryListItems, setGroceryListItems] =
-    useState<GroceryItemDocument[]>();
+    useState<GroceryIngredient[]>();
   const [groupedGroceryList, setGroupedGroceryList] =
-    useState<Map<string, GroceryItemDocument[]>>();
+    useState<Map<string, GroceryIngredient[]>>();
 
   useEffect(() => {
     axios.get("/fridge", { withCredentials: true }).then((res) => {

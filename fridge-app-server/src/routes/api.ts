@@ -1,87 +1,62 @@
-import { ExpirationData, FridgeIngredient, IngredientSearchResult } from '../models/ingredient';
-import fuzzysort from 'fuzzysort';
-import { durationToMs } from '../utils/duration-to-ms';
-import { ProcessIngredientResults } from '../utils/process-ingredient-results';
-import express, { application } from 'express';
-import axios from 'axios';
+import {
+  ExpirationData,
+  FridgeIngredient,
+  Ingredient,
+} from "../models/userfridge";
+import fuzzysort from "fuzzysort";
+import { durationToMs } from "../utils/duration-to-ms";
+import { ProcessIngredientResults } from "../utils/process-ingredient-results";
+import express, { application } from "express";
+import axios from "axios";
+import { getExpirationOrDefault } from "../expiration";
 
 const router = express.Router();
 
 type IngredientSearchResponse = {
-    results: IngredientSearchResult[],
-    offset: number,
-    number: number,
-    totalResults: number
-}
+  results: Ingredient[];
+  offset: number;
+  number: number;
+  totalResults: number;
+};
 
 /**
  * Ingredient search, returning 10 entries sorted by relevance.
  * @route GET /api/ingredient/search
  */
-router.get('/ingredient/search', async (req, res) => {
-    const query = req.query.query as string;
-    const number = req.query.number ?? "10"
+router.get("/ingredient/search", async (req, res) => {
+  const query = req.query.query as string;
+  const number = req.query.number ?? "10";
 
-    const resp = await axios.get(`https://api.spoonacular.com/food/ingredients/search`, {
-        headers: {
-            "x-api-key": process.env.SPOONACULAR_API_KEY,
-            "Access-Control-Allow-Origin": "*"
-        },
-        params: {
-            query,
-            number,
-            metaInformation: true
-        }
-    });
+  const resp = await axios.get(
+    `https://api.spoonacular.com/food/ingredients/search`,
+    {
+      headers: {
+        "x-api-key": process.env.SPOONACULAR_API_KEY,
+        "Access-Control-Allow-Origin": "*",
+      },
+      params: {
+        query,
+        number,
+        metaInformation: true,
+      },
+    }
+  );
 
-    // Sort results
-    const data = await resp.data as IngredientSearchResponse;
+  // Sort results
+  const data = (await resp.data) as IngredientSearchResponse;
 
-    const processedResults = ProcessIngredientResults(query, data.results);
-    res.json(processedResults);
-})
+  const processedResults = ProcessIngredientResults(query, data.results);
+  res.json(processedResults);
+});
 
 /**
  * Ingredient expiration data (pantry, fridge, freezer).
  * @route GET /api/ingredient/expiration
  */
-router.get('/ingredient/expiration', (req, res) => {
-    const query = req.query.query as string;
+router.get("/ingredient/expiration", (req, res) => {
+  const query = req.query.query as string;
 
-    // Get all food names from expiration database
-    const names = Object.keys(expirations);
-    // Fuzzy string match
-    const scores = fuzzysort.go(query, names);
-    const foodName = scores[0] ? scores[0].target : "";
-
-    // Get matching expiration data
-    if (foodName in expirations) {
-        res.json(expirations[foodName]);
-    }
-    else {
-        res.json({ pantry: -1, fridge: -1, freezer: -1 });
-    }
-})
-
-// Times in milliseconds
-const expirations: { [name: string]: ExpirationData } = {
-    "banana": {
-        pantry: durationToMs("3d"),
-        fridge: durationToMs("2w"),
-        freezer: durationToMs("6m"),
-    },
-    "apple": {
-        pantry: durationToMs("5d"),
-        fridge: durationToMs("3w"),
-        freezer: durationToMs("6m"),
-    },
-    "chicken breast": {
-        pantry: durationToMs("2d"),
-        fridge: durationToMs("3w"),
-        freezer: durationToMs("6m"),
-    }
-}
+  res.json(getExpirationOrDefault(query));
+});
 
 export default router;
-
-

@@ -8,7 +8,7 @@ import { TransitionGroup } from "react-transition-group";
 type FridgeCategoryProps = {
   name: string;
   items: FridgeIngredient[];
-  onAddButtonClick: (ingredient: FridgeIngredient) => void;
+  onAddButtonClick: (ingredientId: string) => void;
 };
 
 const FridgeCategory = ({

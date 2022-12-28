@@ -1,4 +1,4 @@
-import { IngredientSearchResult } from "@backend/userfridge";
+import { Ingredient } from "@backend/userfridge";
 import {
   ListItem,
   ListItemAvatar,
@@ -10,8 +10,8 @@ import { toTitleCase } from "../../utils/toTitleCase";
 import IngredientImage from "./IngredientImage";
 
 type IngredientSearchResultCardProps = {
-  ingredient: IngredientSearchResult;
-  handleClick: (value: IngredientSearchResult) => void;
+  ingredient: Ingredient;
+  handleClick: (value: Ingredient) => void;
 };
 
 export const IngredientSearchResultCard = ({
