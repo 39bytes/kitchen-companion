@@ -122,7 +122,13 @@ const Layout = ({ title, children }: LayoutProps) => {
   };
 
   const logout = () => {
-    axios.post("/auth/logout").then((data) => (window.location.href = "/"));
+    axios
+      .post(
+        process.env.REACT_APP_BACKEND_URL + "/auth/logout",
+        {},
+        { withCredentials: true }
+      )
+      .then((data) => (window.location.href = "/"));
   };
 
   const SidebarTabs = () => (

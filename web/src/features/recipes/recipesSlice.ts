@@ -24,7 +24,10 @@ const initialState = recipesAdapter.getInitialState<RecipesState>({
 export const fetchSavedRecipes = createAsyncThunk(
   "recipes/fetchRecipes",
   async () => {
-    const recipes = await axios.get("/recipes");
+    const recipes = await axios.get(
+      process.env.REACT_APP_BACKEND_URL + "/recipes",
+      { withCredentials: true }
+    );
     return recipes.data as Recipe[];
   }
 );
@@ -32,7 +35,11 @@ export const fetchSavedRecipes = createAsyncThunk(
 export const saveRecipe = createAsyncThunk(
   "recipes/recipeSaved",
   async (recipe: Recipe) => {
-    const response = await axios.post("/recipes/addRecipe", recipe);
+    const response = await axios.post(
+      process.env.REACT_APP_BACKEND_URL + "/recipes/addRecipe",
+      recipe,
+      { withCredentials: true }
+    );
     return response.data as Recipe;
   }
 );
@@ -40,9 +47,13 @@ export const saveRecipe = createAsyncThunk(
 export const deleteRecipe = createAsyncThunk(
   "recipes/recipeDeleted",
   async (recipeId: string) => {
-    const response = await axios.post("/recipes/deleteRecipe", {
-      id: recipeId,
-    });
+    const response = await axios.post(
+      process.env.REACT_APP_BACKEND_URL + "/recipes/deleteRecipe",
+      {
+        id: recipeId,
+      },
+      { withCredentials: true }
+    );
 
     // The response is just the id of the deleted recipe
     return response.data as string;
