@@ -129,10 +129,7 @@ export const IngredientAddDialog = ({
             defaultValue={ingredient.possibleUnits[0]}
           />
           <Box display="flex" marginTop={1} justifyContent="center">
-            <SectionSelect
-              defaultValue={section}
-              onChange={handleSectionChange}
-            />
+            <SectionSelect value={section} onChange={handleSectionChange} />
           </Box>
           <AddButton />
         </Container>
