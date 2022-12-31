@@ -1,4 +1,4 @@
-import { FridgeSection } from "@backend/userfridge";
+import { FridgeSection } from "../../types/userfridge";
 import { MenuItem, Select, SelectChangeEvent } from "@mui/material";
 import { SelectProps } from "@mui/material/Select";
 

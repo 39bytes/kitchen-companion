@@ -1,27 +1,22 @@
-import recipeModel, { Recipe } from "@backend/recipe";
+import { Refresh } from "@mui/icons-material";
 import {
   Box,
   Button,
   Fade,
   FormControl,
-  InputLabel,
-  MenuItem,
-  Select,
   SelectChangeEvent,
-  TextField,
 } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import { CenteredSpinner } from "src/components/CenteredSpinner";
 import Layout from "src/components/containers/Layout";
 import { useAppDispatch, useAppSelector } from "src/hooks";
+import { RecipeCard } from "../recipes/RecipeCard";
 import { RecipeInfoDialog } from "../recipes/RecipeInfoDialog";
 import { selectRecipeInfoById } from "./recipeInfoSlice";
-import { RecipeCard } from "../recipes/RecipeCard";
 import {
   fetchRecommendations,
   selectAllRecipeRecommendations,
 } from "./recommendationsSlice";
-import { Refresh } from "@mui/icons-material";
 
 const RecipeRecommendations = () => {
   const [selectedRecipeId, setSelectedRecipeId] = useState<number>();

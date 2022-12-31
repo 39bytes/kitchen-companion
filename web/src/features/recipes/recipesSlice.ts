@@ -1,4 +1,4 @@
-import { Recipe } from "@backend/recipe";
+import { Recipe } from "../../types/recipe";
 import {
   createAsyncThunk,
   createEntityAdapter,

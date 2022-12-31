@@ -1,5 +1,5 @@
-import { Recipe, RecipeByIngredientResult } from "@backend/recipe";
-import { ExpirationData, Ingredient } from "@backend/userfridge";
+import { Recipe, RecipeByIngredientResult } from "../types/recipe";
+import { ExpirationData, Ingredient } from "../types/userfridge";
 import axios from "axios";
 
 const getFromAPI = async (endpoint: string, params: object) => {

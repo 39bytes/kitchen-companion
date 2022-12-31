@@ -3,7 +3,7 @@
     "target": "es6",
     "lib": ["dom", "dom.iterable", "esnext"],
     "baseUrl": "./",
-    "paths": { "@backend/*": ["../server/src/models/*"] },
+    //"paths": { "@backend/*": ["../server/src/models/*"] },
     "allowJs": true,
     "skipLibCheck": true,
     "esModuleInterop": true,

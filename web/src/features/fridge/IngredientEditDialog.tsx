@@ -2,7 +2,7 @@ import {
   FridgeIngredient,
   FridgeSection,
   Ingredient,
-} from "@backend/userfridge";
+} from "../../types/userfridge";
 import {
   Box,
   Button,

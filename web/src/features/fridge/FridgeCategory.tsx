@@ -1,6 +1,6 @@
 import { Box, Collapse, List, Paper, Typography } from "@mui/material";
 import { ReactNode } from "react";
-import { FridgeIngredient } from "@backend/userfridge";
+import { FridgeIngredient } from "../../types/userfridge";
 import FridgeItem from "./FridgeItem";
 import { toTitleCase } from "src/utils/toTitleCase";
 import { TransitionGroup } from "react-transition-group";
