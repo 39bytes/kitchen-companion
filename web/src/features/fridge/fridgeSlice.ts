@@ -13,22 +13,6 @@ import {
 import axios from "axios";
 import { RootState } from "src/store";
 
-// Doesn't work
-const expirationComparator = (a: FridgeIngredient, b: FridgeIngredient) => {
-  if (!a.expirationData) return 1;
-  if (!b.expirationData) return -1;
-
-  const aTimeLeft = a.expirationData[a.section] - a.dateAdded;
-  if (aTimeLeft < 0) return -1;
-
-  const bTimeLeft = b.expirationData[b.section] - b.dateAdded;
-  if (bTimeLeft < 0) return 1;
-
-  if (aTimeLeft < bTimeLeft) return -1;
-  if (aTimeLeft > bTimeLeft) return 1;
-  return 0;
-};
-
 const fridgeContentsAdapter = createEntityAdapter<FridgeIngredient>({
   selectId: (ingredient) => ingredient._id.toString(),
   sortComparer: (a, b) => a.name.localeCompare(b.name),
