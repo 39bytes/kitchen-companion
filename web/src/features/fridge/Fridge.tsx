@@ -29,6 +29,7 @@ import { IngredientAddDialog } from "./IngredientAddDialog";
 import { IngredientEditDialog } from "./IngredientEditDialog";
 import { useSnackbar } from "notistack";
 import Fade from "@mui/material/Fade";
+import { CenteredSpinner } from "src/components/CenteredSpinner";
 
 const Masonry = styled(MuiMasonry)(({ theme }) => ({}));
 type GroupKey = "section" | "category";
@@ -91,14 +92,14 @@ const Fridge = () => {
   };
 
   const GroupBySelect = () => (
-    <FormControl variant="standard" sx={{ mr: 2 }}>
+    <FormControl variant="standard">
       <InputLabel id="group-by-label">Group by</InputLabel>
       <Select
         labelId="group-by-label"
         value={groupKey}
         label="Group by"
         onChange={handleGroupByChange}
-        color="primary"
+        size="small"
       >
         <MenuItem value="section">Section</MenuItem>
         <MenuItem value="category">Category</MenuItem>
@@ -126,16 +127,12 @@ const Fridge = () => {
   let content;
 
   if (fridgeStatus === "loading") {
-    content = (
-      <Box display="flex" justifyContent="center">
-        <CircularProgress color="primary" />
-      </Box>
-    );
+    content = <CenteredSpinner />;
   } else if (fridgeStatus === "failed") {
     content = <div>{error}</div>;
   } else if (fridgeStatus === "success") {
     content = (
-      <Masonry columns={{ sm: 1, md: 2, lg: 3 }} spacing={2}>
+      <Masonry sx={{ mx: 0 }} columns={{ sm: 1, md: 2, lg: 3 }} spacing={2}>
         {Array.from(groupedFridgeContents, ([key, contents]) => (
           <Paper key={key} elevation={1} sx={{ minWidth: 150 }}>
             <FridgeCategory
