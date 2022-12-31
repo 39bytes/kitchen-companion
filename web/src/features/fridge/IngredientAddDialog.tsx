@@ -45,6 +45,7 @@ export const IngredientAddDialog = ({
   useEffect(() => {
     setQuantity(0);
     setUnit(ingredient.possibleUnits[0]);
+    setSection("pantry");
   }, [open, ingredient.possibleUnits]);
 
   const canSave = quantity > 0;
