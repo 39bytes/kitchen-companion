@@ -77,7 +77,10 @@ router.get("/recipes/searchByIngredient", async (req, res) => {
   const data = await getFromSpoonacular<RecipeByIngredientResult[]>(
     "recipes/findByIngredients",
     {
-      ingredients,
+      query: "",
+      includeIngredients: ingredients,
+      instructionsRequired: true,
+      sort: "popularity",
       number,
     }
   );

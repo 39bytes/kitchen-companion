@@ -1,4 +1,4 @@
-import { Box, Fade } from "@mui/material";
+import { Box, Fade, FormControl, InputLabel, Select } from "@mui/material";
 import { useEffect, useState } from "react";
 import { CenteredSpinner } from "src/components/CenteredSpinner";
 import Layout from "src/components/containers/Layout";
@@ -61,12 +61,7 @@ export const Recipes = () => {
   return (
     <Layout title="Saved Recipes">
       <Fade in={true} timeout={500}>
-        <Box>
-          {/* <Typography variant="h6">
-            Recommendations based on what's in your fridge
-          </Typography> */}
-          {recipesList}
-        </Box>
+        <Box>{recipesList}</Box>
       </Fade>
       {recipeInfoDialog}
     </Layout>
