@@ -13,8 +13,7 @@ import ApiRoute from "./routes/api";
 import AuthRoute from "./routes/auth";
 import FridgeRoute from "./routes/fridge";
 import RecipesRoute from "./routes/recipes";
-
-import * as passportConfig from "./passport-config";
+import MongoStore from "connect-mongo";
 
 declare global {
   namespace Express {
@@ -53,6 +52,7 @@ app.use(
     resave: false,
     saveUninitialized: false,
     cookie: { maxAge: 365 * 24 * 60 * 60 * 1000, sameSite: "lax" },
+    store: MongoStore.create({ mongoUrl: process.env.MONGO_URL }),
   })
 );
 app.use(cookieParser(process.env.SESSION_SECRET));
