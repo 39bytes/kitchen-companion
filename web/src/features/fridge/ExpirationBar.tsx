@@ -8,7 +8,7 @@ type ExpirationBarProps = {
 };
 
 export const ExpirationBar = ({ ingredient }: ExpirationBarProps) => {
-  let expirationTime: number = -1;
+  let expirationTime;
   if (ingredient.expirationData) {
     switch (ingredient.section) {
       case "pantry":
@@ -22,33 +22,33 @@ export const ExpirationBar = ({ ingredient }: ExpirationBarProps) => {
         break;
     }
   }
+  if (!expirationTime) {
+    return <Box></Box>;
+  }
+
   let expirationStr: string | undefined;
   const timeLeft = ingredient.dateAdded + expirationTime - Date.now();
   const expirationPercent = (timeLeft / expirationTime) * 100;
 
   let fillPercent = 0;
   let fillColor = "green";
-  if (expirationTime !== -1) {
-    if (timeLeft > 0) {
-      expirationStr = `Expires in ${msToDurationString(timeLeft)}`;
-      fillPercent = expirationPercent;
-      if (timeLeft < 1000 * 60 * 60 * 24) {
-        fillColor = "red";
-      }
-    } else {
-      expirationStr = "Might be expired";
+  if (timeLeft > 0) {
+    expirationStr = `Expires in ${msToDurationString(timeLeft)}`;
+    fillPercent = expirationPercent;
+    if (timeLeft < 1000 * 60 * 60 * 24) {
+      fillColor = "red";
     }
+  } else {
+    expirationStr = "Might be expired";
   }
 
   return (
     <Box>
-      {expirationTime !== -1 && (
-        <Tooltip title={expirationStr}>
-          <Box component="span">
-            <FillBar fillPercent={fillPercent} color={fillColor} width="70%" />
-          </Box>
-        </Tooltip>
-      )}
+      <Tooltip title={expirationStr}>
+        <Box component="span">
+          <FillBar fillPercent={fillPercent} color={fillColor} width="70%" />
+        </Box>
+      </Tooltip>
     </Box>
   );
 };

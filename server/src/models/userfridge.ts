@@ -19,9 +19,9 @@ export interface FridgeIngredient extends Ingredient {
 }
 
 export interface ExpirationData {
-  pantry: number;
-  fridge: number;
-  freezer: number;
+  pantry?: number;
+  fridge?: number;
+  freezer?: number;
 }
 
 const ExpirationDataSchema = new Schema({
