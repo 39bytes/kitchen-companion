@@ -31,7 +31,10 @@ const initialState = fridgeContentsAdapter.getInitialState<FridgeState>({
 export const fetchContents = createAsyncThunk(
   "fridge/fetchContents",
   async () => {
-    const response = await axios.get("/fridge", { withCredentials: true });
+    const response = await axios.get(
+      process.env.REACT_APP_BACKEND_URL + "/fridge",
+      { withCredentials: true }
+    );
     const userFridge = response.data as UserFridgeDocument;
     return userFridge.contents;
   }
@@ -49,7 +52,7 @@ export const addNewIngredient = createAsyncThunk(
   async (data: NewIngredientPayload) => {
     const { ingredientData, quantity, unit, section } = data;
     const response = await axios.post(
-      "/fridge/addIngredient",
+      process.env.REACT_APP_BACKEND_URL + "/fridge/addIngredient",
       { ...ingredientData, quantity, unit, section },
       { withCredentials: true }
     );
@@ -60,9 +63,13 @@ export const addNewIngredient = createAsyncThunk(
 export const updateIngredient = createAsyncThunk(
   "fridge/ingredientUpdated",
   async (data: UpdateIngredientPayload) => {
-    const response = await axios.post("/fridge/updateIngredient", data, {
-      withCredentials: true,
-    });
+    const response = await axios.post(
+      process.env.REACT_APP_BACKEND_URL + "/fridge/updateIngredient",
+      data,
+      {
+        withCredentials: true,
+      }
+    );
     return response.data as UpdateIngredientPayload;
   }
 );
@@ -71,7 +78,7 @@ export const deleteIngredient = createAsyncThunk(
   "fridge/ingredientDeleted",
   async (ingredientId: string) => {
     const response = await axios.post(
-      "fridge/deleteIngredient",
+      process.env.REACT_APP_BACKEND_URL + "/fridge/deleteIngredient",
       { id: ingredientId },
       {
         withCredentials: true,

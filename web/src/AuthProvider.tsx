@@ -33,10 +33,14 @@ const AuthProvider = ({ children }: PropsWithChildren<any>) => {
   // Maybe hook useEffect to location.key?
   useEffect(() => {
     setStatus("pending");
-    axios.get("/auth/user", { withCredentials: true }).then((res) => {
-      setUser(res.data.user);
-      setStatus("success");
-    });
+    axios
+      .get(process.env.REACT_APP_BACKEND_URL + "/auth/user", {
+        withCredentials: true,
+      })
+      .then((res) => {
+        setUser(res.data.user);
+        setStatus("success");
+      });
   }, []);
 
   return status === "pending" ? (

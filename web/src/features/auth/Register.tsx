@@ -20,13 +20,17 @@ export const Register = () => {
   const formik = useFormik({
     initialValues: { email: "", password: "" },
     onSubmit: async (values, { setSubmitting }) => {
-      const res = await axios.post("/auth/register", values, {
-        withCredentials: true,
-        headers: {
-          Accept: "application/json",
-          "Content-Type": "application/json",
-        },
-      });
+      const res = await axios.post(
+        process.env.REACT_APP_BACKEND_URL + "/auth/register",
+        values,
+        {
+          withCredentials: true,
+          headers: {
+            Accept: "application/json",
+            "Content-Type": "application/json",
+          },
+        }
+      );
       if (res.data.success) {
         window.location.href = "/login";
       }

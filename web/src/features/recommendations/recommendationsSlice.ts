@@ -23,9 +23,12 @@ const initialState =
 export const fetchRecommendations = createAsyncThunk(
   "recipes/fetchRecommendations",
   async () => {
-    const response = await axios.get("/recipes/recommendations", {
-      withCredentials: true,
-    });
+    const response = await axios.get(
+      process.env.REACT_APP_BACKEND_URL + "/recipes/recommendations",
+      {
+        withCredentials: true,
+      }
+    );
     return response.data as RecipeByIngredientResult[];
   }
 );

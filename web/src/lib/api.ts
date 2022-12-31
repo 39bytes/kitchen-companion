@@ -11,14 +11,14 @@ const getFromAPI = async (endpoint: string, params: object) => {
 };
 
 export const getIngredientSearch = async (query: string, number: number) => {
-  return (await getFromAPI("ingredient/search", {
+  return (await getFromAPI("/ingredient/search", {
     query,
     number,
   })) as Ingredient[];
 };
 
 export const getIngredientExpiration = async (query: string) => {
-  return (await getFromAPI("ingredient/expiration", {
+  return (await getFromAPI("/ingredient/expiration", {
     query,
   })) as ExpirationData;
 };
@@ -27,14 +27,14 @@ export const getRecipesByIngredients = async (
   ingredients: Iterable<string>,
   number: number
 ) => {
-  return (await getFromAPI("recipes/searchByIngredient", {
+  return (await getFromAPI("/recipes/searchByIngredient", {
     ingredients: [...ingredients].join(),
     number,
   })) as RecipeByIngredientResult[];
 };
 
 export const getRecipeById = async (id: number) => {
-  return (await getFromAPI(`recipes/searchById`, { id })) as Recipe;
+  return (await getFromAPI(`/recipes/searchById`, { id })) as Recipe;
 };
 
 // const LoadTop1kIngrdients = () => {

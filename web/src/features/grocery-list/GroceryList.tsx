@@ -57,11 +57,15 @@ const GroceryList = () => {
     useState<Map<string, GroceryIngredient[]>>();
 
   useEffect(() => {
-    axios.get("/fridge", { withCredentials: true }).then((res) => {
-      const groceryList = res.data as GroceryListDocument;
-      const items = groceryList.items;
-      setGroceryListItems(items);
-    });
+    axios
+      .get(process.env.REACT_APP_BACKEND_URL + "/fridge", {
+        withCredentials: true,
+      })
+      .then((res) => {
+        const groceryList = res.data as GroceryListDocument;
+        const items = groceryList.items;
+        setGroceryListItems(items);
+      });
   });
 
   const handleImportButtonClick = () => {};
