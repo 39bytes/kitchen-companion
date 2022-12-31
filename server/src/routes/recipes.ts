@@ -25,6 +25,10 @@ router.get("/", async (req, res) => {
   });
 });
 
+type ComplexSearchResult = {
+  results: RecipeByIngredientResult[];
+};
+
 router.get("/recommendations", async (req, res) => {
   if (!req.user) {
     res.sendStatus(401);
