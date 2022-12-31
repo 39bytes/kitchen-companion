@@ -27,6 +27,7 @@ import {
   Logout,
   NoteAlt,
   Restaurant,
+  Search,
 } from "@mui/icons-material";
 import axios from "axios";
 import { useState } from "react";
@@ -111,7 +112,6 @@ const Drawer = styled(MuiDrawer, {
 const Layout = ({ title, children }: LayoutProps) => {
   const theme = useTheme();
   const [open, setOpen] = useState(true);
-  const [currentTab, setCurrentTab] = useState("My Fridge");
 
   const handleDrawerOpen = () => {
     setOpen(true);
@@ -124,6 +124,44 @@ const Layout = ({ title, children }: LayoutProps) => {
   const logout = () => {
     axios.post("/auth/logout").then((data) => (window.location.href = "/"));
   };
+
+  const SidebarTabs = () => (
+    <List>
+      {[
+        ["My Fridge", <Kitchen />, "/"],
+        ["Saved Recipes", <Restaurant />, "/recipes"],
+        ["Find Recipes", <Search />, "/recommendations"],
+        // ["Meal Planner", <CalendarMonth />, "/"],
+        // ["Grocery List", <NoteAlt />, "/grocery"],
+      ].map(([text, icon, to]) => (
+        <Link
+          to={to.toString()}
+          style={{ textDecoration: "none", color: "inherit" }}
+        >
+          <ListItem key={text.toString()} disablePadding>
+            <ListItemButton
+              sx={{
+                minHeight: 48,
+                justifyContent: open ? "initial" : "center",
+                px: 2.5,
+              }}
+            >
+              <ListItemIcon
+                sx={{
+                  minWidth: 0,
+                  mr: open ? 3 : "auto",
+                  justifyContent: "center",
+                }}
+              >
+                {icon}
+              </ListItemIcon>
+              <ListItemText primary={text} sx={{ opacity: open ? 1 : 0 }} />
+            </ListItemButton>
+          </ListItem>
+        </Link>
+      ))}
+    </List>
+  );
 
   return (
     <Box display="flex">
@@ -146,7 +184,7 @@ const Layout = ({ title, children }: LayoutProps) => {
           >
             <MenuIcon />
           </IconButton>
-          <Typography variant="h6">{title ?? "Fridge Friend"}</Typography>
+          <Typography variant="h6">{title ?? "Kitchen Companion"}</Typography>
           <Tooltip title="Log out">
             <IconButton
               size="medium"
@@ -180,44 +218,11 @@ const Layout = ({ title, children }: LayoutProps) => {
             {theme.direction === "rtl" ? <ChevronRight /> : <ChevronLeft />}
           </IconButton>
         </DrawerHeader>
-        <List>
-          {[
-            ["My Fridge", <Kitchen />, "/"],
-            ["Saved Recipes", <Restaurant />, "/"],
-            ["Meal Planner", <CalendarMonth />, "/"],
-            ["Grocery List", <NoteAlt />, "/grocery"],
-          ].map(([text, icon, to]) => (
-            <Link
-              to={to.toString()}
-              style={{ textDecoration: "none", color: "inherit" }}
-            >
-              <ListItem key={text.toString()} disablePadding>
-                <ListItemButton
-                  sx={{
-                    minHeight: 48,
-                    justifyContent: open ? "initial" : "center",
-                    px: 2.5,
-                  }}
-                >
-                  <ListItemIcon
-                    sx={{
-                      minWidth: 0,
-                      mr: open ? 3 : "auto",
-                      justifyContent: "center",
-                    }}
-                  >
-                    {icon}
-                  </ListItemIcon>
-                  <ListItemText primary={text} sx={{ opacity: open ? 1 : 0 }} />
-                </ListItemButton>
-              </ListItem>
-            </Link>
-          ))}
-        </List>
+        <SidebarTabs />
       </Drawer>
       <Box component="main" sx={{ flexGrow: 1 }}>
         <Toolbar />
-        <Container sx={{ mt: 2 }}>{children}</Container>
+        <Container sx={{ mt: 2, mx: 0 }}>{children}</Container>
       </Box>
     </Box>
   );
