@@ -10,6 +10,7 @@ import RequireAuth from "./components/RequireAuth";
 import { Login } from "./features/auth/Login";
 import { Register } from "./features/auth/Register";
 import Fridge from "./features/fridge/Fridge";
+import GroceryList from "./features/grocery-list/GroceryList";
 import { Recipes } from "./features/recipes/Recipes";
 import RecipeRecommendations from "./features/recommendations/RecipeRecommendations";
 
@@ -43,6 +44,14 @@ function App() {
               element={
                 <RequireAuth redirectTo="/login">
                   <RecipeRecommendations />
+                </RequireAuth>
+              }
+            />
+            <Route
+              path="/grocery"
+              element={
+                <RequireAuth redirectTo="/login">
+                  <GroceryList />
                 </RequireAuth>
               }
             />
