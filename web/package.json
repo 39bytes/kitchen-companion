@@ -60,7 +60,6 @@
   },
   "devDependencies": {
     "@redux-devtools/core": "^3.13.1",
-    "@types/mongoose": "^5.11.97",
     "@types/mui-image": "^1.0.1",
     "@types/react-redux": "^7.1.24"
   }
