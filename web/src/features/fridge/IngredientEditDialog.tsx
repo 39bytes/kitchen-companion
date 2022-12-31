@@ -131,13 +131,13 @@ export const IngredientEditDialog = ({
   );
 
   const DeleteButton = () => (
-    <IconButton onClick={handleDeleteButtonClick}>
+    <IconButton onClick={handleDeleteButtonClick} sx={{ ml: 2, p: 0 }}>
       <Delete />
     </IconButton>
   );
 
   return (
-    <Dialog open={open} onClose={onClose}>
+    <Dialog open={open} onClose={onClose} maxWidth="xs">
       <DialogTitle>
         <Box display="flex" justifyContent="space-between">
           {toTitleCase(ingredient.name)}
@@ -151,21 +151,21 @@ export const IngredientEditDialog = ({
         justifyContent="center"
       >
         <IngredientImage imageName={ingredient.image} />
-        <Container>
+        <Box>
           {QuantityField}
           <UnitSelect
             onChange={handleUnitChange}
             units={ingredient.possibleUnits}
             defaultValue={ingredient.possibleUnits[0]}
           />
-          <Box display="flex" marginTop={1} justifyContent="center">
-            <SectionSelect
-              defaultValue={section}
-              onChange={handleSectionChange}
-            />
-          </Box>
-          <SaveButton />
-        </Container>
+        </Box>
+        <Box display="flex" marginTop={1} justifyContent="center">
+          <SectionSelect
+            defaultValue={section}
+            onChange={handleSectionChange}
+          />
+        </Box>
+        <SaveButton />
       </Box>
     </Dialog>
   );
