@@ -4,8 +4,6 @@ export type RecipeByIngredientResult = {
   id: number;
   title: string;
   image: string;
-  usedIngredients: RecipeIngredient[];
-  missedIngredients: RecipeIngredient[];
 };
 
 export interface Recipe {
