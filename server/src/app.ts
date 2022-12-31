@@ -52,7 +52,7 @@ app.use(
     resave: false,
     saveUninitialized: false,
     cookie: { maxAge: 365 * 24 * 60 * 60 * 1000, sameSite: "lax" },
-    //store: MongoStore.create({ mongoUrl: process.env.MONGO_URL }),
+    store: MongoStore.create({ mongoUrl: process.env.MONGO_URL }),
   })
 );
 app.use(cookieParser(process.env.SESSION_SECRET));
