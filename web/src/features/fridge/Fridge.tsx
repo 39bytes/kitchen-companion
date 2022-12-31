@@ -1,4 +1,4 @@
-import { FridgeIngredient, Ingredient } from "@backend/userfridge";
+import { FridgeIngredient, Ingredient } from "../../types/userfridge";
 import MuiMasonry from "@mui/lab/Masonry";
 import {
   Box,

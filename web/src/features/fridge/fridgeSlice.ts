@@ -4,7 +4,7 @@ import {
   Ingredient,
   UserFridgeDocument,
   UpdateIngredientPayload,
-} from "@backend/userfridge";
+} from "../../types/userfridge";
 import {
   createAsyncThunk,
   createEntityAdapter,

@@ -1,4 +1,4 @@
-import { FridgeIngredient } from "@backend/userfridge";
+import { FridgeIngredient } from "../../types/userfridge";
 import {
   Avatar,
   Box,

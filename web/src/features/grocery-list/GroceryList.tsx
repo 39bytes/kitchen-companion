@@ -1,5 +1,8 @@
 import { Kitchen } from "@mui/icons-material";
-import { GroceryIngredient, GroceryListDocument } from "@backend/grocerylist";
+import {
+  GroceryIngredient,
+  GroceryListDocument,
+} from "../../types/grocerylist";
 import {
   Box,
   Button,
