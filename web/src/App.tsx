@@ -7,8 +7,8 @@ import { BrowserRouter, Route, Routes } from "react-router-dom";
 import "./App.css";
 import AuthProvider from "./AuthProvider";
 import RequireAuth from "./components/RequireAuth";
-import LoginPage from "./features/auth/Login";
-import RegisterPage from "./features/auth/Register";
+import { Login } from "./features/auth/Login";
+import { Register } from "./features/auth/Register";
 import Fridge from "./features/fridge/Fridge";
 import GroceryList from "./features/grocery-list/GroceryList";
 import { Recipes } from "./features/recipes/Recipes";
@@ -21,8 +21,8 @@ function App() {
       <AuthProvider>
         <BrowserRouter>
           <Routes>
-            <Route path="/login" element={<LoginPage />} />
-            <Route path="/register" element={<RegisterPage />} />
+            <Route path="/login" element={<Login />} />
+            <Route path="/register" element={<Register />} />
             <Route
               path="/"
               element={

@@ -149,6 +149,7 @@ export const IngredientEditDialog = ({
         flexDirection="column"
         alignItems="center"
         justifyContent="center"
+        px={4}
       >
         <IngredientImage imageName={ingredient.image} />
         <Box>
