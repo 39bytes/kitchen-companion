@@ -26,9 +26,15 @@ export const ExpirationBar = ({ ingredient }: ExpirationBarProps) => {
   const timeLeft = ingredient.dateAdded + expirationTime - Date.now();
   const expirationPercent = (timeLeft / expirationTime) * 100;
 
+  let fillPercent = 0;
+  let fillColor = "green";
   if (expirationTime !== -1) {
     if (timeLeft > 0) {
       expirationStr = `Expires in ${msToDurationString(timeLeft)}`;
+      fillPercent = expirationPercent;
+      if (timeLeft < 1000 * 60 * 60 * 24) {
+        fillColor = "red";
+      }
     } else {
       expirationStr = "Might be expired";
     }
@@ -39,11 +45,7 @@ export const ExpirationBar = ({ ingredient }: ExpirationBarProps) => {
       {expirationTime !== -1 && (
         <Tooltip title={expirationStr}>
           <Box component="span">
-            <FillBar
-              fillPercent={expirationPercent}
-              color="green"
-              width="70%"
-            />
+            <FillBar fillPercent={fillPercent} color={fillColor} width="70%" />
           </Box>
         </Tooltip>
       )}
