@@ -131,7 +131,9 @@ export const IngredientAddDialog = ({
           <Box display="flex" marginTop={1} justifyContent="center">
             <SectionSelect value={section} onChange={handleSectionChange} />
           </Box>
-          <AddButton />
+          <Box display="flex" justifyContent="center">
+            <AddButton />
+          </Box>
         </Container>
       </Box>
     </Dialog>
