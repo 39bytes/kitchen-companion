@@ -28,5 +28,5 @@ A full stack web app that lets you keep track of what's in your fridge, and get 
 
 ## Credits and attribution
 
-Authentication page art generated using DALLE-E 2.
+Authentication page art generated using DALL-E 2.  
 Carrot icon from https://www.flaticon.com/free-icon/carrot_271439.
