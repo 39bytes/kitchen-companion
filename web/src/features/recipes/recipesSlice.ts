@@ -2,11 +2,9 @@ import { Recipe } from "@backend/recipe";
 import {
   createAsyncThunk,
   createEntityAdapter,
-  createSelector,
   createSlice,
 } from "@reduxjs/toolkit";
 import axios from "axios";
-import { getRecipeById } from "src/lib/api";
 import { RootState } from "src/store";
 
 const recipesAdapter = createEntityAdapter<Recipe>();
