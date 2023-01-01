@@ -2,8 +2,8 @@
 
 A full stack web app that lets you keep track of what's in your fridge, and get recipe recommendations based on that. Queries the Spoonacular API to get recipe/ingredient data.
 
-![Fridge Section](https://imgur.com/kNv3uwD)  
-![Recipe](https://imgur.com/QVQO5BJ)
+![Fridge Section](https://i.imgur.com/kNv3uwD.png)  
+![Recipe](https://i.imgur.com/QVQO5BJ.png)
 
 ## Technologies used
 
