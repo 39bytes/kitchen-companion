@@ -15,24 +15,30 @@ import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { useFormik } from "formik";
 import axios from "axios";
 import { Link } from "react-router-dom";
+import { useState } from "react";
 
 export const Login = () => {
+  const [error, setError] = useState("");
   const formik = useFormik({
     initialValues: { email: "", password: "" },
     onSubmit: async (values, { setSubmitting }) => {
-      const res = await axios.post(
-        process.env.REACT_APP_BACKEND_URL + "/auth/login",
-        values,
-        {
-          withCredentials: true,
-          headers: {
-            Accept: "application/json",
-            "Content-Type": "application/json",
-          },
+      try {
+        const res = await axios.post(
+          process.env.REACT_APP_BACKEND_URL + "/auth/login",
+          values,
+          {
+            withCredentials: true,
+            headers: {
+              Accept: "application/json",
+              "Content-Type": "application/json",
+            },
+          }
+        );
+        if (res.data.success) {
+          window.location.href = "/";
         }
-      );
-      if (res.data.success) {
-        window.location.href = "/";
+      } catch {
+        setError("Invalid username or password");
       }
     },
     validate: () => {},
@@ -107,6 +113,9 @@ export const Login = () => {
               error={formik.touched.password && Boolean(formik.errors.password)}
               helperText={formik.touched.password && formik.errors.password}
             />
+            <Typography variant="caption" color="red">
+              {error}
+            </Typography>
             <Button
               disabled={formik.isSubmitting}
               type="submit"
@@ -119,11 +128,14 @@ export const Login = () => {
             </Button>
             <Grid container>
               <Grid item>
-                <Link to="/register" style={{ textDecoration: "none" }}>
-                  <MuiLink variant="body2">
-                    {"Don't have an account? Sign Up"}
-                  </MuiLink>
-                </Link>
+                <MuiLink
+                  component={Link}
+                  to="/register"
+                  sx={{ textDecoration: "none" }}
+                  variant="body2"
+                >
+                  {"Don't have an account? Sign Up"}
+                </MuiLink>
               </Grid>
             </Grid>
           </Box>
