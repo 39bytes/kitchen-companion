@@ -51,7 +51,7 @@ app.use(
     secret: process.env.SESSION_SECRET,
     resave: false,
     saveUninitialized: false,
-    cookie: { maxAge: 365 * 24 * 60 * 60 * 1000, sameSite: "lax" },
+    cookie: { maxAge: 365 * 24 * 60 * 60 * 1000, sameSite: "none" },
     store: MongoStore.create({ mongoUrl: process.env.MONGO_URL }),
   })
 );
