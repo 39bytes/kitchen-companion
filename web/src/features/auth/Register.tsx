@@ -1,24 +1,31 @@
-import * as React from "react";
+import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import Avatar from "@mui/material/Avatar";
+import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import CssBaseline from "@mui/material/CssBaseline";
-import TextField from "@mui/material/TextField";
-import FormControlLabel from "@mui/material/FormControlLabel";
-import Checkbox from "@mui/material/Checkbox";
+import Grid from "@mui/material/Grid";
 import MuiLink from "@mui/material/Link";
 import Paper from "@mui/material/Paper";
-import Box from "@mui/material/Box";
-import Grid from "@mui/material/Grid";
-import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
+import TextField from "@mui/material/TextField";
 import Typography from "@mui/material/Typography";
-import { createTheme, ThemeProvider } from "@mui/material/styles";
-import { useFormik } from "formik";
 import axios from "axios";
+import { useFormik } from "formik";
+import { useState } from "react";
 import { Link } from "react-router-dom";
+import * as Yup from "yup";
+
+const RegisterSchema = Yup.object().shape({
+  email: Yup.string().email().required("Email is required."),
+  password: Yup.string()
+    .min(6, "Password must be at least 6 characters.")
+    .required("Password is required."),
+});
 
 export const Register = () => {
+  const [error, setError] = useState("");
   const formik = useFormik({
     initialValues: { email: "", password: "" },
+    validationSchema: RegisterSchema,
     onSubmit: async (values, { setSubmitting }) => {
       const res = await axios.post(
         process.env.REACT_APP_BACKEND_URL + "/auth/register",
@@ -33,6 +40,8 @@ export const Register = () => {
       );
       if (res.data.success) {
         window.location.href = "/login";
+      } else {
+        setError(res.data.errors);
       }
     },
     validate: () => {},
@@ -107,6 +116,9 @@ export const Register = () => {
               error={formik.touched.password && Boolean(formik.errors.password)}
               helperText={formik.touched.password && formik.errors.password}
             />
+            <Typography variant="caption" color="red">
+              {error}
+            </Typography>
             <Button
               disabled={formik.isSubmitting}
               type="submit"
@@ -119,11 +131,14 @@ export const Register = () => {
             </Button>
             <Grid container>
               <Grid item>
-                <Link to="/login" style={{ textDecoration: "none" }}>
-                  <MuiLink variant="body2">
-                    {"Already have an account? Log in"}
-                  </MuiLink>
-                </Link>
+                <MuiLink
+                  component={Link}
+                  to="/login"
+                  sx={{ textDecoration: "none" }}
+                  variant="body2"
+                >
+                  {"Already have an account? Log in"}
+                </MuiLink>
               </Grid>
             </Grid>
           </Box>
