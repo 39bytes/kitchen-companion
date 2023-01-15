@@ -11,17 +11,24 @@ const theme = createTheme({
     secondary: {
       main: blue[800],
     },
-    background: {},
+    background: {
+      default: grey[50],
+    },
     error: {
       main: red[600],
     },
   },
   typography: {
-    fontFamily: "Roboto",
+    fontFamily: "Public Sans, sans-serif",
+    h6: {
+      color: "black",
+      //fontWeight: "bold",
+      fontWeight: 550,
+      fontSize: 19,
+    },
     caption: {
       color: "#AAA",
       fontStyle: "italic",
-      fontWeight: "lighter",
     },
     button: {
       textTransform: "none",
@@ -39,7 +46,7 @@ const theme = createTheme({
       sm: 400,
       md: 700,
       lg: 1000,
-      xl: 1336,
+      xl: 1500,
     },
   },
   zIndex: {

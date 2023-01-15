@@ -1,7 +1,7 @@
 import { Box, Fade, FormControl, InputLabel, Select } from "@mui/material";
 import { useEffect, useState } from "react";
 import { CenteredSpinner } from "src/components/CenteredSpinner";
-import Layout from "src/components/containers/Layout";
+import Layout from "src/components/containers/Layout/Layout";
 import { useAppDispatch, useAppSelector } from "src/hooks";
 import {
   fetchSavedRecipes,
@@ -39,7 +39,7 @@ export const Recipes = () => {
     recipesList = <CenteredSpinner />;
   } else {
     recipesList = (
-      <Box display="flex" flexWrap="wrap">
+      <Box mx={8} mt={4} display="flex" flexWrap="wrap">
         {recipes.map((rec) => (
           <RecipeCard recipe={rec} handleClick={handleRecipeCardClick} />
         ))}

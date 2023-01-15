@@ -8,7 +8,7 @@ import {
 } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import { CenteredSpinner } from "src/components/CenteredSpinner";
-import Layout from "src/components/containers/Layout";
+import Layout from "src/components/containers/Layout/Layout";
 import { useAppDispatch, useAppSelector } from "src/hooks";
 import { RecipeCard } from "../recipes/RecipeCard";
 import { RecipeInfoDialog } from "../recipes/RecipeInfoDialog";
@@ -49,7 +49,7 @@ const RecipeRecommendations = () => {
     recommendationsList = <CenteredSpinner />;
   } else {
     recommendationsList = (
-      <Box display="flex" flexWrap="wrap">
+      <Box display="flex" flexWrap="wrap" mx={12} justifyContent="space-evenly">
         {recommendations.map((rec) => (
           <RecipeCard
             recipe={rec}

@@ -32,7 +32,14 @@ const FridgeItem = ({ ingredient, onAddButtonClick }: FridgeItemProps) => {
       <ListItemText
         primary={
           <Box component="span">
-            <Typography sx={{ textOverflow: "ellipsis" }}>
+            <Typography
+              noWrap
+              width="80%"
+              sx={{
+                overflow: "hidden",
+                textOverflow: "ellipsis",
+              }}
+            >
               {toTitleCase(ingredient.name)}
               <Typography variant="caption" sx={{ ml: 0.5, display: "inline" }}>
                 {`${ingredient.quantity} ${ingredient.unit}`}

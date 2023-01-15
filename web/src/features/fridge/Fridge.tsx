@@ -15,7 +15,7 @@ import {
   useTheme,
 } from "@mui/material";
 import { useEffect, useState } from "react";
-import Layout from "src/components/containers/Layout";
+import Layout from "src/components/containers/Layout/Layout";
 import { useAppDispatch, useAppSelector } from "src/hooks";
 import {
   groupIngredientsByAisle,
@@ -43,7 +43,7 @@ const Fridge = () => {
   const [editOpen, setEditOpen] = useState(false);
   const [selectedIngredient, setSelectedIngredient] = useState<Ingredient>();
   const [ingredientToEdit, setIngredientToEdit] = useState<string>();
-  const [groupKey, setGroupKey] = useState<GroupKey>("section");
+  const [groupKey, setGroupKey] = useState<GroupKey>("category");
 
   const fridgeContents = useAppSelector(selectAllFridgeIngredients);
   const fridgeStatus = useAppSelector((state) => state.fridge.status);
@@ -132,9 +132,13 @@ const Fridge = () => {
     content = <div>{error}</div>;
   } else if (fridgeStatus === "success") {
     content = (
-      <Masonry sx={{ mx: 0 }} columns={{ sm: 1, md: 2, lg: 3 }} spacing={2}>
+      <Masonry
+        columns={{ sm: 1, md: 2, lg: 3, xl: 5 }}
+        sx={{ mt: 4 }}
+        spacing={1.5}
+      >
         {Array.from(groupedFridgeContents, ([key, contents]) => (
-          <Paper key={key} elevation={1} sx={{ minWidth: 150 }}>
+          <Paper key={key} elevation={0} sx={{ borderRadius: 3 }}>
             <FridgeCategory
               name={key}
               items={contents}
@@ -172,9 +176,9 @@ const Fridge = () => {
           ) : (
             <></>
           )}
-          <Box display="flex" justifyContent="end">
+          {/* <Box display="flex" justifyContent="end">
             <GroupBySelect />
-          </Box>
+          </Box> */}
           {content}
           <AddIngredientButton />
         </Box>

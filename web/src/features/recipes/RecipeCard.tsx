@@ -13,14 +13,14 @@ type RecipeCardProps = {
   handleClick: (recipeId: number) => void;
 };
 export const RecipeCard = ({ recipe, handleClick }: RecipeCardProps) => (
-  <Card sx={{ width: 200, height: 150, m: 1 }}>
+  <Card sx={{ width: 250, height: 300, m: 1 }}>
     <CardActionArea onClick={() => handleClick(recipe.id)}>
       <CardMedia
-        sx={{ height: 80 }}
+        sx={{ height: 200 }}
         image={recipe.image}
         title={recipe.title}
       />
-      <CardContent sx={{ height: 70 }}>
+      <CardContent sx={{ height: 100 }}>
         <Typography gutterBottom component="div">
           {recipe.title}
         </Typography>

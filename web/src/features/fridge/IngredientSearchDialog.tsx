@@ -21,7 +21,7 @@ export const IngredientSearchDialog = ({
   // Only update the search results when the user hasn't typed for a bit
   // This prevents unnecessary API call spam
   useEffect(() => {
-    const timeoutId = setTimeout(() => getIngredients(searchQuery), 200);
+    const timeoutId = setTimeout(() => getIngredients(searchQuery), 100);
     return () => clearTimeout(timeoutId);
   }, [searchQuery]);
 
@@ -32,7 +32,7 @@ export const IngredientSearchDialog = ({
     }
 
     // Return 10 results
-    getIngredientSearch(value, 10).then((data) => {
+    getIngredientSearch(value, 15).then((data) => {
       setSearchResults(data);
     });
   };

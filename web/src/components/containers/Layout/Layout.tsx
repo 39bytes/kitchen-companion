@@ -137,8 +137,6 @@ const Layout = ({ title, children }: LayoutProps) => {
         ["My Fridge", <Kitchen />, "/"],
         ["Saved Recipes", <Restaurant />, "/recipes"],
         ["Find Recipes", <Search />, "/recommendations"],
-        // ["Meal Planner", <CalendarMonth />, "/"],
-        // ["Grocery List", <NoteAlt />, "/grocery"],
       ].map(([text, icon, to]) => (
         <Link
           to={to.toString()}
@@ -171,14 +169,7 @@ const Layout = ({ title, children }: LayoutProps) => {
 
   return (
     <Box display="flex">
-      <AppBar
-        position="fixed"
-        open={open}
-        // sx={{
-        //   width: `calc(100% - ${drawerWidth}px)`,
-        //   ml: `${drawerWidth}px`,
-        // }}
-      >
+      <AppBar position="fixed" open={open}>
         <Toolbar>
           <IconButton
             size="large"
@@ -205,20 +196,7 @@ const Layout = ({ title, children }: LayoutProps) => {
           </Tooltip>
         </Toolbar>
       </AppBar>
-      <Drawer
-        // sx={{
-        //   width: drawerWidth,
-        //   flexShrink: 0,
-        //   "& .MuiDrawer-paper": {
-        //     width: drawerWidth,
-        //     boxSizing: "border-box",
-        //   },
-        // }}
-        // anchor="left"
-
-        variant="permanent"
-        open={open}
-      >
+      <Drawer variant="permanent" open={open}>
         <DrawerHeader>
           <IconButton onClick={handleDrawerClose}>
             {theme.direction === "rtl" ? <ChevronRight /> : <ChevronLeft />}
@@ -228,7 +206,7 @@ const Layout = ({ title, children }: LayoutProps) => {
       </Drawer>
       <Box component="main" sx={{ flexGrow: 1 }}>
         <Toolbar />
-        <Container sx={{ mt: 2, mx: 0 }}>{children}</Container>
+        <Box mx={4}>{children}</Box>
       </Box>
     </Box>
   );

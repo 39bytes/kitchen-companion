@@ -17,7 +17,7 @@ import {
   useTheme,
 } from "@mui/material";
 import React, { useEffect, useState } from "react";
-import Layout from "src/components/containers/Layout";
+import Layout from "src/components/containers/Layout/Layout";
 import axios from "axios";
 
 type GroceryListItemProps = {
