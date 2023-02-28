@@ -1,4 +1,4 @@
-import { RecipeByIngredientResult } from "../../types/recipe";
+import { RecipeByIngredientResult } from "../../api/types/recipe";
 import {
   createAsyncThunk,
   createEntityAdapter,

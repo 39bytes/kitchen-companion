@@ -1,4 +1,4 @@
-import { FridgeIngredient } from "../../types/userfridge";
+import { FridgeIngredient } from "../../api/types/userfridge";
 import { Box, Tooltip } from "@mui/material";
 import { FillBar } from "src/components/FillBar";
 import { msToDurationString } from "src/utils/msToDurationString";

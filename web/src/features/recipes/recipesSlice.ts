@@ -1,4 +1,4 @@
-import { Recipe } from "../../types/recipe";
+import { Recipe } from "../../api/types/recipe";
 import {
   createAsyncThunk,
   createEntityAdapter,
@@ -6,7 +6,7 @@ import {
   createSlice,
 } from "@reduxjs/toolkit";
 import axios from "axios";
-import { getRecipeById } from "src/lib/api";
+import { getRecipeById } from "src/api/api";
 import { RootState } from "../store";
 
 const recipesAdapter = createEntityAdapter<Recipe>();
@@ -30,6 +30,11 @@ export const fetchSavedRecipes = createAsyncThunk(
     );
     return recipes.data as Recipe[];
   }
+);
+
+export const addRecipe = createAsyncThunk(
+  "recipes/recipeAdded",
+  async (recipe: Recipe) => {}
 );
 
 export const saveRecipe = createAsyncThunk(

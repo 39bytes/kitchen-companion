@@ -2,7 +2,7 @@ import { Kitchen } from "@mui/icons-material";
 import {
   GroceryIngredient,
   GroceryListDocument,
-} from "../../types/grocerylist";
+} from "../../api/types/grocerylist";
 import {
   Box,
   Button,

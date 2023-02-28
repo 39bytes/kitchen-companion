@@ -8,6 +8,11 @@ import { getFromSpoonacular } from "./api";
 
 const router = express.Router();
 
+/**
+ * Get all recipes saved by the user.
+ * @route GET /recipes
+ */
+
 router.get("/", async (req, res) => {
   if (!req.user) {
     res.sendStatus(401);
@@ -25,9 +30,10 @@ router.get("/", async (req, res) => {
   });
 });
 
-type ComplexSearchResult = {
-  results: RecipeByIngredientResult[];
-};
+/**
+ * Get recommendations for recipes based on the user's fridge contents.
+ * @route GET /recipes/recommendations
+ */
 
 router.get("/recommendations", async (req, res) => {
   if (!req.user) {
@@ -54,6 +60,13 @@ router.get("/recommendations", async (req, res) => {
   );
 });
 
+/**
+ * Add a recipe to the user's saved recipes.
+ * This route will either create a new recipe or update an existing one.
+ * @route POST /recipes/addRecipe
+ * @param recipe The recipe data (request body).
+ */
+
 router.post("/addRecipe", async (req, res) => {
   if (!req.user) {
     res.sendStatus(401);
@@ -69,9 +82,7 @@ router.post("/addRecipe", async (req, res) => {
         res.status(400).send(err);
         throw err;
       }
-      console.log(doc);
       if (doc) {
-        console.log(doc);
         res.json(doc);
       }
     }
@@ -84,6 +95,12 @@ router.post("/updateRecipe", async (req, res) => {
     return;
   }
 });
+
+/**
+ * Delete a recipe from the user's saved recipes.
+ * @route POST /recipes/deleteRecipe
+ * @param id The ID of the recipe to delete.
+ */
 
 router.post("/deleteRecipe", async (req, res) => {
   if (!req.user) {

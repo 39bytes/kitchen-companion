@@ -11,22 +11,33 @@ const StyledImage = styled("img")`
 export const Logo = () => {
   return (
     <Box
+      component={Link}
+      to="/"
       sx={{
-        ":hover": {
-          backgroundColor: "neutral.700",
-          transitionDuration: "0.2s",
-        },
-        transitionDuration: "0.2s",
-        width: "48px",
-        height: "48px",
+        display: "inline-flex",
+        height: 32,
+        width: 32,
       }}
-      p={1}
-      boxSizing="border-box"
-      borderRadius="50%"
+      position="relative"
+      right={8}
+      bottom={4}
     >
-      <Link to="/">
+      <Box
+        sx={{
+          ":hover": {
+            backgroundColor: "neutral.700",
+            transitionDuration: "0.2s",
+          },
+          transitionDuration: "0.2s",
+          width: "48px",
+          height: "48px",
+        }}
+        p={1}
+        boxSizing="border-box"
+        borderRadius="50%"
+      >
         <StyledImage src={logoImg} />
-      </Link>
+      </Box>
     </Box>
   );
 };

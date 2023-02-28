@@ -1,4 +1,4 @@
-import { FridgeSection, Ingredient } from "../../types/userfridge";
+import { FridgeSection, Ingredient } from "../../api/types/userfridge";
 import {
   Box,
   Button,

@@ -1,6 +1,6 @@
 import { Box, Collapse, List, Paper, Typography } from "@mui/material";
 import { ReactNode } from "react";
-import { FridgeIngredient } from "../../types/userfridge";
+import { FridgeIngredient } from "../../api/types/userfridge";
 import FridgeItem from "./FridgeItem";
 import { toTitleCase } from "src/utils/toTitleCase";
 import { TransitionGroup } from "react-transition-group";
@@ -50,6 +50,7 @@ const FridgeCategory = ({
   onAddButtonClick,
 }: FridgeCategoryProps) => {
   const icon = iconMap.get(name);
+
   return (
     <Box>
       <Box>

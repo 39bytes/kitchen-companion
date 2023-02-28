@@ -1,4 +1,4 @@
-import { Recipe } from "../../types/recipe";
+import { Recipe } from "../../api/types/recipe";
 import {
   AccessTime,
   Bookmark,
@@ -42,13 +42,14 @@ export const RecipeInfoDialog = ({
   onClose,
   recipeInfoSelector,
 }: RecipeInfoDialogProps) => {
+  // Redux State
   const recipe = useAppSelector((state) => recipeInfoSelector(state, recipeId));
   const recipeIsSaved = useAppSelector((state) =>
     selectRecipeById(state, recipeId)
   );
-
   const dispatch = useAppDispatch();
 
+  // Fetch recipe info if it's not already in the store
   useEffect(() => {
     if (!recipe) {
       dispatch(fetchRecipeInfo(recipeId));

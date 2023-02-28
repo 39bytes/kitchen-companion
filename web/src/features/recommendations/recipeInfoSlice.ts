@@ -1,10 +1,10 @@
-import { Recipe } from "../../types/recipe";
+import { Recipe } from "../../api/types/recipe";
 import {
   createAsyncThunk,
   createEntityAdapter,
   createSlice,
 } from "@reduxjs/toolkit";
-import { getRecipeById } from "src/lib/api";
+import { getRecipeById } from "src/api/api";
 import { RootState } from "../store";
 
 const recipeInfoAdapter = createEntityAdapter<Recipe>({

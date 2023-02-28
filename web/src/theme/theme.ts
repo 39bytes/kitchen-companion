@@ -109,7 +109,7 @@ const theme = createTheme({
     h5: {
       fontFamily: "'Plus Jakarta Sans', sans-serif",
       fontWeight: 700,
-      fontSize: "1.5rem",
+      fontSize: "1.3rem",
       lineHeight: 1.2,
     },
     h6: {
@@ -119,11 +119,7 @@ const theme = createTheme({
       lineHeight: 1.2,
     },
   },
-  components: {
-    MuiButtonBase: {
-      defaultProps: {},
-    },
-  },
+  components: {},
   breakpoints: {
     values: {
       xs: 0,

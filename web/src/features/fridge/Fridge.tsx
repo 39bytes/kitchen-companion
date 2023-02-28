@@ -22,7 +22,7 @@ import {
   groupIngredientsByAisle,
   groupIngredientsBySection,
 } from "src/utils/groupIngredientsBy";
-import { Ingredient } from "../../types/userfridge";
+import { Ingredient } from "../../api/types/userfridge";
 import FridgeCategory from "./FridgeCategory";
 import { fetchContents, selectAllFridgeIngredients } from "./fridgeSlice";
 import { IngredientAddDialog } from "./IngredientAddDialog";
@@ -133,7 +133,7 @@ const Fridge = () => {
       <Masonry
         columns={{ sm: 1, md: 2, lg: 2, xl: 3 }}
         sx={{ mt: 4 }}
-        spacing={1.5}
+        spacing={2}
       >
         {Array.from(groupedFridgeContents, ([key, contents]) => (
           <Paper key={key} elevation={0} sx={{ borderRadius: 3 }}>
@@ -156,23 +156,19 @@ const Fridge = () => {
             open={searchOpen}
             onClose={handleSearchClose}
           />
-          {selectedIngredient ? (
+          {selectedIngredient && (
             <IngredientAddDialog
               open={addOpen}
               handleClose={handleAddClose}
               ingredient={selectedIngredient}
             />
-          ) : (
-            <></>
           )}
-          {ingredientToEdit ? (
+          {ingredientToEdit && (
             <IngredientEditDialog
               open={editOpen}
               handleClose={handleEditClose}
               ingredientId={ingredientToEdit}
             />
-          ) : (
-            <></>
           )}
           {/* <Box display="flex" justifyContent="end">
             <GroupBySelect />

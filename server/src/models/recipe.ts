@@ -39,7 +39,7 @@ const RecipeSchema = new Schema<Recipe>({
   userId: { type: Schema.Types.ObjectId, required: true },
   id: { type: Number, required: true },
   title: { type: String, required: true },
-  image: { type: String, required: true },
+  image: { type: String },
   servings: { type: Number, required: true },
   readyInMinutes: { type: Number, required: true },
   sourceUrl: { type: String, required: true },

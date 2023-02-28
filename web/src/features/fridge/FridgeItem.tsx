@@ -1,4 +1,4 @@
-import { FridgeIngredient } from "../../types/userfridge";
+import { FridgeIngredient } from "../../api/types/userfridge";
 import {
   Avatar,
   Box,

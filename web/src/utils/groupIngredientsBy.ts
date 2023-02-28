@@ -1,4 +1,4 @@
-import { FridgeIngredient, Ingredient } from "../types/userfridge";
+import { FridgeIngredient, Ingredient } from "../api/types/userfridge";
 
 const nameComparator = (a: Ingredient, b: Ingredient) => {
   if (a.name < b.name) return -1;

@@ -52,6 +52,7 @@ const RecipeRecommendations = () => {
       <Box display="flex" flexWrap="wrap" justifyContent="space-evenly">
         {recommendations.map((rec) => (
           <RecipeCard
+            key={rec.title}
             recipe={rec}
             handleClick={handleRecommendationCardClick}
           />

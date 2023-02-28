@@ -29,26 +29,19 @@ export const SideNav = ({ open, onClose }: SideNavProps) => {
   const location = useLocation();
   const lgUp = useMediaQuery(theme.breakpoints.up("lg"));
 
-  const logout = () => {
-    axios
-      .post(
-        process.env.REACT_APP_BACKEND_URL + "/auth/logout",
-        {},
-        { withCredentials: true }
-      )
-      .then((data) => (window.location.href = "/"));
+  const logout = async () => {
+    await axios.post(
+      process.env.REACT_APP_BACKEND_URL + "/auth/logout",
+      {},
+      { withCredentials: true }
+    );
+    window.location.href = "/";
   };
 
   const content = (
     <Box
       sx={{
         height: "100%",
-        "& .simplebar-content": {
-          height: "100%",
-        },
-        "& .simplebar-scrollbar:before": {
-          background: "neutral.400",
-        },
       }}
     >
       <Box
@@ -59,17 +52,7 @@ export const SideNav = ({ open, onClose }: SideNavProps) => {
         }}
       >
         <Box sx={{ p: 3 }}>
-          <Box
-            component={Link}
-            to="/"
-            sx={{
-              display: "inline-flex",
-              height: 32,
-              width: 32,
-            }}
-          >
-            <Logo />
-          </Box>
+          <Logo />
           <Box
             sx={{
               alignItems: "center",
@@ -114,64 +97,26 @@ export const SideNav = ({ open, onClose }: SideNavProps) => {
               const active = item.path === location.pathname;
 
               return (
-                <SideNavItem
-                  active={active}
-                  icon={item.icon}
-                  key={item.title}
-                  path={item.path}
-                  title={item.title}
-                />
+                <li key={item.title}>
+                  <SideNavItem
+                    active={active}
+                    icon={item.icon}
+                    path={item.path}
+                    title={item.title}
+                  />
+                </li>
               );
             })}
           </Stack>
         </Box>
         <Divider sx={{ borderColor: "neutral.700" }} />
         <Box px={2} py={3}>
-          <Button
-            sx={{
-              alignItems: "center",
-              borderRadius: 1,
-              display: "flex",
-              justifyContent: "flex-start",
-              pl: "16px",
-              pr: "16px",
-              py: "6px",
-              textAlign: "left",
-              textTransform: "none",
-              width: "100%",
-              "&:hover": {
-                backgroundColor: "rgba(255, 255, 255, 0.04)",
-              },
-            }}
-            onClick={() => logout()}
-          >
-            <Box
-              component="span"
-              sx={{
-                alignItems: "center",
-                color: "neutral.400",
-                display: "inline-flex",
-                justifyContent: "center",
-                mr: 2,
-              }}
-            >
-              <Logout />
-            </Box>
-            <Box
-              component="span"
-              sx={{
-                color: "neutral.400",
-                flexGrow: 1,
-                fontFamily: (theme) => theme.typography.fontFamily,
-                fontSize: 14,
-                fontWeight: 600,
-                lineHeight: "24px",
-                whiteSpace: "nowrap",
-              }}
-            >
-              Log out
-            </Box>
-          </Button>
+          <SideNavItem
+            variant="button"
+            icon={<Logout />}
+            title="Log out"
+            onClick={logout}
+          />
         </Box>
       </Box>
     </Box>
