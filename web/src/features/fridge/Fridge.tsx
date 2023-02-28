@@ -1,11 +1,9 @@
-import { FridgeIngredient, Ingredient } from "../../types/userfridge";
+import { Add } from "@mui/icons-material";
 import MuiMasonry from "@mui/lab/Masonry";
 import {
   Box,
-  CircularProgress,
   Fab,
   FormControl,
-  Grow,
   InputLabel,
   MenuItem,
   Paper,
@@ -14,22 +12,22 @@ import {
   styled,
   useTheme,
 } from "@mui/material";
+import Fade from "@mui/material/Fade";
+import { useSnackbar } from "notistack";
 import { useEffect, useState } from "react";
-import Layout from "src/components/containers/Layout/Layout";
-import { useAppDispatch, useAppSelector } from "src/hooks";
+import { CenteredSpinner } from "src/components/CenteredSpinner";
+import Layout from "src/components/layouts/layout/Layout";
+import { useAppDispatch, useAppSelector } from "src/hooks/reduxHooks";
 import {
   groupIngredientsByAisle,
   groupIngredientsBySection,
 } from "src/utils/groupIngredientsBy";
+import { Ingredient } from "../../types/userfridge";
 import FridgeCategory from "./FridgeCategory";
 import { fetchContents, selectAllFridgeIngredients } from "./fridgeSlice";
-import { Add } from "@mui/icons-material";
-import { IngredientSearchDialog } from "./IngredientSearchDialog";
 import { IngredientAddDialog } from "./IngredientAddDialog";
 import { IngredientEditDialog } from "./IngredientEditDialog";
-import { useSnackbar } from "notistack";
-import Fade from "@mui/material/Fade";
-import { CenteredSpinner } from "src/components/CenteredSpinner";
+import { IngredientSearchDialog } from "./IngredientSearchDialog";
 
 const Masonry = styled(MuiMasonry)(({ theme }) => ({}));
 type GroupKey = "section" | "category";
@@ -133,7 +131,7 @@ const Fridge = () => {
   } else if (fridgeStatus === "success") {
     content = (
       <Masonry
-        columns={{ sm: 1, md: 2, lg: 3, xl: 5 }}
+        columns={{ sm: 1, md: 2, lg: 2, xl: 3 }}
         sx={{ mt: 4 }}
         spacing={1.5}
       >
@@ -151,7 +149,7 @@ const Fridge = () => {
   }
 
   return (
-    <Layout title="My Fridge">
+    <Layout>
       <Fade in={true} timeout={500}>
         <Box>
           <IngredientSearchDialog

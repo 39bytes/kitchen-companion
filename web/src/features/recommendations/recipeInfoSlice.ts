@@ -5,7 +5,7 @@ import {
   createSlice,
 } from "@reduxjs/toolkit";
 import { getRecipeById } from "src/lib/api";
-import { RootState } from "src/store";
+import { RootState } from "../store";
 
 const recipeInfoAdapter = createEntityAdapter<Recipe>({
   selectId: (recipe) => recipe.id,

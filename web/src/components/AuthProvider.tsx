@@ -21,10 +21,6 @@ export interface User {
 
 export const authContext = createContext<User | undefined>(undefined);
 
-export const useAuth = () => {
-  return useContext(authContext);
-};
-
 const AuthProvider = ({ children }: PropsWithChildren<any>) => {
   const [user, setUser] = useState<User>();
   const [status, setStatus] = useState("pending");

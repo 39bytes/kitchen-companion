@@ -17,14 +17,13 @@ import {
 } from "@mui/material";
 import { useEffect } from "react";
 import { CenteredSpinner } from "src/components/CenteredSpinner";
-import { useAppDispatch, useAppSelector } from "src/hooks";
-// import { fetchRecipeInfo, selectRecipeById } from "./recipesSlice";
+import { useAppDispatch, useAppSelector } from "src/hooks/reduxHooks";
 import Image from "mui-image";
 import {
   fetchRecipeInfo,
   selectRecipeInfoById,
 } from "../recommendations/recipeInfoSlice";
-import { RootState } from "src/store";
+import { RootState } from "../store";
 import { deleteRecipe, saveRecipe, selectRecipeById } from "./recipesSlice";
 
 type RecipeInfoDialogProps = {

@@ -1,8 +1,8 @@
 import { configureStore } from "@reduxjs/toolkit";
-import FridgeReducer from "./features/fridge/fridgeSlice";
-import RecipesReducer from "./features/recipes/recipesSlice";
-import RecommendationsReducer from "./features/recommendations/recommendationsSlice";
-import RecipeInfoReducer from "./features/recommendations/recipeInfoSlice";
+import FridgeReducer from "./fridge/fridgeSlice";
+import RecipesReducer from "./recipes/recipesSlice";
+import RecommendationsReducer from "./recommendations/recommendationsSlice";
+import RecipeInfoReducer from "./recommendations/recipeInfoSlice";
 
 const store = configureStore({
   reducer: {

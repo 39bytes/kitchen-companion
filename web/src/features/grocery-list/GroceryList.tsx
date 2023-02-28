@@ -17,7 +17,7 @@ import {
   useTheme,
 } from "@mui/material";
 import React, { useEffect, useState } from "react";
-import Layout from "src/components/containers/Layout/Layout";
+import Layout from "src/components/layouts/layout/Layout";
 import axios from "axios";
 
 type GroceryListItemProps = {
@@ -74,7 +74,7 @@ const GroceryList = () => {
   const handleImportButtonClick = () => {};
 
   return (
-    <Layout title="Grocery List">
+    <Layout>
       <Paper sx={{ px: 3, py: 2 }}>
         <FormControl>
           <FormGroup>

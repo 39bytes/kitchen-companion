@@ -8,8 +8,8 @@ import {
 } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import { CenteredSpinner } from "src/components/CenteredSpinner";
-import Layout from "src/components/containers/Layout/Layout";
-import { useAppDispatch, useAppSelector } from "src/hooks";
+import Layout from "src/components/layouts/layout/Layout";
+import { useAppDispatch, useAppSelector } from "src/hooks/reduxHooks";
 import { RecipeCard } from "../recipes/RecipeCard";
 import { RecipeInfoDialog } from "../recipes/RecipeInfoDialog";
 import { selectRecipeInfoById } from "./recipeInfoSlice";
@@ -49,7 +49,7 @@ const RecipeRecommendations = () => {
     recommendationsList = <CenteredSpinner />;
   } else {
     recommendationsList = (
-      <Box display="flex" flexWrap="wrap" mx={12} justifyContent="space-evenly">
+      <Box display="flex" flexWrap="wrap" justifyContent="space-evenly">
         {recommendations.map((rec) => (
           <RecipeCard
             recipe={rec}
@@ -86,7 +86,7 @@ const RecipeRecommendations = () => {
   };
 
   return (
-    <Layout title="Recommendations based on what's in your fridge">
+    <Layout>
       <Fade in={true} timeout={500}>
         <Box>
           <FormControl variant="standard">

@@ -5,7 +5,7 @@ import {
   createSlice,
 } from "@reduxjs/toolkit";
 import axios from "axios";
-import { RootState } from "src/store";
+import { RootState } from "../store";
 
 const recommendationsAdapter = createEntityAdapter<RecipeByIngredientResult>();
 

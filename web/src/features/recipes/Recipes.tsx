@@ -1,8 +1,15 @@
-import { Box, Fade, FormControl, InputLabel, Select } from "@mui/material";
+import {
+  Box,
+  Fade,
+  FormControl,
+  InputLabel,
+  Select,
+  Typography,
+} from "@mui/material";
 import { useEffect, useState } from "react";
 import { CenteredSpinner } from "src/components/CenteredSpinner";
-import Layout from "src/components/containers/Layout/Layout";
-import { useAppDispatch, useAppSelector } from "src/hooks";
+import Layout from "src/components/layouts/layout/Layout";
+import { useAppDispatch, useAppSelector } from "src/hooks/reduxHooks";
 import {
   fetchSavedRecipes,
   selectAllRecipes,
@@ -59,7 +66,8 @@ export const Recipes = () => {
   );
 
   return (
-    <Layout title="Saved Recipes">
+    <Layout>
+      <Typography variant="h4">Recipes</Typography>
       <Fade in={true} timeout={500}>
         <Box>{recipesList}</Box>
       </Fade>

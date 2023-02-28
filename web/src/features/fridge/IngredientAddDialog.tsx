@@ -9,7 +9,7 @@ import {
   TextField,
 } from "@mui/material";
 import { useEffect, useState } from "react";
-import { useAppDispatch } from "src/hooks";
+import { useAppDispatch } from "src/hooks/reduxHooks";
 import { isFridgeSection } from "src/utils/isFridgeSection";
 import { toTitleCase } from "../../utils/toTitleCase";
 import { addNewIngredient } from "./fridgeSlice";

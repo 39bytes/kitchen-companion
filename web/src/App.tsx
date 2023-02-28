@@ -5,7 +5,7 @@ import "@fontsource/roboto/700.css";
 import { CssBaseline } from "@mui/material";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import "./App.css";
-import AuthProvider from "./AuthProvider";
+import AuthProvider from "./components/AuthProvider";
 import RequireAuth from "./components/RequireAuth";
 import { Login } from "./features/auth/Login";
 import { Register } from "./features/auth/Register";

@@ -14,7 +14,7 @@ import {
   TextField,
 } from "@mui/material";
 import { useEffect, useState } from "react";
-import { useAppDispatch, useAppSelector } from "src/hooks";
+import { useAppDispatch, useAppSelector } from "src/hooks/reduxHooks";
 import { isFridgeSection } from "src/utils/isFridgeSection";
 import IngredientImage from "./IngredientImage";
 import { toTitleCase } from "../../utils/toTitleCase";

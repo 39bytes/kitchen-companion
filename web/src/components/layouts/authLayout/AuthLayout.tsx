@@ -1,11 +1,4 @@
-import {
-  AppBar,
-  Container,
-  CssBaseline,
-  IconButton,
-  Toolbar,
-} from "@mui/material";
-import MenuIcon from "@mui/icons-material/Menu";
+import { Container } from "@mui/material";
 
 type AuthLayoutProps = {
   children: React.ReactNode;

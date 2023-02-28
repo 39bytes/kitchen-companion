@@ -7,7 +7,7 @@ import {
 } from "@reduxjs/toolkit";
 import axios from "axios";
 import { getRecipeById } from "src/lib/api";
-import { RootState } from "src/store";
+import { RootState } from "../store";
 
 const recipesAdapter = createEntityAdapter<Recipe>();
 
