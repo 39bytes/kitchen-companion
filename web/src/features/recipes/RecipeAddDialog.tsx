@@ -11,30 +11,33 @@ import {
 } from "@mui/material";
 import { FieldArray, Form, Formik, useFormik } from "formik";
 import { useEffect, useState } from "react";
-import * as yup from "yup";
+import { useAppDispatch } from "src/hooks/reduxHooks";
+import { saveRecipe } from "./recipesSlice";
+import * as Yup from "yup";
 
 type RecipeAddDialogProps = {
   open: boolean;
   onClose: () => void;
 };
 
-const validationSchema = yup.object({
-  title: yup.string().required("Recipe name is required"),
-  sourceUrl: yup.string().url("Must be a valid URL"),
-  servings: yup.number().positive().integer("Must be a positive number"),
-  readyInMinutes: yup.number().positive().integer("Must be a positive number"),
+const validationSchema = Yup.object({
+  title: Yup.string().required("Recipe name is required"),
+  sourceUrl: Yup.string().url("Must be a valid URL"),
+  servings: Yup.number().positive().integer("Must be a positive number"),
+  readyInMinutes: Yup.number().positive().integer("Must be a positive number"),
 });
 
 const initialValues = {
   title: "",
   sourceUrl: "",
-  servings: undefined,
-  readyInMinutes: undefined,
+  servings: 1,
+  readyInMinutes: 30,
   ingredients: [""],
   instructions: [""],
 };
 
 export const RecipeAddDialog = ({ open, onClose }: RecipeAddDialogProps) => {
+  // For handling input in the ingredients and instructions fields
   const [ingredientsLength, setIngredientsLength] = useState(1);
   const [instructionsLength, setInstructionsLength] = useState(1);
 
@@ -76,6 +79,9 @@ export const RecipeAddDialog = ({ open, onClose }: RecipeAddDialogProps) => {
     }
   }, [instructionsLength]);
 
+  // Redux state
+  const dispatch = useAppDispatch();
+
   return (
     <Dialog open={open} maxWidth="lg" onClose={onClose}>
       <Box p={4}>
@@ -87,7 +93,16 @@ export const RecipeAddDialog = ({ open, onClose }: RecipeAddDialogProps) => {
           validationSchema={validationSchema}
           validateOnChange={false}
           onSubmit={async (values) => {
-            console.log(values);
+            dispatch(
+              saveRecipe({
+                title: values.title,
+                sourceUrl: values.sourceUrl ?? undefined,
+                servings: values.servings ?? undefined,
+                readyInMinutes: values.readyInMinutes ?? undefined,
+                ingredientsList: values.ingredients,
+                instructionsList: values.instructions,
+              })
+            );
           }}
         >
           {({ values, errors, touched, handleChange, handleBlur }) => (
@@ -140,7 +155,6 @@ export const RecipeAddDialog = ({ open, onClose }: RecipeAddDialogProps) => {
                     onChange={handleChange}
                     error={touched.servings && Boolean(errors.servings)}
                     helperText={touched.servings && errors.servings}
-                    defaultValue={1}
                     sx={{
                       mr: 2,
                       maxWidth: 100,
@@ -161,7 +175,6 @@ export const RecipeAddDialog = ({ open, onClose }: RecipeAddDialogProps) => {
                       touched.readyInMinutes && Boolean(errors.readyInMinutes)
                     }
                     helperText={touched.readyInMinutes && errors.readyInMinutes}
-                    defaultValue={30}
                     InputProps={{
                       endAdornment: (
                         <InputAdornment position="end">mins</InputAdornment>
@@ -260,6 +273,7 @@ export const RecipeAddDialog = ({ open, onClose }: RecipeAddDialogProps) => {
                   )}
                 </FieldArray>
               </FormGroup>
+              <Button type="submit">Save</Button>
             </Form>
           )}
         </Formik>

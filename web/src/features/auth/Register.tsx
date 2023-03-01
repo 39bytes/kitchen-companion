@@ -12,6 +12,7 @@ import axios from "axios";
 import { useFormik } from "formik";
 import { useState } from "react";
 import { Link } from "react-router-dom";
+import { client } from "src/api/api";
 import * as Yup from "yup";
 
 const RegisterSchema = Yup.object().shape({
@@ -23,21 +24,18 @@ const RegisterSchema = Yup.object().shape({
 
 export const Register = () => {
   const [error, setError] = useState("");
+
   const formik = useFormik({
     initialValues: { email: "", password: "" },
     validationSchema: RegisterSchema,
     onSubmit: async (values, { setSubmitting }) => {
-      const res = await axios.post(
-        process.env.REACT_APP_BACKEND_URL + "/auth/register",
-        values,
-        {
-          withCredentials: true,
-          headers: {
-            Accept: "application/json",
-            "Content-Type": "application/json",
-          },
-        }
-      );
+      const res = await client.post("/auth/register", values, {
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json",
+        },
+      });
+
       if (res.data.success) {
         window.location.href = "/login";
       } else {

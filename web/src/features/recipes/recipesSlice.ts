@@ -6,7 +6,7 @@ import {
   createSlice,
 } from "@reduxjs/toolkit";
 import axios from "axios";
-import { getRecipeById } from "src/api/api";
+import { client, getRecipeById } from "src/api/api";
 import { RootState } from "../store";
 
 const recipesAdapter = createEntityAdapter<Recipe>();
@@ -24,28 +24,24 @@ const initialState = recipesAdapter.getInitialState<RecipesState>({
 export const fetchSavedRecipes = createAsyncThunk(
   "recipes/fetchRecipes",
   async () => {
-    const recipes = await axios.get(
-      process.env.REACT_APP_BACKEND_URL + "/recipes",
-      { withCredentials: true }
-    );
-    return recipes.data as Recipe[];
+    const res = await client.get("/recipes");
+    return res.data as Recipe[];
   }
 );
 
-export const addRecipe = createAsyncThunk(
-  "recipes/recipeAdded",
-  async (recipe: Recipe) => {}
-);
+// export const addRecipe = createAsyncThunk(
+//   "recipes/recipeAdded",
+//   async (recipe: Recipe) => {
+//     const res = await client.post("/recipes/addRecipe", recipe);
+//     return res.data as Recipe;
+//   }
+// );
 
 export const saveRecipe = createAsyncThunk(
   "recipes/recipeSaved",
-  async (recipe: Recipe) => {
-    const response = await axios.post(
-      process.env.REACT_APP_BACKEND_URL + "/recipes/addRecipe",
-      recipe,
-      { withCredentials: true }
-    );
-    return response.data as Recipe;
+  async (recipe: Partial<Recipe>) => {
+    const res = await client.post("/recipes/addRecipe", recipe);
+    return res.data as Recipe;
   }
 );
 
@@ -80,7 +76,7 @@ export const recipesSlice = createSlice({
       })
       .addCase(fetchSavedRecipes.rejected, (state, action) => {
         state.status = "failed";
-        state.error = "Failed to fetch fridge contents.";
+        state.error = "Failed to fetch recipes.";
       })
       .addCase(saveRecipe.fulfilled, recipesAdapter.addOne)
       .addCase(deleteRecipe.fulfilled, recipesAdapter.removeOne);

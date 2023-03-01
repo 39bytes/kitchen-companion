@@ -66,7 +66,7 @@ export const RecipeInfoDialog = ({
         await dispatch(saveRecipe(recipe));
       } else {
         onClose();
-        await dispatch(deleteRecipe(recipe.id.toString()));
+        await dispatch(deleteRecipe(recipe.id?.toString()));
       }
     };
 

@@ -15,9 +15,12 @@ export interface Recipe {
   readyInMinutes: number;
   sourceUrl: string;
   extendedIngredients: RecipeIngredient[];
+  ingredientsList: string[];
   instructions: string;
-  instructionsList?: string[];
+  instructionsList: string[];
 }
+
+export interface CustomRecipe {}
 
 export interface RecipeIngredient {
   id: number;
