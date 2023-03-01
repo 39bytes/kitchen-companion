@@ -7,7 +7,8 @@ export type RecipeByIngredientResult = {
 };
 
 export interface Recipe {
-  userId: Types.ObjectId;
+  _id: string;
+  userId: string;
   id: number;
   title: string;
   image: string;

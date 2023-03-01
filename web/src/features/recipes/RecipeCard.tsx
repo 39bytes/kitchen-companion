@@ -10,24 +10,24 @@ import {
 } from "@mui/material";
 
 type RecipeCardProps = {
-  recipe: { id: number; title: string; image: string };
-  handleClick: (recipeId: number) => void;
+  recipe: { _id: string; title: string; image: string };
+  handleClick: (recipeId: string) => void;
 };
 
 export const RecipeCard = ({ recipe, handleClick }: RecipeCardProps) => {
   return (
-    <Card sx={{ width: 275, height: 300, m: 1 }} elevation={1}>
-      <CardActionArea onClick={() => handleClick(recipe.id)}>
+    <Card sx={{ width: 240, height: 240, my: 1, mx: 1 }} elevation={1}>
+      <CardActionArea onClick={() => handleClick(recipe._id)}>
         <CardMedia
-          sx={{ height: 200 }}
+          sx={{ height: 160 }}
           image={recipe.image}
           title={recipe.title}
         />
-        <CardContent sx={{ height: 100 }}>
+        <CardContent sx={{ height: 80 }}>
           <Box display="flex" flexDirection="column">
-            <Box height={36} textOverflow="ellipsis">
+            <Box height={30} textOverflow="ellipsis">
               <Typography
-                variant="h5"
+                variant="h6"
                 textAlign="center"
                 height="inherit"
                 gutterBottom
@@ -38,7 +38,7 @@ export const RecipeCard = ({ recipe, handleClick }: RecipeCardProps) => {
                 {recipe.title}
               </Typography>
             </Box>
-            <Box display="flex" mx="auto" mt={1}>
+            <Box display="flex" mx="auto" mb={1}>
               <Box display="flex" alignItems="center" mr={1}>
                 <AccessTime sx={{ mr: 0.5 }} />
                 <Typography variant="subtitle2">20 minutes</Typography>

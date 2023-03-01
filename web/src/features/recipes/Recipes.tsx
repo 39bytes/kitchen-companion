@@ -10,7 +10,7 @@ import {
   styled,
   Typography,
 } from "@mui/material";
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { CenteredSpinner } from "src/components/CenteredSpinner";
 import Layout from "src/components/layouts/layout/Layout";
 import { useAppDispatch, useAppSelector } from "src/hooks/reduxHooks";
@@ -20,9 +20,10 @@ import {
   selectRecipeById,
 } from "./recipesSlice";
 import { RecipeCard } from "./RecipeCard";
-import { RecipeInfoDialog } from "./RecipeInfoDialog";
+// import { RecipeInfoDialog } from "./RecipeInfoDialog";
 import { Add } from "@mui/icons-material";
 import { RecipeAddDialog } from "./RecipeAddDialog";
+import { SavedRecipeDialog } from "./SavedRecipeDialog";
 
 const StyledButton = styled(Button)(({ theme }) => ({
   textTransform: "none",
@@ -30,7 +31,7 @@ const StyledButton = styled(Button)(({ theme }) => ({
 
 export const Recipes = () => {
   // For recipe dialog
-  const [selectedRecipeId, setSelectedRecipeId] = useState<number>();
+  const [selectedRecipeId, setSelectedRecipeId] = useState<string>();
   const [recipeInfoOpen, setRecipeInfoOpen] = useState(false);
 
   // For add recipe menu
@@ -39,7 +40,12 @@ export const Recipes = () => {
   const handleRecipeAddClick = (event: React.MouseEvent<HTMLButtonElement>) => {
     setAnchorEl(event.currentTarget);
   };
+
   const handleRecipeAddClose = () => {
+    setAnchorEl(null);
+  };
+
+  const handleRecipeAddOptionClick = () => {
     setAnchorEl(null);
     setRecipeAddDialogOpen(true);
   };
@@ -61,7 +67,7 @@ export const Recipes = () => {
     }
   }, [recipesStatus, dispatch]);
 
-  const handleRecipeCardClick = (recipeId: number) => {
+  const handleRecipeCardClick = (recipeId: string) => {
     setSelectedRecipeId(recipeId);
     setRecipeInfoOpen(true);
   };
@@ -112,22 +118,23 @@ export const Recipes = () => {
               "aria-labelledby": "add-recipe-button",
             }}
           >
-            <MenuItem onClick={handleRecipeAddClose}>
+            <MenuItem onClick={handleRecipeAddOptionClick}>
               Import from website
             </MenuItem>
-            <MenuItem onClick={handleRecipeAddClose}>Add manually</MenuItem>
+            <MenuItem onClick={handleRecipeAddOptionClick}>
+              Add manually
+            </MenuItem>
           </Menu>
         </Box>
       </Box>
       <Fade in={true} timeout={500}>
-        <Box>{recipesList}</Box>
+        {recipesList}
       </Fade>
       {selectedRecipeId && (
-        <RecipeInfoDialog
+        <SavedRecipeDialog
           open={recipeInfoOpen}
           recipeId={selectedRecipeId}
           onClose={handleRecipeInfoDialogClose}
-          recipeInfoSelector={selectRecipeById}
         />
       )}
       <RecipeAddDialog

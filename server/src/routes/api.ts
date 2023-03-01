@@ -22,7 +22,7 @@ export const getFromSpoonacular = async <T>(
   endpoint: string,
   params?: object
 ) => {
-  const res = await axios.get(`https://api.spoonacular.com/` + endpoint, {
+  const res = await axios.get(`https://api.spoonacular.com` + endpoint, {
     headers: {
       "x-api-key": process.env.SPOONACULAR_API_KEY,
       "Access-Control-Allow-Origin": "*",
@@ -46,7 +46,7 @@ router.get("/ingredient/search", async (req, res) => {
   const number = req.query.number ?? "10";
 
   const data = await getFromSpoonacular<IngredientSearchResponse>(
-    "food/ingredients/search",
+    "/food/ingredients/search",
     {
       query,
       number,
@@ -81,7 +81,7 @@ router.get("/recipes/searchByIngredient", async (req, res) => {
   const number = req.query.number ?? "10";
 
   const data = await getFromSpoonacular<RecipeByIngredientResult[]>(
-    "recipes/findByIngredients",
+    "/recipes/findByIngredients",
     {
       query: "",
       includeIngredients: ingredients,
@@ -98,8 +98,7 @@ export type AnalyzedInstructions = {
   steps: { step: string }[];
 };
 
-export type RecipeByIdResult = {
-  id: number;
+type RecipeBase = {
   title: string;
   image: string;
   servings: number;
@@ -109,6 +108,8 @@ export type RecipeByIdResult = {
   instructions: string;
   analyzedInstructions: AnalyzedInstructions[];
 };
+
+export type RecipeByIdResult = RecipeBase & { id: number };
 
 /** Recipe search by ID.
  * @route GET /api/recipes/searchById
@@ -120,7 +121,7 @@ router.get("/recipes/searchById", async (req, res) => {
   const recipeId = req.query.id;
 
   const data = await getFromSpoonacular<RecipeByIdResult>(
-    `recipes/${recipeId}/information`
+    `/recipes/${recipeId}/information`
   );
 
   let instructionsList;
@@ -134,6 +135,23 @@ router.get("/recipes/searchById", async (req, res) => {
   }
 
   res.json({ ...data, instructionsList, ingredientsList });
+});
+
+router.get("/recipes/parse", async (req, res) => {
+  const url = req.query.url;
+
+  const data = await getFromSpoonacular<RecipeBase>("/recipes/extract", {
+    url,
+  });
+
+  res.json({
+    ...data,
+    servings: data.servings === -1 ? undefined : data.servings,
+    readyInMinutes:
+      data.readyInMinutes === -1 ? undefined : data.readyInMinutes,
+    instructionsList: data.analyzedInstructions[0].steps.map((s) => s.step),
+    ingredientsList: data.extendedIngredients.map((i) => i.original),
+  });
 });
 
 export default router;

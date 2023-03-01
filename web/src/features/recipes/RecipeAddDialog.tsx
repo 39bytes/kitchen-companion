@@ -9,16 +9,15 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
-import { FieldArray, Form, Formik, useFormik } from "formik";
-import { useEffect, useState } from "react";
+import { FieldArray, Form, Formik } from "formik";
+import { faCarrot } from "@fortawesome/free-solid-svg-icons";
+import { client } from "src/api/api";
+import { Recipe } from "src/api/types/recipe";
 import { useAppDispatch } from "src/hooks/reduxHooks";
-import { saveRecipe } from "./recipesSlice";
+import { useAutoField } from "src/hooks/useAutoField";
 import * as Yup from "yup";
-
-type RecipeAddDialogProps = {
-  open: boolean;
-  onClose: () => void;
-};
+import { addRecipe } from "./recipesSlice";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 const validationSchema = Yup.object({
   title: Yup.string().required("Recipe name is required"),
@@ -29,6 +28,7 @@ const validationSchema = Yup.object({
 
 const initialValues = {
   title: "",
+  image: "",
   sourceUrl: "",
   servings: 1,
   readyInMinutes: 30,
@@ -36,50 +36,43 @@ const initialValues = {
   instructions: [""],
 };
 
+type formikState = typeof initialValues;
+type formikSetValues = (
+  state: React.SetStateAction<formikState>,
+  shouldValidate?: boolean
+) => void;
+
+type RecipeAddDialogProps = {
+  open: boolean;
+  onClose: () => void;
+};
+
 export const RecipeAddDialog = ({ open, onClose }: RecipeAddDialogProps) => {
   // For handling input in the ingredients and instructions fields
-  const [ingredientsLength, setIngredientsLength] = useState(1);
-  const [instructionsLength, setInstructionsLength] = useState(1);
+  const handleIngredientFieldKeyDown = useAutoField("ingredients");
+  const handleInstructionFieldKeyDown = useAutoField("instructions");
 
-  const handleIngredientFieldKeyDown = (
-    e: React.KeyboardEvent<HTMLDivElement>,
-    push: (obj: any) => void,
-    length: number
+  const handleParseButtonClick = async (
+    values: formikState,
+    setValues: formikSetValues
   ) => {
-    if (e.key === "Enter" && !e.shiftKey) {
-      push("");
-      setIngredientsLength(length);
-    }
+    const data = (
+      await client.get("/api/recipes/parse", {
+        params: { url: values.sourceUrl },
+      })
+    ).data as Recipe;
+
+    setValues({
+      title: data.title,
+      image: data.image,
+      sourceUrl: values.sourceUrl,
+      servings: data.servings ?? values.servings,
+      readyInMinutes: data.readyInMinutes ?? values.readyInMinutes,
+      ingredients: data.ingredientsList,
+      instructions: data.instructionsList,
+    });
   };
 
-  const handleInstructionFieldKeyDown = (
-    e: React.KeyboardEvent<HTMLDivElement>,
-    push: (obj: any) => void,
-    length: number
-  ) => {
-    if (e.key === "Enter" && !e.shiftKey) {
-      push("");
-      setInstructionsLength(length);
-    }
-  };
-
-  useEffect(() => {
-    const node = document.getElementById(`ingredients.${ingredientsLength}`);
-    node?.focus();
-    if (node !== null) {
-      node.innerText = "";
-    }
-  }, [ingredientsLength]);
-
-  useEffect(() => {
-    const node = document.getElementById(`instructions.${instructionsLength}`);
-    node?.focus();
-    if (node !== null) {
-      node.innerText = "";
-    }
-  }, [instructionsLength]);
-
-  // Redux state
   const dispatch = useAppDispatch();
 
   return (
@@ -92,20 +85,29 @@ export const RecipeAddDialog = ({ open, onClose }: RecipeAddDialogProps) => {
           initialValues={initialValues}
           validationSchema={validationSchema}
           validateOnChange={false}
-          onSubmit={async (values) => {
-            dispatch(
-              saveRecipe({
-                title: values.title,
-                sourceUrl: values.sourceUrl ?? undefined,
-                servings: values.servings ?? undefined,
-                readyInMinutes: values.readyInMinutes ?? undefined,
-                ingredientsList: values.ingredients,
-                instructionsList: values.instructions,
-              })
-            );
+          onSubmit={async (values, actions) => {
+            const recipeData = {
+              title: values.title,
+              image: values.image,
+              sourceUrl: values.sourceUrl ?? undefined,
+              servings: values.servings ?? undefined,
+              readyInMinutes: values.readyInMinutes ?? undefined,
+              ingredientsList: values.ingredients,
+              instructionsList: values.instructions,
+            };
+            dispatch(addRecipe(recipeData));
+            actions.setSubmitting(false);
+            onClose();
           }}
         >
-          {({ values, errors, touched, handleChange, handleBlur }) => (
+          {({
+            values,
+            errors,
+            touched,
+            handleChange,
+            handleBlur,
+            setValues,
+          }) => (
             <Form>
               <Box display="flex" alignItems="center" minWidth={500}>
                 <TextField
@@ -120,7 +122,11 @@ export const RecipeAddDialog = ({ open, onClose }: RecipeAddDialogProps) => {
                   helperText={touched.sourceUrl && errors.sourceUrl}
                   sx={{ mt: 2, mb: 2 }}
                 />
-                <Button variant="outlined" sx={{ height: 32, ml: 2 }}>
+                <Button
+                  variant="outlined"
+                  sx={{ height: 32, ml: 2 }}
+                  onClick={() => handleParseButtonClick(values, setValues)}
+                >
                   Import
                 </Button>
               </Box>
@@ -201,6 +207,16 @@ export const RecipeAddDialog = ({ open, onClose }: RecipeAddDialogProps) => {
                             helperText={
                               touched.ingredients && errors.ingredients
                             }
+                            InputProps={{
+                              startAdornment: (
+                                <InputAdornment
+                                  color="primary"
+                                  position="start"
+                                >
+                                  <FontAwesomeIcon icon={faCarrot} />
+                                </InputAdornment>
+                              ),
+                            }}
                             onKeyDown={(e) => {
                               handleIngredientFieldKeyDown(
                                 e,

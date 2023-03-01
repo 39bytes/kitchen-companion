@@ -26,6 +26,7 @@ const LayoutContainer = styled("div")({
   width: "100%",
   minHeight: "100vh",
   paddingLeft: 24,
+  paddingRight: 24,
   backgroundColor: "#f4f6f8",
 });
 

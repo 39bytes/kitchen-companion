@@ -9,7 +9,9 @@ import axios from "axios";
 import { client, getRecipeById } from "src/api/api";
 import { RootState } from "../store";
 
-const recipesAdapter = createEntityAdapter<Recipe>();
+const recipesAdapter = createEntityAdapter<Recipe>({
+  selectId: (recipe) => recipe._id.toString(),
+});
 
 interface RecipesState {
   status: "idle" | "loading" | "success" | "failed";
@@ -37,7 +39,7 @@ export const fetchSavedRecipes = createAsyncThunk(
 //   }
 // );
 
-export const saveRecipe = createAsyncThunk(
+export const addRecipe = createAsyncThunk(
   "recipes/recipeSaved",
   async (recipe: Partial<Recipe>) => {
     const res = await client.post("/recipes/addRecipe", recipe);
@@ -48,13 +50,9 @@ export const saveRecipe = createAsyncThunk(
 export const deleteRecipe = createAsyncThunk(
   "recipes/recipeDeleted",
   async (recipeId: string) => {
-    const response = await axios.post(
-      process.env.REACT_APP_BACKEND_URL + "/recipes/deleteRecipe",
-      {
-        id: recipeId,
-      },
-      { withCredentials: true }
-    );
+    const response = await client.post("/recipes/deleteRecipe", {
+      id: recipeId,
+    });
 
     // The response is just the id of the deleted recipe
     return response.data as string;
@@ -78,7 +76,7 @@ export const recipesSlice = createSlice({
         state.status = "failed";
         state.error = "Failed to fetch recipes.";
       })
-      .addCase(saveRecipe.fulfilled, recipesAdapter.addOne)
+      .addCase(addRecipe.fulfilled, recipesAdapter.addOne)
       .addCase(deleteRecipe.fulfilled, recipesAdapter.removeOne);
   },
 });

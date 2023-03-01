@@ -38,7 +38,7 @@ const RecipeIngredientSchema = new Schema<RecipeIngredient>({
 
 const RecipeSchema = new Schema<Recipe>({
   userId: { type: Schema.Types.ObjectId, required: true },
-  id: { type: Number, required: true },
+  id: { type: Number },
   title: { type: String, required: true },
   image: { type: String },
   servings: { type: Number },

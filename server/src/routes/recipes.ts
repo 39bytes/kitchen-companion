@@ -47,7 +47,7 @@ router.get("/recommendations", async (req, res) => {
       const ingredientNames = new Set(doc.contents.map((i) => i.name));
 
       const data = await getFromSpoonacular<RecipeByIngredientResult[]>(
-        "recipes/findByIngredients",
+        "/recipes/findByIngredients",
         {
           ingredients: [...ingredientNames].join(),
           ranking: 2,
@@ -73,10 +73,10 @@ router.post("/addRecipe", async (req, res) => {
     return;
   }
 
-  RecipeModel.findOneAndUpdate(
-    { userId: req.user.id, id: req.body.id },
-    { $setOnInsert: { ...req.body, userId: req.user.id } },
-    { upsert: true, new: true },
+  console.log(req.body);
+
+  RecipeModel.create(
+    { ...req.body, userId: req.user.id },
     (err: Error, doc: Recipe) => {
       if (err) {
         res.status(400).send(err);
@@ -110,14 +110,17 @@ router.post("/deleteRecipe", async (req, res) => {
 
   const recipeId = req.body.id;
 
-  RecipeModel.deleteOne({ userId: req.user.id, id: recipeId }, (err: Error) => {
-    if (err) {
-      res.status(400).send(err);
-      console.error(err);
-    } else {
-      res.send(recipeId);
+  RecipeModel.deleteOne(
+    { userId: req.user.id, _id: recipeId },
+    (err: Error) => {
+      if (err) {
+        res.status(400).send(err);
+        console.error(err);
+      } else {
+        res.send(recipeId);
+      }
     }
-  });
+  );
 });
 
 export default router;
