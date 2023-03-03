@@ -47,19 +47,6 @@ export const getIngredientExpiration = async (query: string) => {
   return res.data as ExpirationData;
 };
 
-export const getRecipesByIngredients = async (
-  ingredients: Iterable<string>,
-  number: number
-) => {
-  const res = await client.get("/api/recipes/searchByIngredient", {
-    params: {
-      ingredients: [...ingredients].join(),
-      number,
-    },
-  });
-  return res.data as RecipeByIngredientResult[];
-};
-
 export const getRecipeById = async (id: number) => {
   const res = await client.get("/api/recipes/searchById", {
     params: {

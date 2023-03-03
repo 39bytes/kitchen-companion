@@ -4,6 +4,8 @@ import {
   BookmarkBorder,
   Restaurant,
   Delete,
+  Backup,
+  ArrowBack,
 } from "@mui/icons-material";
 import {
   Box,
@@ -12,46 +14,44 @@ import {
   IconButton,
   List,
   ListItem,
+  Tooltip,
   Typography,
 } from "@mui/material";
 import Image from "mui-image";
-import { useNavigate } from "react-router-dom";
+import { useEffect } from "react";
+import { useNavigate, useParams } from "react-router-dom";
 import { CenteredSpinner } from "src/components/CenteredSpinner";
+import Layout from "src/components/layouts/layout/Layout";
 import { useAppDispatch, useAppSelector } from "src/hooks/reduxHooks";
 import { deleteRecipe, selectRecipeById } from "./recipesSlice";
 
-type SavedRecipeDialogProps = {
-  recipeId: string;
-  open: boolean;
-  onClose: () => void;
-};
-
-export const SavedRecipeDialog = ({
-  recipeId,
-  open,
-  onClose,
-}: SavedRecipeDialogProps) => {
+export const ViewRecipe = () => {
+  const { recipeId } = useParams();
   const navigate = useNavigate();
-  const recipe = useAppSelector((state) => selectRecipeById(state, recipeId));
+
+  const recipe = useAppSelector((state) => selectRecipeById(state, recipeId!));
   const dispatch = useAppDispatch();
 
-  let content;
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
 
   if (!recipe) {
-    content = <CenteredSpinner />;
-  } else {
-    const handleDeleteButtonClick = async () => {
-      onClose();
-      await dispatch(deleteRecipe(recipe._id.toString()));
-    };
+    return <div>Recipe not found</div>;
+  }
 
-    const handleEditButtonClick = () => {
-      onClose();
-      navigate(`/recipes/edit/${recipe._id}`);
-    };
+  const handleDeleteButtonClick = async () => {
+    await dispatch(deleteRecipe(recipe._id.toString()));
+  };
 
-    content = (
+  return (
+    <Layout>
       <Box p={4}>
+        {/* <Tooltip title="Back">
+          <IconButton onClick={() => navigate("/recipes")}>
+            <ArrowBack />
+          </IconButton>
+        </Tooltip> */}
         <Box display="flex" justifyContent="space-between">
           <Box>
             <Box display="flex" alignItems="center">
@@ -68,7 +68,7 @@ export const SavedRecipeDialog = ({
               <Button
                 variant="outlined"
                 sx={{ mt: 1 }}
-                onClick={handleEditButtonClick}
+                onClick={() => navigate(`/recipes/edit/${recipe._id}`)}
               >
                 Edit
               </Button>
@@ -124,12 +124,6 @@ export const SavedRecipeDialog = ({
           </Typography>
         )}
       </Box>
-    );
-  }
-
-  return (
-    <Dialog open={open} onClose={onClose} maxWidth="lg" fullWidth>
-      {content}
-    </Dialog>
+    </Layout>
   );
 };

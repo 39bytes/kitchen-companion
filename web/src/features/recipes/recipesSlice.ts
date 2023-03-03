@@ -47,6 +47,14 @@ export const addRecipe = createAsyncThunk(
   }
 );
 
+export const updateRecipe = createAsyncThunk(
+  "recipes/recipeUpdated",
+  async (recipe: Partial<Recipe>) => {
+    const res = await client.post("/recipes/updateRecipe", recipe);
+    return res.data as Recipe;
+  }
+);
+
 export const deleteRecipe = createAsyncThunk(
   "recipes/recipeDeleted",
   async (recipeId: string) => {
@@ -77,6 +85,7 @@ export const recipesSlice = createSlice({
         state.error = "Failed to fetch recipes.";
       })
       .addCase(addRecipe.fulfilled, recipesAdapter.addOne)
+      .addCase(updateRecipe.fulfilled, recipesAdapter.setOne)
       .addCase(deleteRecipe.fulfilled, recipesAdapter.removeOne);
   },
 });
@@ -85,3 +94,8 @@ export default recipesSlice.reducer;
 
 export const { selectAll: selectAllRecipes, selectById: selectRecipeById } =
   recipesAdapter.getSelectors<RootState>((state) => state.recipes);
+
+export const selectRecipeBySpoonacularId = createSelector(
+  [selectAllRecipes, (_: RootState, id: number) => id],
+  (recipes, id) => recipes.find((recipe) => recipe.id === id)
+);

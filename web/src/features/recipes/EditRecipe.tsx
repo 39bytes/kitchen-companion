@@ -1,23 +1,22 @@
+import { faCarrot } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Remove } from "@mui/icons-material";
 import {
   Box,
-  Button,
-  Dialog,
-  FormGroup,
-  IconButton,
-  InputAdornment,
-  TextField,
   Typography,
+  TextField,
+  Button,
+  FormGroup,
+  InputAdornment,
+  IconButton,
 } from "@mui/material";
-import { FieldArray, Form, Formik } from "formik";
-import { faCarrot } from "@fortawesome/free-solid-svg-icons";
-import { client } from "src/api/api";
-import { Recipe } from "src/api/types/recipe";
-import { useAppDispatch } from "src/hooks/reduxHooks";
+import { Formik, FieldArray, Form } from "formik";
+import { useNavigate, useParams } from "react-router-dom";
+import Layout from "src/components/layouts/layout/Layout";
+import { useAppDispatch, useAppSelector } from "src/hooks/reduxHooks";
 import { useAutoField } from "src/hooks/useAutoField";
 import * as Yup from "yup";
-import { addRecipe } from "./recipesSlice";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { addRecipe, selectRecipeById, updateRecipe } from "./recipesSlice";
 
 const validationSchema = Yup.object({
   title: Yup.string().required("Recipe name is required"),
@@ -26,60 +25,36 @@ const validationSchema = Yup.object({
   readyInMinutes: Yup.number().positive().integer("Must be a positive number"),
 });
 
-const initialValues = {
-  title: "",
-  image: "",
-  sourceUrl: "",
-  servings: 1,
-  readyInMinutes: 30,
-  ingredients: [""],
-  instructions: [""],
-};
-
-export type formikState = typeof initialValues;
-type formikSetValues = (
-  state: React.SetStateAction<formikState>,
-  shouldValidate?: boolean
-) => void;
-
-type RecipeAddDialogProps = {
-  open: boolean;
-  onClose: () => void;
-};
-
-export const RecipeAddDialog = ({ open, onClose }: RecipeAddDialogProps) => {
-  // For handling input in the ingredients and instructions fields
+export const EditRecipe = () => {
   const handleIngredientFieldKeyDown = useAutoField("ingredients");
   const handleInstructionFieldKeyDown = useAutoField("instructions");
 
-  const handleParseButtonClick = async (
-    values: formikState,
-    setValues: formikSetValues
-  ) => {
-    const data = (
-      await client.get("/api/recipes/parse", {
-        params: { url: values.sourceUrl },
-      })
-    ).data as Recipe;
+  const { recipeId } = useParams();
 
-    setValues({
-      title: data.title,
-      image: data.image,
-      sourceUrl: values.sourceUrl,
-      servings: data.servings ?? values.servings,
-      readyInMinutes: data.readyInMinutes ?? values.readyInMinutes,
-      ingredients: data.ingredientsList,
-      instructions: data.instructionsList,
-    });
-  };
+  const navigate = useNavigate();
 
+  const recipe = useAppSelector((state) => selectRecipeById(state, recipeId!));
   const dispatch = useAppDispatch();
 
+  if (!recipe) {
+    return <div>Recipe id not found</div>;
+  }
+
+  const initialValues = {
+    title: recipe.title,
+    image: recipe.image,
+    sourceUrl: recipe.sourceUrl,
+    servings: recipe.servings,
+    readyInMinutes: recipe.readyInMinutes,
+    ingredients: recipe.ingredientsList,
+    instructions: recipe.instructionsList,
+  };
+
   return (
-    <Dialog open={open} maxWidth="lg" onClose={onClose}>
+    <Layout>
       <Box p={4}>
         <Typography variant="h5" color="primary">
-          New Recipe
+          Edit Recipe
         </Typography>
         <Formik
           initialValues={initialValues}
@@ -87,6 +62,7 @@ export const RecipeAddDialog = ({ open, onClose }: RecipeAddDialogProps) => {
           validateOnChange={false}
           onSubmit={async (values, actions) => {
             const recipeData = {
+              _id: recipe._id,
               title: values.title,
               image: values.image,
               sourceUrl: values.sourceUrl ?? undefined,
@@ -95,19 +71,12 @@ export const RecipeAddDialog = ({ open, onClose }: RecipeAddDialogProps) => {
               ingredientsList: values.ingredients,
               instructionsList: values.instructions,
             };
-            await dispatch(addRecipe(recipeData));
+            await dispatch(updateRecipe(recipeData));
             actions.setSubmitting(false);
-            onClose();
+            navigate("/recipes");
           }}
         >
-          {({
-            values,
-            errors,
-            touched,
-            handleChange,
-            handleBlur,
-            setValues,
-          }) => (
+          {({ values, errors, touched, handleChange, handleBlur }) => (
             <Form>
               <Box display="flex" alignItems="center" minWidth={500}>
                 <TextField
@@ -122,13 +91,13 @@ export const RecipeAddDialog = ({ open, onClose }: RecipeAddDialogProps) => {
                   helperText={touched.sourceUrl && errors.sourceUrl}
                   sx={{ mt: 2, mb: 2 }}
                 />
-                <Button
-                  variant="outlined"
-                  sx={{ height: 32, ml: 2 }}
-                  onClick={() => handleParseButtonClick(values, setValues)}
-                >
-                  Import
-                </Button>
+                {/* <Button
+                variant="outlined"
+                sx={{ height: 32, ml: 2 }}
+                onClick={() => handleParseButtonClick(values, setValues)}
+              >
+                Import
+              </Button> */}
               </Box>
               <Typography
                 component="p"
@@ -296,6 +265,6 @@ export const RecipeAddDialog = ({ open, onClose }: RecipeAddDialogProps) => {
           )}
         </Formik>
       </Box>
-    </Dialog>
+    </Layout>
   );
 };

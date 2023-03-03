@@ -77,6 +77,7 @@ router.get("/ingredient/expiration", (req, res) => {
  * @returns {RecipeByIngredientResult[]} - Array of recipes.
  */
 router.get("/recipes/searchByIngredient", async (req, res) => {
+  return;
   const ingredients = req.query.ingredients;
   const number = req.query.number ?? "10";
 

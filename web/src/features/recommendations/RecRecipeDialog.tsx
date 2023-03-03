@@ -1,10 +1,23 @@
 import { AccessTime, Restaurant } from "@mui/icons-material";
-import { Box, Button, Dialog, List, ListItem, Typography } from "@mui/material";
+import {
+  Box,
+  Button,
+  Dialog,
+  IconButton,
+  List,
+  ListItem,
+  Typography,
+} from "@mui/material";
 import Image from "mui-image";
 import { CenteredSpinner } from "src/components/CenteredSpinner";
 import { useAppDispatch, useAppSelector } from "src/hooks/reduxHooks";
-import { addRecipe } from "../recipes/recipesSlice";
+import {
+  addRecipe,
+  deleteRecipe,
+  selectRecipeBySpoonacularId,
+} from "../recipes/recipesSlice";
 import { fetchRecipeInfo, selectRecipeInfoById } from "./recipeInfoSlice";
+import { BookmarkAdd, BookmarkAddOutlined } from "@mui/icons-material";
 
 type RecRecipeDialogProps = {
   recipeId: number;
@@ -21,6 +34,9 @@ export const RecRecipeDialog = ({
     selectRecipeInfoById(state, recipeId)
   );
   const dispatch = useAppDispatch();
+  const recipeIsSaved = useAppSelector((state) =>
+    selectRecipeBySpoonacularId(state, recipeId)
+  );
 
   let content;
 
@@ -32,20 +48,33 @@ export const RecRecipeDialog = ({
       await dispatch(addRecipe(recipe));
     };
 
+    const handleUnsaveButtonClick = async () => {
+      await dispatch(deleteRecipe(recipe._id));
+    };
+
     content = (
       <Box p={4}>
         <Box display="flex" justifyContent="space-between">
           <Box>
             <Box display="flex" alignItems="center">
               <Typography variant="h5">{recipe.title}</Typography>
-              <Button
+              {recipeIsSaved ? (
+                <IconButton color="primary" onClick={handleUnsaveButtonClick}>
+                  <BookmarkAdd />
+                </IconButton>
+              ) : (
+                <IconButton color="primary" onClick={handleSaveButtonClick}>
+                  <BookmarkAddOutlined />
+                </IconButton>
+              )}
+              {/* <Button
                 variant="outlined"
                 color="primary"
                 onClick={handleSaveButtonClick}
                 sx={{ ml: 20 }}
               >
                 Save
-              </Button>
+              </Button> */}
             </Box>
             <Button href={recipe.sourceUrl} target="_blank" variant="outlined">
               View Source

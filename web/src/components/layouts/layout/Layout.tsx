@@ -31,19 +31,12 @@ const LayoutContainer = styled("div")({
 });
 
 export const Layout = ({ children }: LayoutProps) => {
-  const [openNav, setOpenNav] = useState(true);
-  const location = useLocation();
-
-  useEffect(() => {
-    if (openNav) {
-      setOpenNav(false);
-    }
-  }, [location.pathname, openNav]);
+  const [openNav, setOpenNav] = useState(false);
 
   return (
     <>
+      <TopNav onNavOpen={() => setOpenNav(true)} />
       <SideNav onClose={() => setOpenNav(false)} open={openNav} />
-      <TopNav onNavOpen={() => console.log("open")} />
       <LayoutRoot>
         <LayoutContainer>{children}</LayoutContainer>
       </LayoutRoot>

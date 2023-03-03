@@ -20,38 +20,27 @@ import {
   selectRecipeById,
 } from "./recipesSlice";
 import { RecipeCard } from "./RecipeCard";
-// import { RecipeInfoDialog } from "./RecipeInfoDialog";
 import { Add } from "@mui/icons-material";
 import { RecipeAddDialog } from "./RecipeAddDialog";
 import { SavedRecipeDialog } from "./SavedRecipeDialog";
+import { useNavigate } from "react-router-dom";
 
 const StyledButton = styled(Button)(({ theme }) => ({
   textTransform: "none",
+  marginTop: theme.spacing(2),
 }));
 
 export const Recipes = () => {
+  const navigate = useNavigate();
   // For recipe dialog
   const [selectedRecipeId, setSelectedRecipeId] = useState<string>();
   const [recipeInfoOpen, setRecipeInfoOpen] = useState(false);
 
-  // For add recipe menu
-  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
-  const addRecipeOpen = Boolean(anchorEl);
-  const handleRecipeAddClick = (event: React.MouseEvent<HTMLButtonElement>) => {
-    setAnchorEl(event.currentTarget);
-  };
+  const [recipeAddDialogOpen, setRecipeAddDialogOpen] = useState(false);
 
-  const handleRecipeAddClose = () => {
-    setAnchorEl(null);
-  };
-
-  const handleRecipeAddOptionClick = () => {
-    setAnchorEl(null);
+  const handleRecipeAddClick = () => {
     setRecipeAddDialogOpen(true);
   };
-
-  // For add recipe dialog
-  const [recipeAddDialogOpen, setRecipeAddDialogOpen] = useState(false);
   const handleRecipeAddDialogClose = () => {
     setRecipeAddDialogOpen(false);
   };
@@ -68,8 +57,9 @@ export const Recipes = () => {
   }, [recipesStatus, dispatch]);
 
   const handleRecipeCardClick = (recipeId: string) => {
-    setSelectedRecipeId(recipeId);
-    setRecipeInfoOpen(true);
+    // setSelectedRecipeId(recipeId);
+    // setRecipeInfoOpen(true);
+    navigate(`/recipes/info/${recipeId}`);
   };
   const handleRecipeInfoDialogClose = () => {
     setRecipeInfoOpen(false);
@@ -86,7 +76,7 @@ export const Recipes = () => {
           <RecipeCard
             recipe={rec}
             handleClick={handleRecipeCardClick}
-            key={rec.title}
+            key={rec._id}
           />
         ))}
       </Box>
@@ -95,41 +85,21 @@ export const Recipes = () => {
 
   return (
     <Layout>
-      <Box display="flex">
+      <Box display="flex" mt={4}>
         <Typography variant="h4">Saved Recipes</Typography>
         <Box ml="auto" px={4}>
           <StyledButton
             id="add-recipe-button"
-            aria-controls={addRecipeOpen ? "recipe-add-menu" : undefined}
-            aria-haspopup="true"
-            aria-expanded={addRecipeOpen ? "true" : undefined}
             variant="contained"
             startIcon={<Add />}
             onClick={handleRecipeAddClick}
           >
             Add new
           </StyledButton>
-          <Menu
-            id="add-recipe-menu"
-            anchorEl={anchorEl}
-            open={addRecipeOpen}
-            onClose={handleRecipeAddClose}
-            MenuListProps={{
-              "aria-labelledby": "add-recipe-button",
-            }}
-          >
-            <MenuItem onClick={handleRecipeAddOptionClick}>
-              Import from website
-            </MenuItem>
-            <MenuItem onClick={handleRecipeAddOptionClick}>
-              Add manually
-            </MenuItem>
-          </Menu>
         </Box>
       </Box>
-      <Fade in={true} timeout={500}>
-        {recipesList}
-      </Fade>
+      {/* <Fade in={true} timeout={500}></Fade> */}
+      {recipesList}
       {selectedRecipeId && (
         <SavedRecipeDialog
           open={recipeInfoOpen}

@@ -16,8 +16,8 @@ import { useTheme } from "@mui/system";
 import { useLocation } from "react-router-dom";
 import { Link } from "react-router-dom";
 import { Scrollbar } from "./Scrollbar";
-import axios from "axios";
 import { Logout } from "@mui/icons-material";
+import { client } from "../../../api/api";
 
 type SideNavProps = {
   open: boolean;
@@ -30,11 +30,7 @@ export const SideNav = ({ open, onClose }: SideNavProps) => {
   const lgUp = useMediaQuery(theme.breakpoints.up("lg"));
 
   const logout = async () => {
-    await axios.post(
-      process.env.REACT_APP_BACKEND_URL + "/auth/logout",
-      {},
-      { withCredentials: true }
-    );
+    await client.post("/auth/logout");
     window.location.href = "/";
   };
 
@@ -53,27 +49,6 @@ export const SideNav = ({ open, onClose }: SideNavProps) => {
       >
         <Box sx={{ p: 3 }}>
           <Logo />
-          <Box
-            sx={{
-              alignItems: "center",
-              backgroundColor: "rgba(255, 255, 255, 0.04)",
-              borderRadius: 1,
-              cursor: "pointer",
-              display: "flex",
-              justifyContent: "space-between",
-              mt: 2,
-              p: "12px",
-            }}
-          >
-            <div>
-              <Typography color="inherit" variant="subtitle1">
-                Devias
-              </Typography>
-              <Typography color="neutral.400" variant="body2">
-                Production
-              </Typography>
-            </div>
-          </Box>
         </Box>
         <Divider sx={{ borderColor: "neutral.700" }} />
         <Box

@@ -17,11 +17,17 @@ export const IngredientSearchDialog = ({
 }: IngredientSearchDialogProps) => {
   const [searchQuery, setSearchQuery] = useState("");
   const [searchResults, setSearchResults] = useState<Ingredient[]>([]);
+  const [searching, setSearching] = useState(false);
 
   // Only update the search results when the user hasn't typed for a bit
   // This prevents unnecessary API call spam
   useEffect(() => {
-    const timeoutId = setTimeout(() => getIngredients(searchQuery), 100);
+    setSearchResults([]);
+    if (searchQuery === "") {
+      return;
+    }
+    setSearching(true);
+    const timeoutId = setTimeout(() => getIngredients(searchQuery), 200);
     return () => clearTimeout(timeoutId);
   }, [searchQuery]);
 
@@ -33,7 +39,11 @@ export const IngredientSearchDialog = ({
 
     // Return 10 results
     getIngredientSearch(value, 15).then((data) => {
+      if (searchQuery === "") {
+        return;
+      }
       setSearchResults(data);
+      setSearching(false);
     });
   };
 
@@ -64,7 +74,7 @@ export const IngredientSearchDialog = ({
     });
   } else {
     results =
-      searchQuery !== "" ? (
+      searchQuery !== "" && !searching ? (
         <Box key="no-results" textAlign="center">
           <Typography>No results found :(</Typography>
         </Box>

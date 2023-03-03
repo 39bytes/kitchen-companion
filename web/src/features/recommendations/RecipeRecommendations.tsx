@@ -1,5 +1,5 @@
 import { Refresh } from "@mui/icons-material";
-import { Box, Button, Fade, FormControl } from "@mui/material";
+import { Box, Button, Fade, FormControl, Typography } from "@mui/material";
 import { useEffect, useState } from "react";
 import { CenteredSpinner } from "src/components/CenteredSpinner";
 import Layout from "src/components/layouts/layout/Layout";
@@ -19,11 +19,11 @@ const RecipeRecommendations = () => {
   const recsStatus = useAppSelector((state) => state.recommendations.status);
   const dispatch = useAppDispatch();
 
-  useEffect(() => {
-    if (recsStatus === "idle") {
-      dispatch(fetchRecommendations());
-    }
-  }, [recsStatus, dispatch]);
+  // useEffect(() => {
+  //   if (recsStatus === "idle") {
+  //     dispatch(fetchRecommendations());
+  //   }
+  // }, [recsStatus, dispatch]);
 
   const handleRecommendationCardClick = async (recipeId: number) => {
     setSelectedRecipeId(recipeId);
@@ -52,13 +52,14 @@ const RecipeRecommendations = () => {
   }
 
   const handleRefreshButtonClick = () => {
-    dispatch(fetchRecommendations());
+    //dispatch(fetchRecommendations());
   };
 
   return (
     <Layout>
       <Fade in={true} timeout={500}>
-        <Box>
+        <Box mt={4}>
+          <Typography variant="h4">Recipes for you</Typography>
           <FormControl variant="standard">
             <Box display="flex">
               <Button

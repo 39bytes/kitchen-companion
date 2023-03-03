@@ -17,6 +17,7 @@ import { useSnackbar } from "notistack";
 import { useEffect, useState } from "react";
 import { CenteredSpinner } from "src/components/CenteredSpinner";
 import Layout from "src/components/layouts/layout/Layout";
+import { TopNav } from "src/components/layouts/layout/TopNav";
 import { useAppDispatch, useAppSelector } from "src/hooks/reduxHooks";
 import {
   groupIngredientsByAisle,
@@ -130,11 +131,7 @@ const Fridge = () => {
     content = <div>{error}</div>;
   } else if (fridgeStatus === "success") {
     content = (
-      <Masonry
-        columns={{ sm: 1, md: 2, lg: 2, xl: 3 }}
-        sx={{ mt: 4 }}
-        spacing={2}
-      >
+      <Masonry columns={{ sm: 1, md: 2, lg: 2, xl: 3 }} spacing={2}>
         {Array.from(groupedFridgeContents, ([key, contents]) => (
           <Paper key={key} elevation={0} sx={{ borderRadius: 3 }}>
             <FridgeCategory
@@ -151,7 +148,7 @@ const Fridge = () => {
   return (
     <Layout>
       <Fade in={true} timeout={500}>
-        <Box>
+        <Box mt={4}>
           <IngredientSearchDialog
             open={searchOpen}
             onClose={handleSearchClose}

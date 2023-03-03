@@ -36,6 +36,8 @@ router.get("/", async (req, res) => {
  */
 
 router.get("/recommendations", async (req, res) => {
+  res.json({});
+  return;
   if (!req.user) {
     res.sendStatus(401);
     return;
@@ -73,8 +75,6 @@ router.post("/addRecipe", async (req, res) => {
     return;
   }
 
-  console.log(req.body);
-
   RecipeModel.create(
     { ...req.body, userId: req.user.id },
     (err: Error, doc: Recipe) => {
@@ -89,11 +89,35 @@ router.post("/addRecipe", async (req, res) => {
   );
 });
 
+/**
+ * Update a recipe in the user's saved recipes.
+ * @route POST /recipes/updateRecipe
+ * @param recipe The recipe data (request body).
+ * @returns The updated recipe.
+ */
+
 router.post("/updateRecipe", async (req, res) => {
   if (!req.user) {
     res.sendStatus(401);
     return;
   }
+  console.log(req.body);
+
+  RecipeModel.findOneAndUpdate(
+    { _id: req.body._id },
+    { $set: { ...req.body } },
+    { returnOriginal: false },
+    (err: Error, doc: Recipe) => {
+      if (err) {
+        res.status(400).send(err);
+        throw err;
+      }
+      console.log(doc);
+      if (doc) {
+        res.json(doc);
+      }
+    }
+  );
 });
 
 /**
@@ -110,17 +134,14 @@ router.post("/deleteRecipe", async (req, res) => {
 
   const recipeId = req.body.id;
 
-  RecipeModel.deleteOne(
-    { userId: req.user.id, _id: recipeId },
-    (err: Error) => {
-      if (err) {
-        res.status(400).send(err);
-        console.error(err);
-      } else {
-        res.send(recipeId);
-      }
+  RecipeModel.deleteOne({ _id: recipeId }, (err: Error) => {
+    if (err) {
+      res.status(400).send(err);
+      console.error(err);
+    } else {
+      res.send(recipeId);
     }
-  );
+  });
 });
 
 export default router;
