@@ -1,46 +1,35 @@
-import {
-  AccessTime,
-  Bookmark,
-  BookmarkBorder,
-  Restaurant,
-  Delete,
-} from "@mui/icons-material";
-import {
-  Box,
-  Button,
-  Dialog,
-  IconButton,
-  List,
-  ListItem,
-  Typography,
-} from "@mui/material";
+import { AccessTime, Restaurant } from "@mui/icons-material";
+import { Box, Button, Dialog, List, ListItem, Typography } from "@mui/material";
 import Image from "mui-image";
 import { CenteredSpinner } from "src/components/CenteredSpinner";
 import { useAppDispatch, useAppSelector } from "src/hooks/reduxHooks";
-import { deleteRecipe, selectRecipeById } from "./recipesSlice";
+import { addRecipe } from "../recipes/recipesSlice";
+import { fetchRecipeInfo, selectRecipeInfoById } from "./recipeInfoSlice";
 
-type SavedRecipeDialogProps = {
-  recipeId: string;
+type RecRecipeDialogProps = {
+  recipeId: number;
   open: boolean;
   onClose: () => void;
 };
 
-export const SavedRecipeDialog = ({
+export const RecRecipeDialog = ({
   recipeId,
   open,
   onClose,
-}: SavedRecipeDialogProps) => {
-  const recipe = useAppSelector((state) => selectRecipeById(state, recipeId));
+}: RecRecipeDialogProps) => {
+  const recipe = useAppSelector((state) =>
+    selectRecipeInfoById(state, recipeId)
+  );
   const dispatch = useAppDispatch();
 
   let content;
 
   if (!recipe) {
     content = <CenteredSpinner />;
+    dispatch(fetchRecipeInfo(recipeId));
   } else {
-    const handleDeleteButtonClick = async () => {
-      onClose();
-      await dispatch(deleteRecipe(recipe._id.toString()));
+    const handleSaveButtonClick = async () => {
+      await dispatch(addRecipe(recipe));
     };
 
     content = (
@@ -51,11 +40,11 @@ export const SavedRecipeDialog = ({
               <Typography variant="h5">{recipe.title}</Typography>
               <Button
                 variant="outlined"
-                color="error"
-                onClick={handleDeleteButtonClick}
+                color="primary"
+                onClick={handleSaveButtonClick}
                 sx={{ ml: 20 }}
               >
-                Delete
+                Save
               </Button>
             </Box>
             <Button href={recipe.sourceUrl} target="_blank" variant="outlined">

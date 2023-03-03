@@ -149,8 +149,14 @@ router.get("/recipes/parse", async (req, res) => {
     servings: data.servings === -1 ? undefined : data.servings,
     readyInMinutes:
       data.readyInMinutes === -1 ? undefined : data.readyInMinutes,
-    instructionsList: data.analyzedInstructions[0].steps.map((s) => s.step),
-    ingredientsList: data.extendedIngredients.map((i) => i.original),
+    instructionsList:
+      data.analyzedInstructions.length > 0
+        ? data.analyzedInstructions[0].steps.map((s) => s.step)
+        : [""],
+    ingredientsList:
+      data.extendedIngredients.length > 0
+        ? data.extendedIngredients.map((i) => i.original)
+        : [""],
   });
 });
 

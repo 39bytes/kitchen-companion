@@ -9,12 +9,15 @@ import {
   Typography,
 } from "@mui/material";
 
-type RecipeCardProps = {
-  recipe: { _id: string; title: string; image: string };
-  handleClick: (recipeId: string) => void;
+type RecipeCardProps<T = string | number> = {
+  recipe: { _id: Extract<T, string | number>; title: string; image: string };
+  handleClick: (recipeId: Extract<T, string | number>) => void;
 };
 
-export const RecipeCard = ({ recipe, handleClick }: RecipeCardProps) => {
+export const RecipeCard = <T extends string | number>({
+  recipe,
+  handleClick,
+}: RecipeCardProps<T>) => {
   return (
     <Card sx={{ width: 240, height: 240, my: 1, mx: 1 }} elevation={1}>
       <CardActionArea onClick={() => handleClick(recipe._id)}>
