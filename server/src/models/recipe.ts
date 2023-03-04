@@ -6,10 +6,14 @@ export type RecipeByIngredientResult = {
   image: string;
 };
 
+export const DishTypes = ["breakfast", "lunch", "dinner", "dessert"] as const;
+export type DishType = typeof DishTypes[number];
+
 export interface Recipe {
   userId: Types.ObjectId;
   id?: number;
   title: string;
+  dishType?: DishType;
   image?: string;
   servings?: number;
   readyInMinutes?: number;
@@ -44,6 +48,7 @@ const RecipeSchema = new Schema<Recipe>({
   servings: { type: Number },
   readyInMinutes: { type: Number },
   sourceUrl: { type: String },
+  dishType: { type: String, enum: DishTypes, default: "breakfast" },
   extendedIngredients: { type: [RecipeIngredientSchema] },
   ingredientsList: { type: [String] },
   instructions: { type: String },

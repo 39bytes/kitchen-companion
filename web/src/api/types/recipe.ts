@@ -6,11 +6,15 @@ export type RecipeByIngredientResult = {
   image: string;
 };
 
+export const DishTypes = ["breakfast", "lunch", "dinner", "dessert"] as const;
+export type DishType = typeof DishTypes[number];
+
 export interface Recipe {
   _id: string;
   userId: string;
   id: number;
   title: string;
+  dishType?: DishType;
   image: string;
   servings: number;
   readyInMinutes: number;

@@ -19,11 +19,11 @@ const RecipeRecommendations = () => {
   const recsStatus = useAppSelector((state) => state.recommendations.status);
   const dispatch = useAppDispatch();
 
-  // useEffect(() => {
-  //   if (recsStatus === "idle") {
-  //     dispatch(fetchRecommendations());
-  //   }
-  // }, [recsStatus, dispatch]);
+  useEffect(() => {
+    if (recsStatus === "idle") {
+      dispatch(fetchRecommendations());
+    }
+  }, [recsStatus, dispatch]);
 
   const handleRecommendationCardClick = async (recipeId: number) => {
     setSelectedRecipeId(recipeId);

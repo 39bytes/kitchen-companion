@@ -1,60 +1,93 @@
-import { faCarrot } from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Remove } from "@mui/icons-material";
 import {
   Box,
-  Typography,
-  TextField,
   Button,
+  Dialog,
   FormGroup,
-  InputAdornment,
   IconButton,
+  InputAdornment,
   InputLabel,
-  Select,
   MenuItem,
+  Select,
+  TextField,
+  Typography,
 } from "@mui/material";
-import { Formik, FieldArray, Form } from "formik";
-import { useNavigate, useParams } from "react-router-dom";
-import { DishTypes } from "src/api/types/recipe";
-import Layout from "src/components/layouts/layout/Layout";
-import { useAppDispatch, useAppSelector } from "src/hooks/reduxHooks";
+import { FieldArray, Form, Formik } from "formik";
+import { faCarrot } from "@fortawesome/free-solid-svg-icons";
+import { client } from "src/api/api";
+import { DishType, DishTypes, Recipe } from "src/api/types/recipe";
+import { useAppDispatch } from "src/hooks/reduxHooks";
 import { useAutoField } from "src/hooks/useAutoField";
 import * as Yup from "yup";
-import { addRecipe, selectRecipeById, updateRecipe } from "./recipesSlice";
-import { recipeValidationSchema } from "./AddRecipe";
+import { addRecipe } from "./recipesSlice";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { useNavigate } from "react-router-dom";
+import Layout from "src/components/layouts/layout/Layout";
 import { toTitleCase } from "src/utils/toTitleCase";
 
-export const EditRecipe = () => {
+export const recipeValidationSchema = Yup.object({
+  title: Yup.string().required("Recipe name is required"),
+  sourceUrl: Yup.string().url("Must be a valid URL"),
+  servings: Yup.number().positive().integer("Must be a positive number"),
+  readyInMinutes: Yup.number().positive().integer("Must be a positive number"),
+  dishType: Yup.string()
+    .strict(true)
+    .oneOf(DishTypes.slice(), "Must be a valid dish type"),
+});
+
+const initialValues = {
+  title: "",
+  image: "",
+  sourceUrl: "",
+  servings: 1,
+  readyInMinutes: 30,
+  dishType: "breakfast" as DishType,
+  ingredients: [""],
+  instructions: [""],
+};
+
+export type formikState = typeof initialValues;
+
+type formikSetValues = (
+  state: React.SetStateAction<formikState>,
+  shouldValidate?: boolean
+) => void;
+
+export const AddRecipe = () => {
   const handleIngredientFieldKeyDown = useAutoField("ingredients");
   const handleInstructionFieldKeyDown = useAutoField("instructions");
 
-  const { recipeId } = useParams();
-
   const navigate = useNavigate();
 
-  const recipe = useAppSelector((state) => selectRecipeById(state, recipeId!));
   const dispatch = useAppDispatch();
 
-  if (!recipe) {
-    return <div>Recipe id not found</div>;
-  }
+  const handleParseButtonClick = async (
+    values: formikState,
+    setValues: formikSetValues
+  ) => {
+    const data = (
+      await client.get("/api/recipes/parse", {
+        params: { url: values.sourceUrl },
+      })
+    ).data as Recipe;
 
-  const initialValues = {
-    title: recipe.title,
-    image: recipe.image,
-    sourceUrl: recipe.sourceUrl,
-    servings: recipe.servings,
-    readyInMinutes: recipe.readyInMinutes,
-    dishType: recipe.dishType,
-    ingredients: recipe.ingredientsList,
-    instructions: recipe.instructionsList,
+    setValues({
+      title: data.title,
+      image: data.image,
+      sourceUrl: values.sourceUrl,
+      servings: data.servings ?? values.servings,
+      readyInMinutes: data.readyInMinutes ?? values.readyInMinutes,
+      dishType: values.dishType,
+      ingredients: data.ingredientsList,
+      instructions: data.instructionsList,
+    });
   };
 
   return (
     <Layout>
       <Box mt={4}>
         <Typography variant="h5" color="primary">
-          Edit Recipe
+          New Recipe
         </Typography>
         <Formik
           initialValues={initialValues}
@@ -62,7 +95,6 @@ export const EditRecipe = () => {
           validateOnChange={false}
           onSubmit={async (values, actions) => {
             const recipeData = {
-              _id: recipe._id,
               title: values.title,
               image: values.image,
               sourceUrl: values.sourceUrl ?? undefined,
@@ -72,12 +104,19 @@ export const EditRecipe = () => {
               ingredientsList: values.ingredients,
               instructionsList: values.instructions,
             };
-            await dispatch(updateRecipe(recipeData));
+            await dispatch(addRecipe(recipeData));
             actions.setSubmitting(false);
             navigate("/recipes");
           }}
         >
-          {({ values, errors, touched, handleChange, handleBlur }) => (
+          {({
+            values,
+            errors,
+            touched,
+            handleChange,
+            handleBlur,
+            setValues,
+          }) => (
             <Form>
               <Box display="flex" alignItems="center">
                 <TextField
@@ -85,13 +124,20 @@ export const EditRecipe = () => {
                   id="source"
                   name="sourceUrl"
                   variant="standard"
-                  label="Source URL"
+                  placeholder="Enter a URL to parse recipe info"
                   value={values.sourceUrl}
                   onChange={handleChange}
                   error={touched.sourceUrl && Boolean(errors.sourceUrl)}
                   helperText={touched.sourceUrl && errors.sourceUrl}
                   sx={{ mt: 2, mb: 2 }}
                 />
+                <Button
+                  variant="outlined"
+                  sx={{ height: 32, ml: 2 }}
+                  onClick={() => handleParseButtonClick(values, setValues)}
+                >
+                  Import
+                </Button>
               </Box>
               <Typography
                 component="p"

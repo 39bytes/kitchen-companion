@@ -46,7 +46,7 @@ const theme = createTheme({
   },
   typography: {
     fontFamily:
-      '"Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji"',
+      '"Metropolis", -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji"',
     body1: {
       fontSize: "1rem",
       fontWeight: 400,
@@ -66,13 +66,13 @@ const theme = createTheme({
       lineHeight: 1.66,
     },
     subtitle1: {
-      fontSize: "1rem",
-      fontWeight: 500,
+      fontSize: "1.0rem",
+      fontWeight: 600,
       lineHeight: 1.57,
     },
     subtitle2: {
       fontSize: "0.875rem",
-      fontWeight: 500,
+      fontWeight: 600,
       lineHeight: 1.57,
     },
     overline: {
@@ -83,13 +83,13 @@ const theme = createTheme({
       textTransform: "uppercase",
     },
     h1: {
-      fontFamily: "'Plus Jakarta Sans', sans-serif",
+      fontFamily: "Metropolis, sans-serif",
       fontWeight: 700,
       fontSize: "3.5rem",
       lineHeight: 1.2,
     },
     h2: {
-      fontFamily: "'Plus Jakarta Sans', sans-serif",
+      fontFamily: "Metropolis, sans-serif",
       fontWeight: 700,
       fontSize: "3rem",
       lineHeight: 1.2,
@@ -110,7 +110,7 @@ const theme = createTheme({
       fontFamily: "Metropolis, sans-serif",
       fontWeight: 700,
       fontSize: "1.3rem",
-      lineHeight: 1.2,
+      lineHeight: 1.3,
     },
     h6: {
       fontFamily: "Metropolis, sans-serif",

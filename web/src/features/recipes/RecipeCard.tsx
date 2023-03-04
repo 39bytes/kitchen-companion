@@ -25,14 +25,40 @@ export const RecipeCard = <T extends string | number>({
   handleClick,
 }: RecipeCardProps<T>) => {
   return (
-    <Card sx={{ width: 240, height: 240, my: 1, mx: 1 }} elevation={1}>
+    <Card
+      sx={{
+        width: 144,
+        height: 144,
+        my: 1,
+        mx: 1,
+        position: "relative",
+        borderRadius: 4,
+      }}
+      elevation={0}
+    >
       <CardActionArea onClick={() => handleClick(recipe._id)}>
         <CardMedia
-          sx={{ height: 240, filter: "brightness(70%)" }}
+          sx={{ height: 144, filter: "brightness(65%)" }}
           image={recipe.image}
           title={recipe.title}
         />
-        <CardContent sx={{ height: 80 }}>
+        <Box position="absolute" color="white" bottom={8} left={8} width={132}>
+          <Typography
+            variant="subtitle2"
+            noWrap
+            overflow="hidden"
+            textOverflow="ellipsis"
+          >
+            {recipe.title}
+          </Typography>
+          <Box display="flex" color="neutral.300" alignItems="center" mr={1}>
+            <AccessTime sx={{ mr: 0.5, fontSize: "14px" }} />
+            <Typography variant="subtitle2" fontWeight={500}>
+              {recipe.readyInMinutes} min
+            </Typography>
+          </Box>
+        </Box>
+        {/* <CardContent sx={{ height: 40 }}>
           <Box display="flex" flexDirection="column">
             <Typography
               variant="h6"
@@ -77,7 +103,7 @@ export const RecipeCard = <T extends string | number>({
               </Box>
             )}
           </Box>
-        </CardContent>
+        </CardContent> */}
       </CardActionArea>
     </Card>
   );

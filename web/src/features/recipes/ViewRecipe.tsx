@@ -1,16 +1,11 @@
-import {
-  AccessTime,
-  Bookmark,
-  BookmarkBorder,
-  Restaurant,
-  Delete,
-  Backup,
-  ArrowBack,
-} from "@mui/icons-material";
+import { AccessTime, ArrowBack, Launch, Restaurant } from "@mui/icons-material";
 import {
   Box,
+  BoxProps,
   Button,
   Dialog,
+  DialogActions,
+  DialogTitle,
   IconButton,
   List,
   ListItem,
@@ -18,12 +13,45 @@ import {
   Typography,
 } from "@mui/material";
 import Image from "mui-image";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { CenteredSpinner } from "src/components/CenteredSpinner";
 import Layout from "src/components/layouts/layout/Layout";
 import { useAppDispatch, useAppSelector } from "src/hooks/reduxHooks";
 import { deleteRecipe, selectRecipeById } from "./recipesSlice";
+import { ExternalLink, Edit, Trash2, ArrowLeft } from "react-feather";
+
+type SubInfoProps = BoxProps & {
+  icon: React.ReactNode;
+  text: string;
+};
+
+const SubInfo = ({ icon, text, ...props }: SubInfoProps) => (
+  <Box display="flex" alignItems="center" mt={1} color="neutral.500" {...props}>
+    {icon}
+    <Typography sx={{ ml: 0.5 }} variant="subtitle2">
+      {text}
+    </Typography>
+  </Box>
+);
+
+type DeleteDialogProps = {
+  open: boolean;
+  onClose: () => void;
+  onDelete: () => void;
+};
+const DeleteDialog = ({ open, onClose, onDelete }: DeleteDialogProps) => {
+  return (
+    <Dialog open={open} onClose={onClose}>
+      <DialogTitle>Delete recipe?</DialogTitle>
+      <DialogActions>
+        <Button onClick={onClose}>Cancel</Button>
+        <Button onClick={onDelete} color="error">
+          Delete
+        </Button>
+      </DialogActions>
+    </Dialog>
+  );
+};
 
 export const ViewRecipe = () => {
   const { recipeId } = useParams();
@@ -36,68 +64,94 @@ export const ViewRecipe = () => {
     window.scrollTo(0, 0);
   }, []);
 
+  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
+
   if (!recipe) {
     return <div>Recipe not found</div>;
   }
 
-  const handleDeleteButtonClick = async () => {
-    await dispatch(deleteRecipe(recipe._id.toString()));
+  const handleDeleteButtonClick = () => {
+    setDeleteDialogOpen(true);
   };
+
+  const handleDeleteDialogClose = () => {
+    setDeleteDialogOpen(false);
+  };
+
+  const handleDelete = async () => {
+    setDeleteDialogOpen(false);
+    await dispatch(deleteRecipe(recipe._id.toString()));
+    navigate("/recipes");
+  };
+
+  const iconsMenu = (
+    <Box position="relative" right={16} my={1}>
+      <Box display="flex" justifyContent="space-between">
+        <Tooltip title="Back">
+          <IconButton onClick={() => navigate("/recipes")}>
+            <ArrowLeft />
+          </IconButton>
+        </Tooltip>
+        <Box
+          display="flex"
+          justifyContent="center"
+          position="relative"
+          left={32}
+        >
+          <Tooltip title="View Source">
+            <IconButton href={recipe.sourceUrl} target="_blank">
+              <ExternalLink />
+            </IconButton>
+          </Tooltip>
+          <Tooltip title="Edit">
+            <IconButton onClick={() => navigate(`/recipes/edit/${recipe._id}`)}>
+              <Edit />
+            </IconButton>
+          </Tooltip>
+          <Tooltip title="Delete">
+            <IconButton onClick={handleDeleteButtonClick}>
+              <Trash2 />
+            </IconButton>
+          </Tooltip>
+        </Box>
+      </Box>
+    </Box>
+  );
 
   return (
     <Layout>
-      <Box p={4}>
-        {/* <Tooltip title="Back">
-          <IconButton onClick={() => navigate("/recipes")}>
-            <ArrowBack />
-          </IconButton>
-        </Tooltip> */}
-        <Box display="flex" justifyContent="space-between">
-          <Box>
-            <Box display="flex" alignItems="center">
-              <Typography variant="h5">{recipe.title}</Typography>
-            </Box>
-            <Box display="flex" flexDirection="column" maxWidth={125} mt={0.5}>
-              <Button
-                href={recipe.sourceUrl}
-                target="_blank"
-                variant="outlined"
-              >
-                View Source
-              </Button>
-              <Button
-                variant="outlined"
-                sx={{ mt: 1 }}
-                onClick={() => navigate(`/recipes/edit/${recipe._id}`)}
-              >
-                Edit
-              </Button>
-              <Button
-                variant="outlined"
-                color="error"
-                onClick={handleDeleteButtonClick}
-                sx={{ mt: 1 }}
-              >
-                Delete
-              </Button>
-            </Box>
-            <Box display="flex" alignContent="center" mt={1}>
-              <AccessTime />
-              <Typography sx={{ ml: 0.5 }}>
-                {recipe.readyInMinutes} minutes
-              </Typography>
-            </Box>
-            <Box display="flex" alignContent="center" mt={1}>
-              <Restaurant />
-              <Typography sx={{ ml: 0.5 }}>
-                {recipe.servings} servings
-              </Typography>
-            </Box>
+      <Box>
+        {iconsMenu}
+        <Box>
+          <Typography variant="h5" textAlign="center">
+            {recipe.title}
+          </Typography>
+          <Box display="flex" justifyContent="center" mb={2}>
+            <SubInfo
+              icon={<AccessTime sx={{ fontSize: "14px" }} />}
+              text={`${recipe.readyInMinutes} min`}
+            />
+            <SubInfo
+              icon={<Restaurant sx={{ fontSize: "14px" }} />}
+              text={`${recipe.servings} servings`}
+              ml={2}
+            />
           </Box>
-          <Image height="100%" width={200} duration={200} src={recipe.image} />
+          <Box display="flex" justifyContent="center">
+            <Image
+              height={300}
+              width={300}
+              src={recipe.image}
+              duration={200}
+              style={{
+                borderRadius: 16,
+              }}
+            />
+          </Box>
         </Box>
-
-        <Typography variant="h6">Ingredients</Typography>
+        <Typography variant="h6" mt={2}>
+          Ingredients
+        </Typography>
         <List sx={{ listStyleType: "disc", pl: 2.5 }}>
           {recipe.ingredientsList.map((ingredient, index) => (
             <ListItem
@@ -123,6 +177,11 @@ export const ViewRecipe = () => {
             instructions.
           </Typography>
         )}
+        <DeleteDialog
+          open={deleteDialogOpen}
+          onClose={handleDeleteDialogClose}
+          onDelete={handleDelete}
+        />
       </Box>
     </Layout>
   );

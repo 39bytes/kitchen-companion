@@ -11,6 +11,7 @@ import { Login } from "./features/auth/Login";
 import { Register } from "./features/auth/Register";
 import Fridge from "./features/fridge/Fridge";
 import GroceryList from "./features/grocery-list/GroceryList";
+import { AddRecipe } from "./features/recipes/AddRecipe";
 import { EditRecipe } from "./features/recipes/EditRecipe";
 import { Recipes } from "./features/recipes/Recipes";
 import { ViewRecipe } from "./features/recipes/ViewRecipe";
@@ -55,6 +56,14 @@ function App() {
                 element={
                   <RequireAuth redirectTo="/login">
                     <ViewRecipe />
+                  </RequireAuth>
+                }
+              />
+              <Route
+                path="add"
+                element={
+                  <RequireAuth redirectTo="/login">
+                    <AddRecipe />
                   </RequireAuth>
                 }
               />

@@ -1,52 +1,68 @@
+import { Add } from "@mui/icons-material";
 import {
   Box,
   Button,
-  Fade,
-  FormControl,
-  InputLabel,
-  Menu,
-  MenuItem,
-  Select,
+  ButtonBase,
+  Collapse,
+  Grow,
   styled,
   Typography,
 } from "@mui/material";
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { DishType, DishTypes } from "src/api/types/recipe";
 import { CenteredSpinner } from "src/components/CenteredSpinner";
 import Layout from "src/components/layouts/layout/Layout";
 import { useAppDispatch, useAppSelector } from "src/hooks/reduxHooks";
+import { toTitleCase } from "src/utils/toTitleCase";
+import { RecipeCard } from "./RecipeCard";
 import {
   fetchSavedRecipes,
   selectAllRecipes,
-  selectRecipeById,
+  selectRecipeByDishType,
 } from "./recipesSlice";
-import { RecipeCard } from "./RecipeCard";
-import { Add } from "@mui/icons-material";
-import { RecipeAddDialog } from "./RecipeAddDialog";
-import { SavedRecipeDialog } from "./SavedRecipeDialog";
-import { useNavigate } from "react-router-dom";
 
 const StyledButton = styled(Button)(({ theme }) => ({
   textTransform: "none",
   marginTop: theme.spacing(2),
 }));
 
+const Notch = styled("div")(({ theme }) => ({
+  position: "relative",
+  left: "50%",
+  transform: "translateX(-50%)",
+  borderRadius: "25%",
+  width: "16px",
+  height: "6px",
+  backgroundColor: theme.palette.text.primary,
+}));
+
+type DishTypeOptionProps = {
+  selected: boolean;
+  option: DishType;
+  setter: (option: DishType) => void;
+};
+
+const DishTypeOption = ({ selected, option, setter }: DishTypeOptionProps) => {
+  const selectedProps = { fontWeight: 700, color: "neutral.900" };
+  return (
+    <ButtonBase onClick={() => setter(option)} disableRipple>
+      <Typography variant="subtitle1" {...(selected && selectedProps)}>
+        {toTitleCase(option)}
+        {selected && <Notch />}
+      </Typography>
+    </ButtonBase>
+  );
+};
+
 export const Recipes = () => {
   const navigate = useNavigate();
-  // For recipe dialog
-  const [selectedRecipeId, setSelectedRecipeId] = useState<string>();
-  const [recipeInfoOpen, setRecipeInfoOpen] = useState(false);
-
-  const [recipeAddDialogOpen, setRecipeAddDialogOpen] = useState(false);
-
-  const handleRecipeAddClick = () => {
-    setRecipeAddDialogOpen(true);
-  };
-  const handleRecipeAddDialogClose = () => {
-    setRecipeAddDialogOpen(false);
-  };
+  const [dishType, setDishType] = useState<DishType>("breakfast");
 
   // Redux state
-  const recipes = useAppSelector(selectAllRecipes);
+  const recipes = useAppSelector((state) =>
+    selectRecipeByDishType(state, dishType)
+  );
   const recipesStatus = useAppSelector((state) => state.recipes.status);
   const dispatch = useAppDispatch();
 
@@ -57,12 +73,7 @@ export const Recipes = () => {
   }, [recipesStatus, dispatch]);
 
   const handleRecipeCardClick = (recipeId: string) => {
-    // setSelectedRecipeId(recipeId);
-    // setRecipeInfoOpen(true);
     navigate(`/recipes/info/${recipeId}`);
-  };
-  const handleRecipeInfoDialogClose = () => {
-    setRecipeInfoOpen(false);
   };
 
   let recipesList;
@@ -85,32 +96,35 @@ export const Recipes = () => {
 
   return (
     <Layout>
-      <Box display="flex" mt={4}>
+      <Box display="flex" mt={4} alignItems="center">
         <Typography variant="h4">Saved Recipes</Typography>
-        <Box ml="auto" px={4}>
+        <Box ml="auto" my="auto">
           <StyledButton
             id="add-recipe-button"
             variant="contained"
             startIcon={<Add />}
-            onClick={handleRecipeAddClick}
+            onClick={() => navigate("/recipes/add")}
           >
-            Add new
+            Add
           </StyledButton>
         </Box>
       </Box>
-      {/* <Fade in={true} timeout={500}></Fade> */}
+      <Box
+        display="flex"
+        color="neutral.500"
+        justifyContent="space-between"
+        mt={4}
+      >
+        {DishTypes.map((t) => (
+          <DishTypeOption
+            key={t}
+            selected={dishType === t}
+            option={t}
+            setter={setDishType}
+          />
+        ))}
+      </Box>
       {recipesList}
-      {selectedRecipeId && (
-        <SavedRecipeDialog
-          open={recipeInfoOpen}
-          recipeId={selectedRecipeId}
-          onClose={handleRecipeInfoDialogClose}
-        />
-      )}
-      <RecipeAddDialog
-        open={recipeAddDialogOpen}
-        onClose={handleRecipeAddDialogClose}
-      />
     </Layout>
   );
 };

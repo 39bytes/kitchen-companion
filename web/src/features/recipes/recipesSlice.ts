@@ -1,4 +1,4 @@
-import { Recipe } from "../../api/types/recipe";
+import { DishType, Recipe } from "../../api/types/recipe";
 import {
   createAsyncThunk,
   createEntityAdapter,
@@ -98,4 +98,10 @@ export const { selectAll: selectAllRecipes, selectById: selectRecipeById } =
 export const selectRecipeBySpoonacularId = createSelector(
   [selectAllRecipes, (_: RootState, id: number) => id],
   (recipes, id) => recipes.find((recipe) => recipe.id === id)
+);
+
+export const selectRecipeByDishType = createSelector(
+  [selectAllRecipes, (_: RootState, dishType: DishType) => dishType],
+  (recipes, dishType) =>
+    recipes.filter((recipe) => recipe.dishType === dishType)
 );

@@ -59,13 +59,6 @@ export const TopNav = ({ onNavOpen }: TopNavProps) => {
                 </SvgIcon>
               </IconButton>
             )}
-            <Tooltip title="Search">
-              <IconButton>
-                <SvgIcon fontSize="small">
-                  <Search />
-                </SvgIcon>
-              </IconButton>
-            </Tooltip>
           </Stack>
         </Stack>
       </Box>
