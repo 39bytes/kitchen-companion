@@ -36,8 +36,6 @@ router.get("/", async (req, res) => {
  */
 
 router.get("/recommendations", async (req, res) => {
-  res.json({});
-  return;
   if (!req.user) {
     res.sendStatus(401);
     return;
@@ -104,7 +102,7 @@ router.post("/updateRecipe", async (req, res) => {
   console.log(req.body);
 
   RecipeModel.findOneAndUpdate(
-    { _id: req.body._id },
+    { _id: req.body._id, userId: req.user.id },
     { $set: { ...req.body } },
     { returnOriginal: false },
     (err: Error, doc: Recipe) => {
@@ -134,14 +132,17 @@ router.post("/deleteRecipe", async (req, res) => {
 
   const recipeId = req.body.id;
 
-  RecipeModel.deleteOne({ _id: recipeId }, (err: Error) => {
-    if (err) {
-      res.status(400).send(err);
-      console.error(err);
-    } else {
-      res.send(recipeId);
+  RecipeModel.deleteOne(
+    { _id: recipeId, userId: req.user.id },
+    (err: Error) => {
+      if (err) {
+        res.status(400).send(err);
+        console.error(err);
+      } else {
+        res.send(recipeId);
+      }
     }
-  });
+  );
 });
 
 export default router;

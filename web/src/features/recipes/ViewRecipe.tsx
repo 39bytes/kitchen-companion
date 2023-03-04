@@ -1,57 +1,12 @@
-import { AccessTime, ArrowBack, Launch, Restaurant } from "@mui/icons-material";
-import {
-  Box,
-  BoxProps,
-  Button,
-  Dialog,
-  DialogActions,
-  DialogTitle,
-  IconButton,
-  List,
-  ListItem,
-  Tooltip,
-  Typography,
-} from "@mui/material";
-import Image from "mui-image";
+import { Box, IconButton, Tooltip } from "@mui/material";
 import { useEffect, useState } from "react";
+import { ArrowLeft, Edit, ExternalLink, Trash2 } from "react-feather";
 import { useNavigate, useParams } from "react-router-dom";
 import Layout from "src/components/layouts/layout/Layout";
 import { useAppDispatch, useAppSelector } from "src/hooks/reduxHooks";
+import { DeleteDialog } from "./DeleteDialog";
+import { RecipeInfo } from "./RecipeInfo";
 import { deleteRecipe, selectRecipeById } from "./recipesSlice";
-import { ExternalLink, Edit, Trash2, ArrowLeft } from "react-feather";
-
-type SubInfoProps = BoxProps & {
-  icon: React.ReactNode;
-  text: string;
-};
-
-const SubInfo = ({ icon, text, ...props }: SubInfoProps) => (
-  <Box display="flex" alignItems="center" mt={1} color="neutral.500" {...props}>
-    {icon}
-    <Typography sx={{ ml: 0.5 }} variant="subtitle2">
-      {text}
-    </Typography>
-  </Box>
-);
-
-type DeleteDialogProps = {
-  open: boolean;
-  onClose: () => void;
-  onDelete: () => void;
-};
-const DeleteDialog = ({ open, onClose, onDelete }: DeleteDialogProps) => {
-  return (
-    <Dialog open={open} onClose={onClose}>
-      <DialogTitle>Delete recipe?</DialogTitle>
-      <DialogActions>
-        <Button onClick={onClose}>Cancel</Button>
-        <Button onClick={onDelete} color="error">
-          Delete
-        </Button>
-      </DialogActions>
-    </Dialog>
-  );
-};
 
 export const ViewRecipe = () => {
   const { recipeId } = useParams();
@@ -122,61 +77,7 @@ export const ViewRecipe = () => {
     <Layout>
       <Box>
         {iconsMenu}
-        <Box>
-          <Typography variant="h5" textAlign="center">
-            {recipe.title}
-          </Typography>
-          <Box display="flex" justifyContent="center" mb={2}>
-            <SubInfo
-              icon={<AccessTime sx={{ fontSize: "14px" }} />}
-              text={`${recipe.readyInMinutes} min`}
-            />
-            <SubInfo
-              icon={<Restaurant sx={{ fontSize: "14px" }} />}
-              text={`${recipe.servings} servings`}
-              ml={2}
-            />
-          </Box>
-          <Box display="flex" justifyContent="center">
-            <Image
-              height={300}
-              width={300}
-              src={recipe.image}
-              duration={200}
-              style={{
-                borderRadius: 16,
-              }}
-            />
-          </Box>
-        </Box>
-        <Typography variant="h6" mt={2}>
-          Ingredients
-        </Typography>
-        <List sx={{ listStyleType: "disc", pl: 2.5 }}>
-          {recipe.ingredientsList.map((ingredient, index) => (
-            <ListItem
-              sx={{ display: "list-item", px: 0, py: 0.25 }}
-              key={`ingredient${index}`}
-            >
-              {ingredient}
-            </ListItem>
-          ))}
-        </List>
-        <Typography variant="h6">Instructions</Typography>
-        {recipe.instructionsList ? (
-          <ol style={{ paddingLeft: "22px" }}>
-            {recipe.instructionsList.map((instruction, index) => (
-              <li style={{ marginTop: "6px" }} key={`instruction${index}`}>
-                {instruction}
-              </li>
-            ))}
-          </ol>
-        ) : (
-          <Typography fontStyle="italic">
-            Instructions unavailable for this recipe, view source page for
-            instructions.
-          </Typography>
-        )}
+        <RecipeInfo recipe={recipe} />
         <DeleteDialog
           open={deleteDialogOpen}
           onClose={handleDeleteDialogClose}

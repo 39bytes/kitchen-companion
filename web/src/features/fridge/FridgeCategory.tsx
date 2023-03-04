@@ -1,4 +1,11 @@
-import { Box, Collapse, List, Paper, Typography } from "@mui/material";
+import {
+  Box,
+  Collapse,
+  List,
+  Paper,
+  Typography,
+  useTheme,
+} from "@mui/material";
 import { ReactNode } from "react";
 import { FridgeIngredient } from "../../api/types/userfridge";
 import FridgeItem from "./FridgeItem";
@@ -50,13 +57,14 @@ const FridgeCategory = ({
   onAddButtonClick,
 }: FridgeCategoryProps) => {
   const icon = iconMap.get(name);
+  const theme = useTheme();
 
   return (
     <Box>
       <Box>
         <Typography
           variant="h6"
-          color="primary"
+          color={theme.palette.neutral.light}
           textAlign="left"
           mt={2}
           sx={{ px: 2 }}

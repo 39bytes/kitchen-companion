@@ -25,8 +25,8 @@ const LayoutContainer = styled("div")({
   flexDirection: "column",
   width: "100%",
   minHeight: "100vh",
-  paddingLeft: 24,
-  paddingRight: 24,
+  paddingLeft: 18,
+  paddingRight: 18,
   backgroundColor: "#f4f6f8",
 });
 

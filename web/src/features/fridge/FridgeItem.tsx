@@ -20,34 +20,40 @@ type FridgeItemProps = {
 const FridgeItem = ({ ingredient, onAddButtonClick }: FridgeItemProps) => {
   return (
     <ListItem
-      secondaryAction={
-        <AddRemoveButton
-          onClick={() => onAddButtonClick(ingredient._id.toString())}
-        />
-      }
+    // secondaryAction={
+    //   <AddRemoveButton
+    //     onClick={() => onAddButtonClick(ingredient._id.toString())}
+    //   />
+    // }
     >
       <ListItemAvatar>
         <Avatar src={getImageUrl(ingredient.image)} />
       </ListItemAvatar>
       <ListItemText
         primary={
-          <Box component="span">
+          <Box component="span" display="flex">
             <Typography
               noWrap
-              width="80%"
+              maxWidth="75%"
               sx={{
                 overflow: "hidden",
                 textOverflow: "ellipsis",
               }}
             >
               {toTitleCase(ingredient.name)}
-              <Typography variant="caption" sx={{ ml: 0.5, display: "inline" }}>
-                {`${ingredient.quantity} ${ingredient.unit}`}
-              </Typography>
+            </Typography>
+            <Typography
+              variant="subtitle2"
+              sx={{
+                ml: "auto",
+                display: "inline",
+                color: "neutral.700",
+              }}
+            >
+              {`${ingredient.quantity} ${ingredient.unit}`}
             </Typography>
           </Box>
         }
-        secondary={<ExpirationBar ingredient={ingredient} />}
       />
     </ListItem>
   );

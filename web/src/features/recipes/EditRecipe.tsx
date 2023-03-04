@@ -23,14 +23,17 @@ import * as Yup from "yup";
 import { addRecipe, selectRecipeById, updateRecipe } from "./recipesSlice";
 import { recipeValidationSchema } from "./AddRecipe";
 import { toTitleCase } from "src/utils/toTitleCase";
+import { useEffect } from "react";
 
 export const EditRecipe = () => {
   const handleIngredientFieldKeyDown = useAutoField("ingredients");
   const handleInstructionFieldKeyDown = useAutoField("instructions");
 
   const { recipeId } = useParams();
-
   const navigate = useNavigate();
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
 
   const recipe = useAppSelector((state) => selectRecipeById(state, recipeId!));
   const dispatch = useAppDispatch();

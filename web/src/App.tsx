@@ -16,6 +16,7 @@ import { EditRecipe } from "./features/recipes/EditRecipe";
 import { Recipes } from "./features/recipes/Recipes";
 import { ViewRecipe } from "./features/recipes/ViewRecipe";
 import RecipeRecommendations from "./features/recommendations/RecipeRecommendations";
+import { ViewRecommendation } from "./features/recommendations/ViewRecommendation";
 
 function App() {
   return (
@@ -68,31 +69,24 @@ function App() {
                 }
               />
             </Route>
-            {/* <Route
-              path="recipes"
-              element={
-                <RequireAuth redirectTo="/login">
-                  <Recipes />
-                </RequireAuth>
-              }
-            />
-            <Route
-              path="recipes/edit/:recipeId"
-              element={
-                <RequireAuth redirectTo="login">
-                  <EditRecipe />
-                </RequireAuth>
-              }
-            /> */}
-
-            <Route
-              path="/recommendations"
-              element={
-                <RequireAuth redirectTo="/login">
-                  <RecipeRecommendations />
-                </RequireAuth>
-              }
-            />
+            <Route path="recommendations">
+              <Route
+                index
+                element={
+                  <RequireAuth redirectTo="/login">
+                    <RecipeRecommendations />
+                  </RequireAuth>
+                }
+              />
+              <Route
+                path="info/:recipeId"
+                element={
+                  <RequireAuth redirectTo="/login">
+                    <ViewRecommendation />
+                  </RequireAuth>
+                }
+              />
+            </Route>
             <Route
               path="/grocery"
               element={

@@ -32,8 +32,8 @@ const Notch = styled("div")(({ theme }) => ({
   left: "50%",
   transform: "translateX(-50%)",
   borderRadius: "25%",
-  width: "16px",
-  height: "6px",
+  width: "12px",
+  height: "4px",
   backgroundColor: theme.palette.text.primary,
 }));
 

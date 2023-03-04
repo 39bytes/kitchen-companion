@@ -1,6 +1,7 @@
-import { Refresh } from "@mui/icons-material";
-import { Box, Button, Fade, FormControl, Typography } from "@mui/material";
-import { useEffect, useState } from "react";
+import { Box, Fade, IconButton, Typography } from "@mui/material";
+import { useEffect } from "react";
+import { RefreshCcw } from "react-feather";
+import { useNavigate } from "react-router-dom";
 import { CenteredSpinner } from "src/components/CenteredSpinner";
 import Layout from "src/components/layouts/layout/Layout";
 import { useAppDispatch, useAppSelector } from "src/hooks/reduxHooks";
@@ -9,11 +10,9 @@ import {
   fetchRecommendations,
   selectAllRecipeRecommendations,
 } from "./recommendationsSlice";
-import { RecRecipeDialog } from "./RecRecipeDialog";
 
 const RecipeRecommendations = () => {
-  const [selectedRecipeId, setSelectedRecipeId] = useState<number>();
-  const [recipeInfoOpen, setRecipeInfoOpen] = useState(false);
+  const navigate = useNavigate();
 
   const recommendations = useAppSelector(selectAllRecipeRecommendations);
   const recsStatus = useAppSelector((state) => state.recommendations.status);
@@ -24,14 +23,6 @@ const RecipeRecommendations = () => {
       dispatch(fetchRecommendations());
     }
   }, [recsStatus, dispatch]);
-
-  const handleRecommendationCardClick = async (recipeId: number) => {
-    setSelectedRecipeId(recipeId);
-    setRecipeInfoOpen(true);
-  };
-  const handleRecipeInfoDialogClose = () => {
-    setRecipeInfoOpen(false);
-  };
 
   let recommendationsList;
 
@@ -44,7 +35,7 @@ const RecipeRecommendations = () => {
           <RecipeCard
             key={rec.title}
             recipe={{ _id: rec.id, ...rec }}
-            handleClick={handleRecommendationCardClick}
+            handleClick={() => navigate(`/recommendations/info/${rec.id}`)}
           />
         ))}
       </Box>
@@ -52,37 +43,22 @@ const RecipeRecommendations = () => {
   }
 
   const handleRefreshButtonClick = () => {
-    //dispatch(fetchRecommendations());
+    dispatch(fetchRecommendations());
   };
 
   return (
     <Layout>
       <Fade in={true} timeout={500}>
         <Box mt={4}>
-          <Typography variant="h4">Recipes for you</Typography>
-          <FormControl variant="standard">
-            <Box display="flex">
-              <Button
-                type="submit"
-                variant="contained"
-                size="small"
-                onClick={handleRefreshButtonClick}
-              >
-                <Refresh sx={{ mr: 1 }} />
-                Refresh
-              </Button>
-            </Box>
-          </FormControl>
+          <Box display="flex" mb={4}>
+            <Typography variant="h4">Recipes for you</Typography>
+            <IconButton sx={{ ml: 1 }} onClick={handleRefreshButtonClick}>
+              <RefreshCcw />
+            </IconButton>
+          </Box>
           {recommendationsList}
         </Box>
       </Fade>
-      {selectedRecipeId && (
-        <RecRecipeDialog
-          open={recipeInfoOpen}
-          recipeId={selectedRecipeId}
-          onClose={handleRecipeInfoDialogClose}
-        />
-      )}
     </Layout>
   );
 };
