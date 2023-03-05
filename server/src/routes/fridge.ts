@@ -9,6 +9,8 @@ import UserFridge, {
 
 const router = express.Router();
 
+router.use(isAuthenticated);
+
 router.get("/", async (req, res) => {
   UserFridge.findOne(
     { userId: req.user.id },

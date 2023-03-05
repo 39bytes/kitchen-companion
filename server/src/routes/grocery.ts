@@ -6,6 +6,8 @@ import { GroceryListDocument } from "../models/grocerylist";
 
 const router = express.Router();
 
+router.use(isAuthenticated);
+
 router.get("/", async (req, res) => {
   GroceryList.findOne(
     { userId: req.user.id },
