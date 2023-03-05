@@ -11,8 +11,6 @@ import { ProcessIngredientResults } from "../utils/process-ingredient-results";
  */
 const router = express.Router();
 
-router.use(isAuthenticated);
-
 type IngredientSearchResponse = {
   results: Ingredient[];
   offset: number;
