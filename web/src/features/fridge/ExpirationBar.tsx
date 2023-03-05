@@ -7,21 +7,22 @@ type ExpirationBarProps = {
   ingredient: FridgeIngredient;
 };
 
+// Unused, might be reimplemented in the future.
 export const ExpirationBar = ({ ingredient }: ExpirationBarProps) => {
   let expirationTime;
-  if (ingredient.expirationData) {
-    switch (ingredient.section) {
-      case "pantry":
-        expirationTime = ingredient.expirationData.pantry;
-        break;
-      case "fridge":
-        expirationTime = ingredient.expirationData.fridge;
-        break;
-      case "freezer":
-        expirationTime = ingredient.expirationData.freezer;
-        break;
-    }
-  }
+  // if (ingredient.expirationData) {
+  //   switch (ingredient.section) {
+  //     case "pantry":
+  //       expirationTime = ingredient.expirationData.pantry;
+  //       break;
+  //     case "fridge":
+  //       expirationTime = ingredient.expirationData.fridge;
+  //       break;
+  //     case "freezer":
+  //       expirationTime = ingredient.expirationData.freezer;
+  //       break;
+  //   }
+  // }
   if (!expirationTime) {
     return <Box></Box>;
   }

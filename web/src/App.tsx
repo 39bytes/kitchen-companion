@@ -7,6 +7,7 @@ import { BrowserRouter, Route, Routes } from "react-router-dom";
 import "./App.css";
 import AuthProvider from "./components/AuthProvider";
 import RequireAuth from "./components/RequireAuth";
+import ScrollToTop from "./components/ScrollToTop";
 import { Login } from "./features/auth/Login";
 import { Register } from "./features/auth/Register";
 import Fridge from "./features/fridge/Fridge";
@@ -17,6 +18,7 @@ import { Recipes } from "./features/recipes/Recipes";
 import { ViewRecipe } from "./features/recipes/ViewRecipe";
 import RecipeRecommendations from "./features/recommendations/RecipeRecommendations";
 import { ViewRecommendation } from "./features/recommendations/ViewRecommendation";
+import { LandingPage } from "./LandingPage";
 
 function App() {
   return (
@@ -24,11 +26,13 @@ function App() {
       <CssBaseline />
       <AuthProvider>
         <BrowserRouter>
+          <ScrollToTop />
           <Routes>
+            <Route index element={<LandingPage />} />
             <Route path="login" element={<Login />} />
             <Route path="register" element={<Register />} />
             <Route
-              index
+              path="fridge"
               element={
                 <RequireAuth redirectTo="/login">
                   <Fridge />

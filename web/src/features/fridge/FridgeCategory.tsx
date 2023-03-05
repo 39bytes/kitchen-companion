@@ -1,31 +1,24 @@
-import {
-  Box,
-  Collapse,
-  List,
-  Paper,
-  Typography,
-  useTheme,
-} from "@mui/material";
+import { Box, Collapse, List, Typography, useTheme } from "@mui/material";
 import { ReactNode } from "react";
+import {
+  GiCannedFish,
+  GiCheeseWedge,
+  GiCube,
+  GiFlour,
+  GiIceCube,
+  GiKetchup,
+  GiMeat,
+  GiMilkCarton,
+  GiSaltShaker,
+} from "react-icons/gi";
+import { TransitionGroup } from "react-transition-group";
+import { toTitleCase } from "src/utils/toTitleCase";
 import { FridgeIngredient } from "../../api/types/userfridge";
 import FridgeItem from "./FridgeItem";
-import { toTitleCase } from "src/utils/toTitleCase";
-import { TransitionGroup } from "react-transition-group";
-import {
-  GiMeat,
-  GiSaltShaker,
-  GiCheeseWedge,
-  GiFlour,
-  GiBreadSlice,
-  GiCarrot,
-  GiMilkCarton,
-  GiCannedFish,
-  GiKetchup,
-} from "react-icons/gi";
 
 import {
-  faCarrot,
   faBreadSlice,
+  faCarrot,
   faOilCan,
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -41,6 +34,7 @@ const iconMap = new Map<string, ReactNode>([
   ["Canned and Jarred", <GiCannedFish />],
   ["Oil, Vinegar, Salad Dressing", <FontAwesomeIcon icon={faOilCan} />],
   ["Condiments", <GiKetchup />],
+  ["Frozen", <GiCube />],
 ]);
 
 const iconProps = { style: { marginRight: "8px" }, size: 24 };
@@ -56,7 +50,7 @@ const FridgeCategory = ({
   items,
   onAddButtonClick,
 }: FridgeCategoryProps) => {
-  const icon = iconMap.get(name);
+  const icon = iconMap.get(name) ?? <FontAwesomeIcon icon={faCarrot} />;
   const theme = useTheme();
 
   return (

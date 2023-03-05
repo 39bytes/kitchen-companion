@@ -1,9 +1,10 @@
-import { Box, Fade, IconButton, Typography } from "@mui/material";
+import { Box, Fade, IconButton, Tooltip, Typography } from "@mui/material";
 import { useEffect } from "react";
 import { RefreshCcw } from "react-feather";
 import { useNavigate } from "react-router-dom";
 import { CenteredSpinner } from "src/components/CenteredSpinner";
 import Layout from "src/components/layouts/layout/Layout";
+import { LoadingScreen } from "src/components/LoadingScreen";
 import { useAppDispatch, useAppSelector } from "src/hooks/reduxHooks";
 import { RecipeCard } from "../recipes/RecipeCard";
 import {
@@ -27,7 +28,7 @@ const RecipeRecommendations = () => {
   let recommendationsList;
 
   if (recsStatus === "loading") {
-    recommendationsList = <CenteredSpinner />;
+    recommendationsList = <LoadingScreen height="60vh" />;
   } else {
     recommendationsList = (
       <Box display="flex" flexWrap="wrap" justifyContent="space-evenly">
@@ -52,9 +53,11 @@ const RecipeRecommendations = () => {
         <Box mt={4}>
           <Box display="flex" mb={4}>
             <Typography variant="h4">Recipes for you</Typography>
-            <IconButton sx={{ ml: 1 }} onClick={handleRefreshButtonClick}>
-              <RefreshCcw />
-            </IconButton>
+            <Tooltip title="Refresh">
+              <IconButton sx={{ ml: 1 }} onClick={handleRefreshButtonClick}>
+                <RefreshCcw />
+              </IconButton>
+            </Tooltip>
           </Box>
           {recommendationsList}
         </Box>

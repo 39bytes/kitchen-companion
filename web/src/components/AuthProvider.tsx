@@ -6,6 +6,7 @@ import {
   useEffect,
   useState,
 } from "react";
+import { LoadingScreen } from "./LoadingScreen";
 
 export interface EmailPasswordInput {
   email: string;
@@ -40,7 +41,7 @@ const AuthProvider = ({ children }: PropsWithChildren<any>) => {
   }, []);
 
   return status === "pending" ? (
-    <div>"Loading..."</div>
+    <LoadingScreen />
   ) : (
     <authContext.Provider value={user}>{children}</authContext.Provider>
   );

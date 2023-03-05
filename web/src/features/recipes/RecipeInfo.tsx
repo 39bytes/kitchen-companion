@@ -1,5 +1,5 @@
 import { AccessTime, Restaurant } from "@mui/icons-material";
-import { Box, List, ListItem, Typography } from "@mui/material";
+import { Box, List, ListItem, Typography, useTheme } from "@mui/material";
 import { Recipe } from "src/api/types/recipe";
 import { SubInfo } from "src/components/SubInfo";
 import Image from "mui-image";
@@ -66,6 +66,7 @@ export const RecipeInfo = ({ recipe }: RecipeInfoProps) => {
           instructions.
         </Typography>
       )}
+      <Box height={32} />
     </>
   );
 };

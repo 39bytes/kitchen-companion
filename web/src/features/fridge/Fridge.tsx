@@ -1,28 +1,14 @@
 import { Add } from "@mui/icons-material";
 import MuiMasonry from "@mui/lab/Masonry";
-import {
-  Box,
-  Fab,
-  FormControl,
-  InputLabel,
-  MenuItem,
-  Paper,
-  Select,
-  SelectChangeEvent,
-  styled,
-  useTheme,
-} from "@mui/material";
+import { Box, Fab, Paper, styled, useTheme } from "@mui/material";
 import Fade from "@mui/material/Fade";
 import { useSnackbar } from "notistack";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { CenteredSpinner } from "src/components/CenteredSpinner";
 import Layout from "src/components/layouts/layout/Layout";
-import { TopNav } from "src/components/layouts/layout/TopNav";
+import { LoadingScreen } from "src/components/LoadingScreen";
 import { useAppDispatch, useAppSelector } from "src/hooks/reduxHooks";
-import {
-  groupIngredientsByAisle,
-  groupIngredientsBySection,
-} from "src/utils/groupIngredientsBy";
+import { groupIngredientsByAisle } from "src/utils/groupIngredientsBy";
 import { Ingredient } from "../../api/types/userfridge";
 import FridgeCategory from "./FridgeCategory";
 import { fetchContents, selectAllFridgeIngredients } from "./fridgeSlice";
@@ -31,7 +17,6 @@ import { IngredientEditDialog } from "./IngredientEditDialog";
 import { IngredientSearchDialog } from "./IngredientSearchDialog";
 
 const Masonry = styled(MuiMasonry)(({ theme }) => ({}));
-type GroupKey = "section" | "category";
 
 const Fridge = () => {
   const theme = useTheme();
@@ -42,19 +27,16 @@ const Fridge = () => {
   const [editOpen, setEditOpen] = useState(false);
   const [selectedIngredient, setSelectedIngredient] = useState<Ingredient>();
   const [ingredientToEdit, setIngredientToEdit] = useState<string>();
-  const [groupKey, setGroupKey] = useState<GroupKey>("category");
 
   const fridgeContents = useAppSelector(selectAllFridgeIngredients);
   const fridgeStatus = useAppSelector((state) => state.fridge.status);
   const error = useAppSelector((state) => state.fridge.error);
   const dispatch = useAppDispatch();
 
-  let groupedFridgeContents;
-  if (groupKey === "section") {
-    groupedFridgeContents = groupIngredientsBySection(fridgeContents);
-  } else {
-    groupedFridgeContents = groupIngredientsByAisle(fridgeContents);
-  }
+  const groupedFridgeContents = useMemo(
+    () => groupIngredientsByAisle(fridgeContents),
+    [fridgeContents]
+  );
 
   // Load fridge contents
   useEffect(() => {
@@ -86,26 +68,6 @@ const Fridge = () => {
     setEditOpen(false);
   };
 
-  const handleGroupByChange = (event: SelectChangeEvent) => {
-    setGroupKey(event.target.value as GroupKey);
-  };
-
-  const GroupBySelect = () => (
-    <FormControl variant="standard">
-      <InputLabel id="group-by-label">Group by</InputLabel>
-      <Select
-        labelId="group-by-label"
-        value={groupKey}
-        label="Group by"
-        onChange={handleGroupByChange}
-        size="small"
-      >
-        <MenuItem value="section">Section</MenuItem>
-        <MenuItem value="category">Category</MenuItem>
-      </Select>
-    </FormControl>
-  );
-
   const AddIngredientButton = () => (
     <Fab
       color="primary"
@@ -126,7 +88,7 @@ const Fridge = () => {
   let content;
 
   if (fridgeStatus === "loading") {
-    content = <CenteredSpinner />;
+    content = <LoadingScreen height="80vh" />;
   } else if (fridgeStatus === "failed") {
     content = <div>{error}</div>;
   } else if (fridgeStatus === "success") {
@@ -167,9 +129,6 @@ const Fridge = () => {
               ingredientId={ingredientToEdit}
             />
           )}
-          {/* <Box display="flex" justifyContent="end">
-            <GroupBySelect />
-          </Box> */}
           {content}
           <AddIngredientButton />
         </Box>

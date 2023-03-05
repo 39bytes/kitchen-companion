@@ -7,6 +7,8 @@ import {
   CardMedia,
   Divider,
   Typography,
+  useMediaQuery,
+  useTheme,
 } from "@mui/material";
 
 type RecipeCardProps<T = string | number> = {
@@ -24,11 +26,20 @@ export const RecipeCard = <T extends string | number>({
   recipe,
   handleClick,
 }: RecipeCardProps<T>) => {
+  const theme = useTheme();
+  const xlUp = useMediaQuery(theme.breakpoints.up("xl"));
+
   return (
     <Card
       sx={{
-        width: 144,
-        height: 144,
+        width: {
+          xs: 144,
+          xl: 200,
+        },
+        height: {
+          xs: 144,
+          xl: 200,
+        },
         my: 1,
         mx: 1,
         position: "relative",
@@ -38,7 +49,7 @@ export const RecipeCard = <T extends string | number>({
     >
       <CardActionArea onClick={() => handleClick(recipe._id)}>
         <CardMedia
-          sx={{ height: 144, filter: "brightness(65%)" }}
+          sx={{ height: { xs: 144, xl: 200 }, filter: "brightness(65%)" }}
           image={recipe.image}
           title={recipe.title}
         />

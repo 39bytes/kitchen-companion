@@ -9,7 +9,7 @@ import {
 const navData = [
   {
     title: "My Ingredients",
-    path: "/",
+    path: "/fridge",
     icon: <Kitchen />,
   },
   {

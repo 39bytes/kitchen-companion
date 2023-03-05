@@ -4,7 +4,8 @@ import { useLocation } from "react-router-dom";
 import { SideNav } from "./SideNav";
 import { TopNav } from "./TopNav";
 
-const SIDENAV_WIDTH = 280;
+export const SIDENAV_WIDTH = 280;
+export const TOPNAV_HEIGHT = 64;
 
 type LayoutProps = {
   children: React.ReactNode;

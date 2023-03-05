@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 
 // Hook to add new text field in formik FieldArray on enter key press
 export const useAutoField = (fieldName: string) => {
-  const [length, setLength] = useState(1);
+  const [length, setLength] = useState(0);
 
   const handleFieldKeyDown = (
     e: React.KeyboardEvent<HTMLDivElement>,

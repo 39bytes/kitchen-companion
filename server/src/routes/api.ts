@@ -8,7 +8,6 @@ import { ProcessIngredientResults } from "../utils/process-ingredient-results";
 /**
  * Wrapper endpoints for Spoonacular API.
  */
-
 const router = express.Router();
 
 type IngredientSearchResponse = {
@@ -77,7 +76,6 @@ router.get("/ingredient/expiration", (req, res) => {
  * @returns {RecipeByIngredientResult[]} - Array of recipes.
  */
 router.get("/recipes/searchByIngredient", async (req, res) => {
-  return;
   const ingredients = req.query.ingredients;
   const number = req.query.number ?? "10";
 

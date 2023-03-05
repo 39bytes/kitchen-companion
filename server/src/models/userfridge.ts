@@ -11,11 +11,10 @@ export interface Ingredient {
 
 export interface FridgeIngredient extends Ingredient {
   _id: Types.ObjectId;
-  expirationData?: ExpirationData;
+  // expirationData?: ExpirationData;
   quantity: number;
   unit: string;
   dateAdded: number;
-  section: FridgeSection;
 }
 
 export interface ExpirationData {
@@ -36,11 +35,10 @@ const FridgeIngredientSchema = new Schema<FridgeIngredient>({
   image: { type: String, required: true },
   aisle: { type: String, required: true },
   possibleUnits: [String],
-  expirationData: ExpirationDataSchema,
+  // expirationData: ExpirationDataSchema,
   quantity: { type: Number, required: true },
   unit: { type: String, required: true },
   dateAdded: Number,
-  section: { type: String, required: true },
 });
 
 export interface UserFridgeDocument {
@@ -52,7 +50,6 @@ export type UpdateIngredientPayload = {
   ingredientId: string;
   quantity: number;
   unit: string;
-  section: FridgeSection;
 };
 
 const UserFridgeSchema = new Schema<UserFridgeDocument>({

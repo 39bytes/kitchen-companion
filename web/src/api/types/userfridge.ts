@@ -1,6 +1,6 @@
 import { Types } from "mongoose";
 
-export type FridgeSection = "pantry" | "fridge" | "freezer";
+// export type FridgeSection = "pantry" | "fridge" | "freezer";
 
 export interface Ingredient {
   id: number;
@@ -12,11 +12,9 @@ export interface Ingredient {
 
 export interface FridgeIngredient extends Ingredient {
   _id: Types.ObjectId;
-  expirationData?: ExpirationData;
   quantity: number;
   unit: string;
   dateAdded: number;
-  section: FridgeSection;
 }
 
 export interface ExpirationData {
@@ -34,5 +32,4 @@ export type UpdateIngredientPayload = {
   ingredientId: string;
   quantity: number;
   unit: string;
-  section: FridgeSection;
 };

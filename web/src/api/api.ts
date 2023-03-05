@@ -55,16 +55,3 @@ export const getRecipeById = async (id: number) => {
   });
   return res.data as Recipe;
 };
-
-// const LoadTop1kIngrdients = () => {
-//     const data = fs.readFileSync("top-1k-ingredients.csv").toString().split('\n');
-
-//     const top1kIngredients = data.map(x => {
-//         const [name, id] = x.split(';');
-//         return {name, id}
-//     });
-
-//     return top1kIngredients;
-// }
-
-// const Top1kIngredients = LoadTop1kIngrdients();

@@ -4,6 +4,7 @@ import { ArrowLeft, Bookmark, ExternalLink } from "react-feather";
 import { useNavigate, useParams } from "react-router-dom";
 import { CenteredSpinner } from "src/components/CenteredSpinner";
 import Layout from "src/components/layouts/layout/Layout";
+import { LoadingScreen } from "src/components/LoadingScreen";
 import { useAppDispatch, useAppSelector } from "src/hooks/reduxHooks";
 import { RecipeInfo } from "../recipes/RecipeInfo";
 import {
@@ -34,7 +35,7 @@ export const ViewRecommendation = () => {
 
   if (!recipe) {
     dispatch(fetchRecipeInfo(parseInt(recipeId!)));
-    content = <CenteredSpinner />;
+    content = <LoadingScreen />;
   } else {
     const handleSaveButtonClick = async () => {
       await dispatch(addRecipe(recipe));
@@ -91,7 +92,7 @@ export const ViewRecommendation = () => {
 
   return (
     <Layout>
-      <Box>{content}</Box>
+      <Box sx={{ p: { xl: 2 } }}>{content}</Box>
     </Layout>
   );
 };

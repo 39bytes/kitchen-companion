@@ -12,6 +12,13 @@ import { useFormik } from "formik";
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import { client } from "../../api/api";
+import logoImg from "../../assets/icon.png";
+import * as Yup from "yup";
+
+export const authValidationSchema = Yup.object({
+  email: Yup.string().email("Invalid email address").required("Required"),
+  password: Yup.string().required("Required"),
+});
 
 export const Login = () => {
   const [error, setError] = useState("");
@@ -19,42 +26,23 @@ export const Login = () => {
   const formik = useFormik({
     initialValues: { email: "", password: "" },
     onSubmit: async (values, { setSubmitting }) => {
-      try {
-        const res = await client.post("/auth/login", values, {
-          headers: {
-            Accept: "application/json",
-            "Content-Type": "application/json",
-          },
-        });
-        if (res.data.success) {
-          window.location.href = "/";
-        }
-      } catch {
-        setError("Invalid username or password");
+      const res = await client.post("/auth/login", values, {
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json",
+        },
+      });
+      if (res.data.success) {
+        window.location.href = "/fridge";
       }
     },
-    validate: () => {},
+    validationSchema: authValidationSchema,
+    validateOnChange: false,
   });
 
   return (
     <Grid container component="main" sx={{ height: "100vh" }}>
       <CssBaseline />
-      <Grid
-        item
-        xs={false}
-        sm={4}
-        md={7}
-        sx={{
-          backgroundImage: "url('/login-art.png')",
-          backgroundRepeat: "no-repeat",
-          backgroundColor: (t) =>
-            t.palette.mode === "light"
-              ? t.palette.grey[50]
-              : t.palette.grey[900],
-          backgroundSize: "cover",
-          backgroundPosition: "center",
-        }}
-      />
       <Grid item xs={12} sm={8} md={5} component={Paper} elevation={6} square>
         <Box
           sx={{
@@ -65,17 +53,17 @@ export const Login = () => {
             alignItems: "center",
           }}
         >
-          <Avatar sx={{ m: 1, bgcolor: "secondary.main" }}>
-            <LockOutlinedIcon />
+          <Avatar sx={{ m: 1, bgcolor: "neutral.50" }}>
+            <img src={logoImg} width={32} height={32} />
           </Avatar>
           <Typography component="h1" variant="h5">
-            Sign in
+            Log In
           </Typography>
           <Box
             component="form"
             noValidate
             onSubmit={formik.handleSubmit}
-            sx={{ mt: 1 }}
+            sx={{ mt: 4 }}
           >
             <TextField
               margin="normal"

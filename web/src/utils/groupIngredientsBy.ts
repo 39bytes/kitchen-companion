@@ -54,17 +54,3 @@ export const groupIngredientsByAisle = <T extends Ingredient>(
   }
   return sections;
 };
-
-export const groupIngredientsBySection = (ingredients: FridgeIngredient[]) => {
-  let sections = new Map<string, FridgeIngredient[]>();
-
-  for (const ingredient of ingredients) {
-    let arr = sections.get(ingredient.section);
-    if (arr) {
-      arr.push(ingredient);
-    } else {
-      sections.set(ingredient.section, [ingredient]);
-    }
-  }
-  return sections;
-};

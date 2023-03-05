@@ -10,9 +10,7 @@ import {
   useMediaQuery,
 } from "@mui/material";
 import { alpha, useTheme } from "@mui/material/styles";
-
-const SIDE_NAV_WIDTH = 280;
-const TOP_NAV_HEIGHT = 64;
+import { SIDENAV_WIDTH, TOPNAV_HEIGHT } from "./Layout";
 
 type TopNavProps = {
   onNavOpen: () => void;
@@ -32,11 +30,11 @@ export const TopNav = ({ onNavOpen }: TopNavProps) => {
             alpha(theme.palette.background.default, 0.8),
           position: "sticky",
           left: {
-            lg: `${SIDE_NAV_WIDTH}px`,
+            lg: `${SIDENAV_WIDTH}px`,
           },
           top: 0,
           width: {
-            lg: `calc(100% - ${SIDE_NAV_WIDTH}px)`,
+            lg: `calc(100% - ${SIDENAV_WIDTH}px)`,
           },
           zIndex: (theme) => theme.zIndex.appBar,
         }}
@@ -47,7 +45,7 @@ export const TopNav = ({ onNavOpen }: TopNavProps) => {
           justifyContent="space-between"
           spacing={2}
           sx={{
-            minHeight: TOP_NAV_HEIGHT,
+            minHeight: TOPNAV_HEIGHT,
             px: 2,
           }}
         >

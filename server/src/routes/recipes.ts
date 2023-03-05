@@ -99,7 +99,6 @@ router.post("/updateRecipe", async (req, res) => {
     res.sendStatus(401);
     return;
   }
-  console.log(req.body);
 
   RecipeModel.findOneAndUpdate(
     { _id: req.body._id, userId: req.user.id },
@@ -110,7 +109,6 @@ router.post("/updateRecipe", async (req, res) => {
         res.status(400).send(err);
         throw err;
       }
-      console.log(doc);
       if (doc) {
         res.json(doc);
       }

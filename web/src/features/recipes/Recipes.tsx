@@ -7,12 +7,15 @@ import {
   Grow,
   styled,
   Typography,
+  useMediaQuery,
+  useTheme,
 } from "@mui/material";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { DishType, DishTypes } from "src/api/types/recipe";
 import { CenteredSpinner } from "src/components/CenteredSpinner";
 import Layout from "src/components/layouts/layout/Layout";
+import { LoadingScreen } from "src/components/LoadingScreen";
 import { useAppDispatch, useAppSelector } from "src/hooks/reduxHooks";
 import { toTitleCase } from "src/utils/toTitleCase";
 import { RecipeCard } from "./RecipeCard";
@@ -57,7 +60,10 @@ const DishTypeOption = ({ selected, option, setter }: DishTypeOptionProps) => {
 
 export const Recipes = () => {
   const navigate = useNavigate();
+  const theme = useTheme();
   const [dishType, setDishType] = useState<DishType>("breakfast");
+
+  const smUp = useMediaQuery(theme.breakpoints.up("sm"));
 
   // Redux state
   const recipes = useAppSelector((state) =>
@@ -79,7 +85,7 @@ export const Recipes = () => {
   let recipesList;
 
   if (recipesStatus === "loading") {
-    recipesList = <CenteredSpinner />;
+    recipesList = <LoadingScreen height="50vh" />;
   } else {
     recipesList = (
       <Box mt={4} display="flex" flexWrap="wrap">
@@ -114,6 +120,7 @@ export const Recipes = () => {
         color="neutral.500"
         justifyContent="space-between"
         mt={4}
+        {...(smUp && { width: 400, mx: "auto" })}
       >
         {DishTypes.map((t) => (
           <DishTypeOption

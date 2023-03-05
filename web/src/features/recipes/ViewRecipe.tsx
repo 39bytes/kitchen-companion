@@ -75,7 +75,7 @@ export const ViewRecipe = () => {
 
   return (
     <Layout>
-      <Box>
+      <Box sx={{ p: { xl: 2 } }}>
         {iconsMenu}
         <RecipeInfo recipe={recipe} />
         <DeleteDialog

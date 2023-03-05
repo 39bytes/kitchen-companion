@@ -19,6 +19,7 @@ import {
 import React, { useEffect, useState } from "react";
 import Layout from "src/components/layouts/layout/Layout";
 import axios from "axios";
+import { LoadingScreen } from "src/components/LoadingScreen";
 
 type GroceryListItemProps = {
   item?: GroceryIngredient;
@@ -75,7 +76,8 @@ const GroceryList = () => {
 
   return (
     <Layout>
-      <Paper sx={{ px: 3, py: 2 }}>
+      <LoadingScreen />
+      {/* <Paper sx={{ px: 3, py: 2 }}>
         <FormControl>
           <FormGroup>
             <Typography variant="h6" color="primary">
@@ -91,7 +93,7 @@ const GroceryList = () => {
       </Paper>
       <Button variant="outlined" onClick={handleImportButtonClick}>
         Add Purchased to Fridge
-      </Button>
+      </Button> */}
     </Layout>
   );
 };

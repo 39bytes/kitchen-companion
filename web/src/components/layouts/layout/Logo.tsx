@@ -1,6 +1,6 @@
 import { Box, styled } from "@mui/material";
 import { Link } from "react-router-dom";
-import logoImg from "./icon.png";
+import logoImg from "../../../assets/icon.png";
 
 const StyledImage = styled("img")`
   width: 32px;
