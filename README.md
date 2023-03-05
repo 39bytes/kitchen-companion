@@ -1,9 +1,17 @@
 # Kitchen Companion
 
 An all in one food and recipe app built with the MERN stack. Queries the Spoonacular API to get recipe/ingredient data.
+
+## Screenshots
+
 ![Splash screen](https://imgur.com/1cntvDV.png)
 ![Recipes](https://imgur.com/oxbTvBf.png)  
 ![Fridge](https://imgur.com/E0tU9Tf.png)
+
+### Mobile
+
+<img src="https://imgur.com/ios4P4I.png" alt="Mobile Recipes" width="47%" height="47%">
+<img src="https://imgur.com/KgbU3Q6.png" alt="Mobile Fridge" width="47%" height="47%">
 
 ## Technologies used
 
