@@ -1,4 +1,4 @@
-import { Box, IconButton, Tooltip } from "@mui/material";
+import { Box, Fade, IconButton, Tooltip } from "@mui/material";
 import { useEffect, useState } from "react";
 import { ArrowLeft, Edit, ExternalLink, Trash2 } from "react-feather";
 import { useNavigate, useParams } from "react-router-dom";
@@ -75,15 +75,17 @@ export const ViewRecipe = () => {
 
   return (
     <Layout>
-      <Box sx={{ p: { xl: 2 } }}>
-        {iconsMenu}
-        <RecipeInfo recipe={recipe} />
-        <DeleteDialog
-          open={deleteDialogOpen}
-          onClose={handleDeleteDialogClose}
-          onDelete={handleDelete}
-        />
-      </Box>
+      <Fade in={true} timeout={500}>
+        <Box sx={{ p: { xl: 2 } }}>
+          {iconsMenu}
+          <RecipeInfo recipe={recipe} />
+          <DeleteDialog
+            open={deleteDialogOpen}
+            onClose={handleDeleteDialogClose}
+            onDelete={handleDelete}
+          />
+        </Box>
+      </Fade>
     </Layout>
   );
 };

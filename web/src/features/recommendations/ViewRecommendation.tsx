@@ -1,4 +1,4 @@
-import { Box, IconButton, Tooltip, useTheme } from "@mui/material";
+import { Box, Fade, IconButton, Tooltip, useTheme } from "@mui/material";
 import { useEffect } from "react";
 import { ArrowLeft, Bookmark, ExternalLink } from "react-feather";
 import { useNavigate, useParams } from "react-router-dom";
@@ -91,7 +91,9 @@ export const ViewRecommendation = () => {
 
   return (
     <Layout>
-      <Box sx={{ p: { xl: 2 } }}>{content}</Box>
+      <Fade in={true} timeout={500}>
+        <Box sx={{ p: { xl: 2 } }}>{content}</Box>
+      </Fade>
     </Layout>
   );
 };
