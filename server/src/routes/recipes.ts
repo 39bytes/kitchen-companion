@@ -9,8 +9,6 @@ import { getFromSpoonacular } from "./api";
 
 const router = express.Router();
 
-router.use(isAuthenticated);
-
 /**
  * Get all recipes saved by the user.
  * @route GET /recipes
