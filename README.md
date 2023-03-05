@@ -1,9 +1,9 @@
 # Kitchen Companion
 
-A full stack web app that lets you keep track of what's in your fridge, and get recipe recommendations based on that. Queries the Spoonacular API to get recipe/ingredient data.
-
-![Fridge Section](https://i.imgur.com/kNv3uwD.png)  
-![Recipe](https://i.imgur.com/QVQO5BJ.png)
+An all in one food and recipe app built with the MERN stack. Queries the Spoonacular API to get recipe/ingredient data.
+![Splash screen](https://imgur.com/1cntvDV)
+![Recipes](https://imgur.com/oxbTvBf)  
+![Fridge](https://imgur.com/E0tU9Tf)
 
 ## Technologies used
 
@@ -17,19 +17,17 @@ A full stack web app that lets you keep track of what's in your fridge, and get 
 
 ## Features
 
-- Save ingredients to your fridge dashboard, and sort them based on category or section (pantry, fridge, freezer)
-- Get recipe recommendations based on what's in your fridge at the moment
-- Save recommended recipes you like for later reference
+- Keep track of ingredients with your fridge dashboard
+- Add your own recipes
+- Import recipes automatically from any website using Spoonacular's semantic analysis
+- Get recipe recommendations based on what you currently have
 
-## To do
+## Planned features
 
-- Add custom recipes
-- Import recipes from any website (using GPT-3?)
-- Option to set dietary restrictions for recipe recommendations
-- Improve expiration data database
-- General UI/UX improvements
+- Grocery list feature
+- Keeping track of food expiration dates
+- Meal planner feature
 
 ## Credits and attribution
 
-Authentication page art generated using DALL-E 2.  
 Carrot icon from https://www.flaticon.com/free-icon/carrot_271439.
