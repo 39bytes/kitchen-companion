@@ -1,9 +1,9 @@
 # Kitchen Companion
 
 An all in one food and recipe app built with the MERN stack. Queries the Spoonacular API to get recipe/ingredient data.
-![Splash screen](https://imgur.com/1cntvDV)
-![Recipes](https://imgur.com/oxbTvBf)  
-![Fridge](https://imgur.com/E0tU9Tf)
+![Splash screen](https://imgur.com/1cntvDV.png)
+![Recipes](https://imgur.com/oxbTvBf.png)  
+![Fridge](https://imgur.com/E0tU9Tf.png)
 
 ## Technologies used
 
@@ -22,11 +22,11 @@ An all in one food and recipe app built with the MERN stack. Queries the Spoonac
 - Import recipes automatically from any website using Spoonacular's semantic analysis
 - Get recipe recommendations based on what you currently have
 
-## Planned features
+## Planned Features
 
-- Grocery list feature
+- Grocery list
 - Keeping track of food expiration dates
-- Meal planner feature
+- Meal planner
 
 ## Credits and attribution
 
