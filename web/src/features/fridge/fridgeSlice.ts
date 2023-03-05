@@ -1,17 +1,16 @@
 import {
   FridgeIngredient,
-  FridgeSection,
   Ingredient,
   UserFridgeDocument,
   UpdateIngredientPayload,
-} from "../../types/userfridge";
+} from "../../api/types/userfridge";
 import {
   createAsyncThunk,
   createEntityAdapter,
   createSlice,
 } from "@reduxjs/toolkit";
 import axios from "axios";
-import { RootState } from "src/store";
+import { RootState } from "../store";
 
 const fridgeContentsAdapter = createEntityAdapter<FridgeIngredient>({
   selectId: (ingredient) => ingredient._id.toString(),
@@ -44,16 +43,15 @@ type NewIngredientPayload = {
   ingredientData: Ingredient;
   quantity: number;
   unit: string;
-  section: FridgeSection;
 };
 
 export const addNewIngredient = createAsyncThunk(
   "fridge/ingredientAdded",
   async (data: NewIngredientPayload) => {
-    const { ingredientData, quantity, unit, section } = data;
+    const { ingredientData, quantity, unit } = data;
     const response = await axios.post(
       process.env.REACT_APP_BACKEND_URL + "/fridge/addIngredient",
-      { ...ingredientData, quantity, unit, section },
+      { ...ingredientData, quantity, unit },
       { withCredentials: true }
     );
     return response.data as FridgeIngredient;
@@ -107,13 +105,12 @@ export const fridgeSlice = createSlice({
       })
       .addCase(addNewIngredient.fulfilled, fridgeContentsAdapter.addOne)
       .addCase(updateIngredient.fulfilled, (state, action) => {
-        const { ingredientId, quantity, unit, section } = action.payload;
+        const { ingredientId, quantity, unit } = action.payload;
         fridgeContentsAdapter.updateOne(state, {
           id: ingredientId,
           changes: {
             quantity,
             unit,
-            section,
           },
         });
       })

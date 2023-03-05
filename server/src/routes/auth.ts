@@ -1,14 +1,16 @@
-import express from "express";
 import bcrypt from "bcrypt";
-import mongoose from "mongoose";
+import express from "express";
+import passport from "passport";
 import User, { UserDocument } from "../models/user";
-import passport, { use } from "passport";
 
 const router = express.Router();
 
 /**
  * User registration.
- * @route POST /register
+ * @route POST /auth/register
+ * @param {string} email.required
+ * @param {string} password.required
+ * @returns {object} 200 - Success
  */
 router.post("/register", async (req, res) => {
   if (!req.body.email || !req.body.password) {
@@ -44,7 +46,10 @@ router.post("/register", async (req, res) => {
 
 /**
  * Login with email and password.
- * @route POST /login
+ * @route POST /auth/login
+ * @param {string} email.required
+ * @param {string} password.required
+ * @returns {object} 200 - Success
  */
 router.post("/login", passport.authenticate("local"), (req, res) => {
   if (req.isAuthenticated()) {
@@ -54,6 +59,12 @@ router.post("/login", passport.authenticate("local"), (req, res) => {
   }
 });
 
+/**
+ * Get user information.
+ * @route GET /auth/user
+ * @returns {object} 200 - Success
+ */
+
 router.get("/user", (req, res) => {
   if (req.user) {
     res.json({ user: req.user });
@@ -62,6 +73,11 @@ router.get("/user", (req, res) => {
   }
 });
 
+/**
+ * Logout.
+ * @route POST /auth/logout
+ * @returns {object} 200 - Success
+ */
 router.post("/logout", (req, res) => {
   if (req.user) {
     req.logOut((err) => {

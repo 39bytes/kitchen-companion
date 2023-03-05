@@ -37,3 +37,28 @@
     transform: rotate(360deg);
   }
 }
+
+@font-face {
+  font-family: "Metropolis";
+  src: local("Metropolis"),
+    url(./fonts/Metropolis-Regular.woff2) format("woff2");
+}
+
+@font-face {
+  font-family: "Metropolis";
+  font-weight: 500;
+  src: local("Metropolis"), url(./fonts/Metropolis-Medium.woff2) format("woff2");
+}
+
+@font-face {
+  font-family: "Metropolis";
+  font-weight: 600;
+  src: local("Metropolis"),
+    url(./fonts/Metropolis-SemiBold.woff2) format("woff2");
+}
+
+@font-face {
+  font-family: "Metropolis";
+  font-weight: 700;
+  src: local("Metropolis"), url(./fonts/Metropolis-Bold.woff2) format("woff2");
+}

@@ -1,30 +1,96 @@
-import { RecipeByIngredientResult } from "../../types/recipe";
+import { AccessTime } from "@mui/icons-material";
 import {
+  Box,
   Card,
   CardActionArea,
-  CardContent,
   CardMedia,
   Typography,
+  useMediaQuery,
+  useTheme,
 } from "@mui/material";
-import React from "react";
 
-type RecipeCardProps = {
-  recipe: { id: number; title: string; image: string };
-  handleClick: (recipeId: number) => void;
+type RecipeCardProps<T = string | number> = {
+  recipe: {
+    _id: Extract<T, string | number>;
+    title: string;
+    image: string;
+    servings?: number;
+    readyInMinutes?: number;
+  };
+  handleClick: (recipeId: Extract<T, string | number>) => void;
 };
-export const RecipeCard = ({ recipe, handleClick }: RecipeCardProps) => (
-  <Card sx={{ width: 250, height: 300, m: 1 }}>
-    <CardActionArea onClick={() => handleClick(recipe.id)}>
-      <CardMedia
-        sx={{ height: 200 }}
-        image={recipe.image}
-        title={recipe.title}
-      />
-      <CardContent sx={{ height: 100 }}>
-        <Typography gutterBottom component="div">
-          {recipe.title}
-        </Typography>
-      </CardContent>
-    </CardActionArea>
-  </Card>
-);
+
+export const RecipeCard = <T extends string | number>({
+  recipe,
+  handleClick,
+}: RecipeCardProps<T>) => {
+  const theme = useTheme();
+  const xlUp = useMediaQuery(theme.breakpoints.up("xl"));
+
+  return (
+    <Card
+      sx={{
+        width: {
+          xs: 144,
+          xl: 200,
+        },
+        height: {
+          xs: 144,
+          xl: 200,
+        },
+        my: 1,
+        mx: 1,
+        position: "relative",
+        borderRadius: 4,
+      }}
+      elevation={0}
+    >
+      <CardActionArea onClick={() => handleClick(recipe._id)}>
+        <CardMedia
+          sx={{ height: { xs: 144, xl: 200 }, filter: "brightness(65%)" }}
+          image={recipe.image}
+          title={recipe.title}
+        />
+        <Box position="absolute" color="white" bottom={8} left={8} width={132}>
+          {recipe.readyInMinutes ? (
+            <>
+              <Typography
+                variant="subtitle2"
+                noWrap
+                overflow="hidden"
+                textOverflow="ellipsis"
+              >
+                {recipe.title}
+              </Typography>
+              <Box
+                display="flex"
+                color="neutral.300"
+                alignItems="center"
+                mr={1}
+              >
+                <AccessTime sx={{ mr: 0.5, fontSize: "14px" }} />
+                <Typography variant="subtitle2" fontWeight={500}>
+                  {recipe.readyInMinutes} min
+                </Typography>
+              </Box>
+            </>
+          ) : (
+            <Typography
+              variant="subtitle2"
+              maxHeight={44}
+              overflow="hidden"
+              textOverflow="ellipsis"
+              sx={{
+                display: "-webkit-box",
+                WebkitLineClamp: 2,
+                WebkitBoxOrient: "vertical",
+              }}
+            >
+              {recipe.title}
+            </Typography>
+          )}
+        </Box>
+      </CardActionArea>
+    </Card>
+  );
+};

@@ -1,29 +1,18 @@
-import { Refresh } from "@mui/icons-material";
-import {
-  Box,
-  Button,
-  Fade,
-  FormControl,
-  SelectChangeEvent,
-} from "@mui/material";
-import React, { useEffect, useState } from "react";
-import { CenteredSpinner } from "src/components/CenteredSpinner";
-import Layout from "src/components/containers/Layout/Layout";
-import { useAppDispatch, useAppSelector } from "src/hooks";
+import { Box, Fade, IconButton, Tooltip, Typography } from "@mui/material";
+import { useEffect } from "react";
+import { RefreshCcw } from "react-feather";
+import { useNavigate } from "react-router-dom";
+import Layout from "src/components/layouts/layout/Layout";
+import { LoadingScreen } from "src/components/LoadingScreen";
+import { useAppDispatch, useAppSelector } from "src/hooks/reduxHooks";
 import { RecipeCard } from "../recipes/RecipeCard";
-import { RecipeInfoDialog } from "../recipes/RecipeInfoDialog";
-import { selectRecipeInfoById } from "./recipeInfoSlice";
 import {
   fetchRecommendations,
   selectAllRecipeRecommendations,
 } from "./recommendationsSlice";
 
 const RecipeRecommendations = () => {
-  const [selectedRecipeId, setSelectedRecipeId] = useState<number>();
-  const [recipeInfoOpen, setRecipeInfoOpen] = useState(false);
-
-  const [recipeType, setRecipeType] = useState("");
-  const [searchQuery, setSearchQuery] = useState("");
+  const navigate = useNavigate();
 
   const recommendations = useAppSelector(selectAllRecipeRecommendations);
   const recsStatus = useAppSelector((state) => state.recommendations.status);
@@ -35,110 +24,43 @@ const RecipeRecommendations = () => {
     }
   }, [recsStatus, dispatch]);
 
-  const handleRecommendationCardClick = async (recipeId: number) => {
-    setSelectedRecipeId(recipeId);
-    setRecipeInfoOpen(true);
-  };
-  const handleRecipeInfoDialogClose = () => {
-    setRecipeInfoOpen(false);
-  };
-
   let recommendationsList;
 
   if (recsStatus === "loading") {
-    recommendationsList = <CenteredSpinner />;
+    recommendationsList = <LoadingScreen height="60vh" />;
   } else {
     recommendationsList = (
-      <Box display="flex" flexWrap="wrap" mx={12} justifyContent="space-evenly">
+      <Box display="flex" flexWrap="wrap" justifyContent="space-evenly">
         {recommendations.map((rec) => (
           <RecipeCard
-            recipe={rec}
-            handleClick={handleRecommendationCardClick}
+            key={rec.title}
+            recipe={{ _id: rec.id, ...rec }}
+            handleClick={() => navigate(`/recommendations/info/${rec.id}`)}
           />
         ))}
       </Box>
     );
   }
 
-  const recipeInfoDialog = selectedRecipeId ? (
-    <RecipeInfoDialog
-      open={recipeInfoOpen}
-      recipeId={selectedRecipeId}
-      onClose={handleRecipeInfoDialogClose}
-      recipeInfoSelector={selectRecipeInfoById}
-    />
-  ) : (
-    <></>
-  );
-
-  const handleRecipeTypeChange = (e: SelectChangeEvent) => {
-    setRecipeType(e.target.value);
-  };
-
-  const handleSearchQueryChange = (
-    e: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>
-  ) => {
-    setSearchQuery(e.target.value);
-  };
-
   const handleRefreshButtonClick = () => {
     dispatch(fetchRecommendations());
   };
 
   return (
-    <Layout title="Recommendations based on what's in your fridge">
+    <Layout>
       <Fade in={true} timeout={500}>
-        <Box>
-          <FormControl variant="standard">
-            <Box display="flex">
-              {/* <InputLabel id="recipe-type-label">Recipe Type</InputLabel>
-              <Select
-                labelId="recipe-type-label"
-                value={recipeType}
-                label="Recipe Type"
-                onChange={handleRecipeTypeChange}
-                sx={{ width: 200, mr: 2 }}
-              >
-                <MenuItem value="main course">Main Course</MenuItem>
-                <MenuItem value="side dish">Side Dish</MenuItem>
-                <MenuItem value="dessert">Dessert</MenuItem>
-                <MenuItem value="appetizer">Appetizer</MenuItem>
-                <MenuItem value="salad">Salad</MenuItem>
-                <MenuItem value="bread">Bread</MenuItem>
-                <MenuItem value="breakfast">Breakfast</MenuItem>
-                <MenuItem value="soup">Soup</MenuItem>
-                <MenuItem value="beverage">Beverage</MenuItem>
-                <MenuItem value="sauce">Sauce</MenuItem>
-                <MenuItem value="fingerfood">Finger Food</MenuItem>
-                <MenuItem value="snack">Snack</MenuItem>
-                <MenuItem value="drink">Drink</MenuItem>
-              </Select>
-
-              <TextField
-                InputProps={{
-                  startAdornment: <Search color="secondary" sx={{ mr: 1 }} />,
-                }}
-                label="Search for a specific kind of recipe (ex: pasta)"
-                value={searchQuery}
-                onChange={handleSearchQueryChange}
-                variant="standard"
-                fullWidth
-              /> */}
-              <Button
-                type="submit"
-                variant="contained"
-                size="small"
-                onClick={handleRefreshButtonClick}
-              >
-                <Refresh sx={{ mr: 1 }} />
-                Refresh
-              </Button>
-            </Box>
-          </FormControl>
+        <Box mt={4}>
+          <Box display="flex" mb={4}>
+            <Typography variant="h4">Recipes for you</Typography>
+            <Tooltip title="Refresh">
+              <IconButton sx={{ ml: 1 }} onClick={handleRefreshButtonClick}>
+                <RefreshCcw />
+              </IconButton>
+            </Tooltip>
+          </Box>
           {recommendationsList}
         </Box>
       </Fade>
-      {recipeInfoDialog}
     </Layout>
   );
 };

@@ -1,21 +1,17 @@
-import {
-  ExpirationData,
-  FridgeIngredient,
-  Ingredient,
-} from "../models/userfridge";
-import fuzzysort from "fuzzysort";
-import { durationToMs } from "../utils/duration-to-ms";
-import { ProcessIngredientResults } from "../utils/process-ingredient-results";
-import express, { application } from "express";
 import axios from "axios";
+import express from "express";
 import { getExpirationOrDefault } from "../expiration";
-import {
-  Recipe,
-  RecipeByIngredientResult,
-  RecipeIngredient,
-} from "../models/recipe";
+import { isAuthenticated } from "../middleware/isAuthenticated";
+import { RecipeByIngredientResult, RecipeIngredient } from "../models/recipe";
+import { Ingredient } from "../models/userfridge";
+import { ProcessIngredientResults } from "../utils/process-ingredient-results";
 
+/**
+ * Wrapper endpoints for Spoonacular API.
+ */
 const router = express.Router();
+
+router.use(isAuthenticated);
 
 type IngredientSearchResponse = {
   results: Ingredient[];
@@ -28,7 +24,7 @@ export const getFromSpoonacular = async <T>(
   endpoint: string,
   params?: object
 ) => {
-  const res = await axios.get(`https://api.spoonacular.com/` + endpoint, {
+  const res = await axios.get(`https://api.spoonacular.com` + endpoint, {
     headers: {
       "x-api-key": process.env.SPOONACULAR_API_KEY,
       "Access-Control-Allow-Origin": "*",
@@ -40,15 +36,19 @@ export const getFromSpoonacular = async <T>(
 };
 
 /**
- * Ingredient search, returning 10 entries sorted by relevance.
+ * Ingredient search, returning entries sorted by relevance.
+ * Does some post-processing to remove useless data from the API response.
  * @route GET /api/ingredient/search
+ * @param {string} query - Ingredient name to search for.
+ * @param {number} number - Number of results to return. Default 10.
+ * @returns {Ingredient[]} - Array of ingredients.
  */
 router.get("/ingredient/search", async (req, res) => {
   const query = req.query.query as string;
   const number = req.query.number ?? "10";
 
   const data = await getFromSpoonacular<IngredientSearchResponse>(
-    "food/ingredients/search",
+    "/food/ingredients/search",
     {
       query,
       number,
@@ -63,6 +63,7 @@ router.get("/ingredient/search", async (req, res) => {
 /**
  * Ingredient expiration data (pantry, fridge, freezer).
  * @route GET /api/ingredient/expiration
+ * @param {string} query - Ingredient name to search for.
  */
 router.get("/ingredient/expiration", (req, res) => {
   const query = req.query.query as string;
@@ -70,12 +71,19 @@ router.get("/ingredient/expiration", (req, res) => {
   res.json(getExpirationOrDefault(query));
 });
 
+/**
+ * Recipe search by ingredient.
+ * @route GET /api/recipes/searchByIngredient
+ * @param {string} ingredients - Comma-separated list of ingredients.'
+ * @param {number} number - Number of results to return. Default 10.
+ * @returns {RecipeByIngredientResult[]} - Array of recipes.
+ */
 router.get("/recipes/searchByIngredient", async (req, res) => {
   const ingredients = req.query.ingredients;
-  const number = req.query.number;
+  const number = req.query.number ?? "10";
 
   const data = await getFromSpoonacular<RecipeByIngredientResult[]>(
-    "recipes/findByIngredients",
+    "/recipes/findByIngredients",
     {
       query: "",
       includeIngredients: ingredients,
@@ -85,7 +93,6 @@ router.get("/recipes/searchByIngredient", async (req, res) => {
     }
   );
 
-  console.log(data);
   res.json(data);
 });
 
@@ -93,8 +100,7 @@ export type AnalyzedInstructions = {
   steps: { step: string }[];
 };
 
-export type RecipeByIdResult = {
-  id: number;
+type RecipeBase = {
   title: string;
   image: string;
   servings: number;
@@ -105,11 +111,19 @@ export type RecipeByIdResult = {
   analyzedInstructions: AnalyzedInstructions[];
 };
 
+export type RecipeByIdResult = RecipeBase & { id: number };
+
+/** Recipe search by ID.
+ * @route GET /api/recipes/searchById
+ * @param {number} id - Recipe ID.
+ * @returns {Recipe} - Recipe data.
+ */
+
 router.get("/recipes/searchById", async (req, res) => {
   const recipeId = req.query.id;
 
   const data = await getFromSpoonacular<RecipeByIdResult>(
-    `recipes/${recipeId}/information`
+    `/recipes/${recipeId}/information`
   );
 
   let instructionsList;
@@ -117,7 +131,35 @@ router.get("/recipes/searchById", async (req, res) => {
     instructionsList = data.analyzedInstructions[0].steps.map((s) => s.step);
   }
 
-  res.json({ ...data, instructionsList });
+  let ingredientsList;
+  if (data.extendedIngredients.length > 0) {
+    ingredientsList = data.extendedIngredients.map((i) => i.original);
+  }
+
+  res.json({ ...data, instructionsList, ingredientsList });
+});
+
+router.get("/recipes/parse", async (req, res) => {
+  const url = req.query.url;
+
+  const data = await getFromSpoonacular<RecipeBase>("/recipes/extract", {
+    url,
+  });
+
+  res.json({
+    ...data,
+    servings: data.servings === -1 ? undefined : data.servings,
+    readyInMinutes:
+      data.readyInMinutes === -1 ? undefined : data.readyInMinutes,
+    instructionsList:
+      data.analyzedInstructions.length > 0
+        ? data.analyzedInstructions[0].steps.map((s) => s.step)
+        : [""],
+    ingredientsList:
+      data.extendedIngredients.length > 0
+        ? data.extendedIngredients.map((i) => i.original)
+        : [""],
+  });
 });
 
 export default router;

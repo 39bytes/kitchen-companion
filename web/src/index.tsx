@@ -5,8 +5,8 @@ import App from "./App";
 import reportWebVitals from "./reportWebVitals";
 import { ThemeProvider } from "@mui/material";
 import { SnackbarProvider } from "notistack";
-import theme from "./theme";
-import store from "./store";
+import theme from "./theme/theme";
+import store from "./features/store";
 import { Provider } from "react-redux";
 
 const root = ReactDOM.createRoot(

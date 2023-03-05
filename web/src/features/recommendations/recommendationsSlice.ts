@@ -1,11 +1,11 @@
-import { RecipeByIngredientResult } from "../../types/recipe";
+import { RecipeByIngredientResult } from "../../api/types/recipe";
 import {
   createAsyncThunk,
   createEntityAdapter,
   createSlice,
 } from "@reduxjs/toolkit";
-import axios from "axios";
-import { RootState } from "src/store";
+import { RootState } from "../store";
+import { client } from "src/api/api";
 
 const recommendationsAdapter = createEntityAdapter<RecipeByIngredientResult>();
 
@@ -23,12 +23,7 @@ const initialState =
 export const fetchRecommendations = createAsyncThunk(
   "recipes/fetchRecommendations",
   async () => {
-    const response = await axios.get(
-      process.env.REACT_APP_BACKEND_URL + "/recipes/recommendations",
-      {
-        withCredentials: true,
-      }
-    );
+    const response = await client.get("/recipes/recommendations");
     return response.data as RecipeByIngredientResult[];
   }
 );

@@ -61,7 +61,6 @@ app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
 
 app.use((req, res, next) => {
-  //console.log('req.session', req.session);
   return next();
 });
 
@@ -110,8 +109,8 @@ app.get("/", (req, res) => {
   res.send("Hello World!");
 });
 
-app.use("/api", ApiRoute);
 app.use("/auth", AuthRoute);
+app.use("/api", ApiRoute);
 app.use("/fridge", FridgeRoute);
 app.use("/recipes", RecipesRoute);
 

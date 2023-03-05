@@ -1,4 +1,4 @@
-import { Ingredient } from "../../types/userfridge";
+import { Ingredient } from "../../api/types/userfridge";
 import {
   ListItem,
   ListItemAvatar,

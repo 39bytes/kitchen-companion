@@ -1,16 +1,15 @@
-import { FridgeIngredient } from "../../types/userfridge";
 import {
   Avatar,
   Box,
   ListItem,
   ListItemAvatar,
+  ListItemButton,
   ListItemText,
   Typography,
 } from "@mui/material";
-import AddRemoveButton from "../../components/buttons/AddRemoveButton";
+import { FridgeIngredient } from "../../api/types/userfridge";
 import { getImageUrl } from "../../utils/getImageUrl";
 import { toTitleCase } from "../../utils/toTitleCase";
-import { ExpirationBar } from "./ExpirationBar";
 
 type FridgeItemProps = {
   ingredient: FridgeIngredient;
@@ -19,36 +18,40 @@ type FridgeItemProps = {
 
 const FridgeItem = ({ ingredient, onAddButtonClick }: FridgeItemProps) => {
   return (
-    <ListItem
-      secondaryAction={
-        <AddRemoveButton
-          onClick={() => onAddButtonClick(ingredient._id.toString())}
-        />
-      }
-    >
-      <ListItemAvatar>
-        <Avatar src={getImageUrl(ingredient.image)} />
-      </ListItemAvatar>
-      <ListItemText
-        primary={
-          <Box component="span">
-            <Typography
-              noWrap
-              width="80%"
-              sx={{
-                overflow: "hidden",
-                textOverflow: "ellipsis",
-              }}
-            >
-              {toTitleCase(ingredient.name)}
-              <Typography variant="caption" sx={{ ml: 0.5, display: "inline" }}>
+    <ListItem disablePadding>
+      <ListItemButton
+        onClick={() => onAddButtonClick(ingredient._id.toString())}
+      >
+        <ListItemAvatar>
+          <Avatar src={getImageUrl(ingredient.image)} />
+        </ListItemAvatar>
+        <ListItemText
+          primary={
+            <Box component="span" display="flex">
+              <Typography
+                noWrap
+                maxWidth="75%"
+                sx={{
+                  overflow: "hidden",
+                  textOverflow: "ellipsis",
+                }}
+              >
+                {toTitleCase(ingredient.name)}
+              </Typography>
+              <Typography
+                variant="subtitle2"
+                sx={{
+                  ml: "auto",
+                  display: "inline",
+                  color: "neutral.700",
+                }}
+              >
                 {`${ingredient.quantity} ${ingredient.unit}`}
               </Typography>
-            </Typography>
-          </Box>
-        }
-        secondary={<ExpirationBar ingredient={ingredient} />}
-      />
+            </Box>
+          }
+        />
+      </ListItemButton>
     </ListItem>
   );
 };

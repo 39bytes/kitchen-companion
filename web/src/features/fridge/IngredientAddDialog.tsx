@@ -1,21 +1,17 @@
-import { FridgeSection, Ingredient } from "../../types/userfridge";
-import {
-  Box,
-  Button,
-  Container,
-  Dialog,
-  DialogTitle,
-  SelectChangeEvent,
-  TextField,
-} from "@mui/material";
-import { useEffect, useState } from "react";
-import { useAppDispatch } from "src/hooks";
-import { isFridgeSection } from "src/utils/isFridgeSection";
+import { Box, Dialog, DialogTitle } from "@mui/material";
+import { Formik } from "formik";
+import { SlideTransition } from "src/components/SlideTransition";
+import { useAppDispatch } from "src/hooks/reduxHooks";
+import * as Yup from "yup";
+import { Ingredient } from "../../api/types/userfridge";
 import { toTitleCase } from "../../utils/toTitleCase";
 import { addNewIngredient } from "./fridgeSlice";
-import IngredientImage from "./IngredientImage";
-import { SectionSelect } from "./SectionSelect";
-import { UnitSelect } from "./UnitSelect";
+import { IngredientForm } from "./IngredientForm";
+
+export const ingredientValidationSchema = Yup.object({
+  quantity: Yup.number().positive().max(99999).required("Quantity is required"),
+  unit: Yup.string().required("Unit is required"),
+});
 
 type IngredientAddDialogProps = {
   open: boolean;
@@ -28,114 +24,51 @@ export const IngredientAddDialog = ({
   ingredient,
   handleClose,
 }: IngredientAddDialogProps) => {
-  const [quantity, setQuantity] = useState(0);
-  const [unit, setUnit] = useState("");
-  const [section, setSection] = useState<FridgeSection>("pantry");
-
   const dispatch = useAppDispatch();
 
-  const handleUnitChange = (event: SelectChangeEvent) => {
-    setUnit(event.target.value);
+  const initialValues = {
+    quantity: 0,
+    unit: ingredient.possibleUnits[0],
   };
-
-  const handleSectionChange = (event: SelectChangeEvent) => {
-    setSection(event.target.value as FridgeSection);
-  };
-
-  useEffect(() => {
-    setQuantity(0);
-    setUnit(ingredient.possibleUnits[0]);
-    setSection("pantry");
-  }, [open, ingredient.possibleUnits]);
-
-  const canSave = quantity > 0;
-
-  const onClose = async (
-    event: {},
-    reason: "" | "backdropClick" | "escapeKeyDown"
-  ) => {
-    if (reason === "backdropClick" || reason === "escapeKeyDown") {
-      handleClose();
-      return;
-    }
-    if (canSave) {
-      try {
-        if (!isFridgeSection(section)) {
-          setSection("pantry");
-        }
-
-        await dispatch(
-          addNewIngredient({
-            ingredientData: ingredient,
-            quantity,
-            unit,
-            section,
-          })
-        ).unwrap();
-      } catch (err) {
-        console.error(err);
-      } finally {
-        handleClose();
-      }
-    }
-  };
-
-  const QuantityField = (
-    <TextField
-      value={quantity}
-      size="small"
-      type="number"
-      InputProps={{ inputProps: { min: 0, max: 99999 } }}
-      onChange={(e) => {
-        setQuantity(parseInt(e.target.value));
-      }}
-      sx={{
-        width: 100,
-      }}
-    />
-  );
-
-  const AddButton = () => (
-    <Button
-      onClick={() => onClose({}, "")}
-      color="primary"
-      variant="contained"
-      disabled={!canSave}
-      sx={{ width: "auto", my: 1 }}
-    >
-      Add
-    </Button>
-  );
 
   return (
-    <Dialog open={open} onClose={onClose}>
+    <Dialog
+      open={open}
+      onClose={handleClose}
+      TransitionComponent={SlideTransition}
+    >
       <DialogTitle>
         <Box display="flex" justifyContent="space-between">
           {toTitleCase(ingredient.name)}
         </Box>
       </DialogTitle>
-      <Box
-        display="flex"
-        flexDirection="column"
-        alignItems="center"
-        justifyContent="center"
+      <Formik
+        initialValues={initialValues}
+        validationSchema={ingredientValidationSchema}
+        validateOnChange={false}
+        onSubmit={async (values, actions) => {
+          const data = {
+            ingredientData: ingredient,
+            quantity: values.quantity,
+            unit: values.unit,
+          };
+
+          handleClose();
+          await dispatch(addNewIngredient(data));
+          actions.setSubmitting(false);
+        }}
       >
-        <IngredientImage imageName={ingredient.image} />
-        <Container>
-          {QuantityField}
-          <UnitSelect
-            onChange={handleUnitChange}
-            units={ingredient.possibleUnits}
-            defaultValue={ingredient.possibleUnits[0]}
+        {({ values, errors, touched, handleChange }) => (
+          <IngredientForm
+            ingredient={ingredient}
+            handleClose={handleClose}
+            values={values}
+            errors={errors}
+            touched={touched}
+            handleChange={handleChange}
           />
-          <Box display="flex" marginTop={1} justifyContent="center">
-            <SectionSelect value={section} onChange={handleSectionChange} />
-          </Box>
-          <Box display="flex" justifyContent="center">
-            <AddButton />
-          </Box>
-        </Container>
-      </Box>
+        )}
+      </Formik>
     </Dialog>
   );
 };

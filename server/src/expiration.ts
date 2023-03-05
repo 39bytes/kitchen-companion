@@ -40,9 +40,7 @@ export const getExpirationOrDefault = (query: string) => {
   // Get all food names from expiration database
   const names = [...expirations.keys()];
   // Fuzzy string match
-  console.log(names);
   const scores = fuzzysort.go(query, names);
-  console.log(scores);
   const foodName = scores[0] ? scores[0].target : "";
 
   // Get matching expiration data

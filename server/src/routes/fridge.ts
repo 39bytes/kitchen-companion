@@ -1,21 +1,17 @@
 import express from "express";
-import mongoose, { Error, Mongoose, UpdateWriteOpResult } from "mongoose";
-import {
+import mongoose, { Error } from "mongoose";
+import { isAuthenticated } from "../middleware/isAuthenticated";
+import UserFridge, {
   FridgeIngredient,
-  FridgeSection,
   UpdateIngredientPayload,
+  UserFridgeDocument,
 } from "../models/userfridge";
-import UserFridge, { UserFridgeDocument } from "../models/userfridge";
-import { getExpirationOrDefault } from "../expiration";
 
 const router = express.Router();
 
-router.get("/", async (req, res) => {
-  if (!req.user) {
-    res.sendStatus(401);
-    return;
-  }
+router.use(isAuthenticated);
 
+router.get("/", async (req, res) => {
   UserFridge.findOne(
     { userId: req.user.id },
     async (err: Error, doc: UserFridgeDocument) => {
@@ -28,7 +24,6 @@ router.get("/", async (req, res) => {
           contents: [],
         });
         await userFridge.save();
-        console.log("created user fridge", userFridge);
         res.json(userFridge);
       }
     }
@@ -36,11 +31,6 @@ router.get("/", async (req, res) => {
 });
 
 router.post("/", async (req, res) => {
-  if (!req.user) {
-    res.sendStatus(401);
-    return;
-  }
-
   const contents = req.body as FridgeIngredient[];
   UserFridge.findOneAndUpdate(
     { userId: req.user.id },
@@ -57,18 +47,12 @@ router.post("/", async (req, res) => {
 });
 
 router.post("/addIngredient", async (req, res) => {
-  if (!req.user) {
-    res.sendStatus(401);
-    return;
-  }
-
   const ingredientData = req.body as FridgeIngredient;
   const ingredientId = new mongoose.Types.ObjectId();
   const newIngredient: FridgeIngredient = {
     ...ingredientData,
     _id: ingredientId,
     dateAdded: Date.now(),
-    expirationData: getExpirationOrDefault(ingredientData.name),
   };
 
   UserFridge.updateOne(
@@ -80,18 +64,12 @@ router.post("/addIngredient", async (req, res) => {
         res.status(500).send(err);
       } else {
         res.json(newIngredient);
-        console.log("sent response");
       }
     }
   );
 });
 
 router.post("/updateIngredient", async (req, res) => {
-  if (!req.user) {
-    res.sendStatus(401);
-    return;
-  }
-
   // Just replace the ingredient instead of updating fields
   const data = req.body as UpdateIngredientPayload;
 
@@ -101,7 +79,6 @@ router.post("/updateIngredient", async (req, res) => {
       $set: {
         "contents.$.quantity": data.quantity,
         "contents.$.unit": data.unit,
-        "contents.$.section": data.section,
       },
     },
     { runValidators: true, returnDocument: "after" },
@@ -116,12 +93,6 @@ router.post("/updateIngredient", async (req, res) => {
 });
 
 router.post("/deleteIngredient", async (req, res) => {
-  if (!req.user) {
-    res.sendStatus(401);
-    return;
-  }
-
-  // Just replace the ingredient instead of updating fields
   const { id } = req.body as { id: string };
 
   UserFridge.updateOne(
