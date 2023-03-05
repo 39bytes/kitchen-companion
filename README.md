@@ -10,8 +10,8 @@ An all in one food and recipe app built with the MERN stack. Queries the Spoonac
 
 ### Mobile
 
-<img src="https://imgur.com/ios4P4I.png" alt="Mobile Recipes" width="47%" height="47%">
-<img src="https://imgur.com/KgbU3Q6.png" alt="Mobile Fridge" width="47%" height="47%">
+<img src="https://imgur.com/ios4P4I.png" alt="Mobile Recipes" width="40%" height="40%">
+<img src="https://imgur.com/KgbU3Q6.png" alt="Mobile Fridge" width="40%" height="40%">
 
 ## Technologies used
 
