@@ -82,7 +82,12 @@ export const Recipes = () => {
     recipesList = <LoadingScreen height="50vh" />;
   } else {
     recipesList = (
-      <Box mt={4} display="flex" flexWrap="wrap">
+      <Box
+        mt={4}
+        display="flex"
+        flexWrap="wrap"
+        {...(!smUp && { justifyContent: "space-evenly" })}
+      >
         {recipes.map((rec) => (
           <RecipeCard
             recipe={rec}

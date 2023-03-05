@@ -1,6 +1,13 @@
 import { Add } from "@mui/icons-material";
 import MuiMasonry from "@mui/lab/Masonry";
-import { Box, Fab, Paper, styled, useTheme } from "@mui/material";
+import {
+  Box,
+  Fab,
+  Paper,
+  styled,
+  useMediaQuery,
+  useTheme,
+} from "@mui/material";
 import Fade from "@mui/material/Fade";
 import { useSnackbar } from "notistack";
 import { useEffect, useMemo, useState } from "react";
@@ -20,6 +27,7 @@ const Masonry = styled(MuiMasonry)(({ theme }) => ({}));
 const Fridge = () => {
   const theme = useTheme();
   const snackbar = useSnackbar();
+  const smUp = useMediaQuery(theme.breakpoints.up("sm"));
 
   const [searchOpen, setSearchOpen] = useState(false);
   const [addOpen, setAddOpen] = useState(false);
@@ -92,7 +100,11 @@ const Fridge = () => {
     content = <div>{error}</div>;
   } else if (fridgeStatus === "success") {
     content = (
-      <Masonry columns={{ sm: 1, md: 2, lg: 2, xl: 3 }} spacing={2}>
+      <Masonry
+        columns={{ sm: 1, md: 2, lg: 2, xl: 3 }}
+        spacing={2}
+        sx={{ ...(!smUp && { alignContent: "center", ml: 0.25 }) }}
+      >
         {Array.from(groupedFridgeContents, ([key, contents]) => (
           <Paper key={key} elevation={0} sx={{ borderRadius: 3 }}>
             <FridgeCategory
