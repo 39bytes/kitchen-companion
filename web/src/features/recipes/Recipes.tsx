@@ -3,6 +3,7 @@ import {
   Box,
   Button,
   ButtonBase,
+  Fade,
   styled,
   Typography,
   useMediaQuery,
@@ -95,36 +96,40 @@ export const Recipes = () => {
 
   return (
     <Layout>
-      <Box display="flex" mt={4} alignItems="center">
-        <Typography variant="h4">Saved Recipes</Typography>
-        <Box ml="auto" my="auto">
-          <StyledButton
-            id="add-recipe-button"
-            variant="contained"
-            startIcon={<Add />}
-            onClick={() => navigate("/recipes/add")}
+      <Fade in={true} timeout={500}>
+        <Box>
+          <Box display="flex" mt={4} alignItems="center">
+            <Typography variant="h4">Saved Recipes</Typography>
+            <Box ml="auto" my="auto">
+              <StyledButton
+                id="add-recipe-button"
+                variant="contained"
+                startIcon={<Add />}
+                onClick={() => navigate("/recipes/add")}
+              >
+                Add
+              </StyledButton>
+            </Box>
+          </Box>
+          <Box
+            display="flex"
+            color="neutral.500"
+            justifyContent="space-between"
+            mt={4}
+            {...(smUp && { width: 400, mx: "auto" })}
           >
-            Add
-          </StyledButton>
+            {DishTypes.map((t) => (
+              <DishTypeOption
+                key={t}
+                selected={dishType === t}
+                option={t}
+                setter={setDishType}
+              />
+            ))}
+          </Box>
+          {recipesList}
         </Box>
-      </Box>
-      <Box
-        display="flex"
-        color="neutral.500"
-        justifyContent="space-between"
-        mt={4}
-        {...(smUp && { width: 400, mx: "auto" })}
-      >
-        {DishTypes.map((t) => (
-          <DishTypeOption
-            key={t}
-            selected={dishType === t}
-            option={t}
-            setter={setDishType}
-          />
-        ))}
-      </Box>
-      {recipesList}
+      </Fade>
     </Layout>
   );
 };
