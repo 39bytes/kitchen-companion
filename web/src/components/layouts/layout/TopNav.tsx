@@ -27,7 +27,7 @@ export const TopNav = ({ onNavOpen }: TopNavProps) => {
           width: {
             lg: `calc(100% - ${SIDENAV_WIDTH}px)`,
           },
-          zIndex: (theme) => theme.zIndex.appBar,
+          zIndex: (theme) => theme.zIndex.drawer,
         }}
       >
         <Stack

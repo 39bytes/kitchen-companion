@@ -103,7 +103,6 @@ export const SideNav = ({ open, onClose }: SideNavProps) => {
       </Drawer>
     );
   }
-
   return (
     <Drawer
       anchor="left"
@@ -116,7 +115,7 @@ export const SideNav = ({ open, onClose }: SideNavProps) => {
           width: 280,
         },
       }}
-      sx={{ zIndex: (theme) => theme.zIndex.appBar + 100 }}
+      sx={{ zIndex: (theme) => theme.zIndex.drawer + 1 }}
       variant="temporary"
     >
       {content}
