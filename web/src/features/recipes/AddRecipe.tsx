@@ -15,10 +15,12 @@ import {
   Typography,
 } from "@mui/material";
 import { FieldArray, Form, Formik } from "formik";
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { client } from "src/api/api";
 import { DishType, DishTypes, Recipe } from "src/api/types/recipe";
 import Layout from "src/components/layouts/layout/Layout";
+import { LoadingOverlay } from "src/components/LoadingOverlay";
 import { useAppDispatch } from "src/hooks/reduxHooks";
 import { useAutoField } from "src/hooks/useAutoField";
 import { toTitleCase } from "src/utils/toTitleCase";
@@ -56,6 +58,7 @@ type formikSetValues = (
 export const AddRecipe = () => {
   const handleIngredientFieldKeyDown = useAutoField("ingredients");
   const handleInstructionFieldKeyDown = useAutoField("instructions");
+  const [parsing, setParsing] = useState(false);
 
   const navigate = useNavigate();
 
@@ -65,6 +68,7 @@ export const AddRecipe = () => {
     values: formikState,
     setValues: formikSetValues
   ) => {
+    setParsing(true);
     const data = (
       await client.get("/api/recipes/parse", {
         params: { url: values.sourceUrl },
@@ -81,12 +85,14 @@ export const AddRecipe = () => {
       ingredients: data.ingredientsList,
       instructions: data.instructionsList,
     });
+    setParsing(false);
   };
 
   return (
     <Layout>
       <Fade in={true} timeout={500}>
         <Box mt={4}>
+          <LoadingOverlay open={parsing} />
           <Typography variant="h5" color="primary">
             New Recipe
           </Typography>
