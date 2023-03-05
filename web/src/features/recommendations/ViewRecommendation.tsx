@@ -2,7 +2,6 @@ import { Box, IconButton, Tooltip, useTheme } from "@mui/material";
 import { useEffect } from "react";
 import { ArrowLeft, Bookmark, ExternalLink } from "react-feather";
 import { useNavigate, useParams } from "react-router-dom";
-import { CenteredSpinner } from "src/components/CenteredSpinner";
 import Layout from "src/components/layouts/layout/Layout";
 import { LoadingScreen } from "src/components/LoadingScreen";
 import { useAppDispatch, useAppSelector } from "src/hooks/reduxHooks";

@@ -1,11 +1,9 @@
-import { AccessTime, Restaurant } from "@mui/icons-material";
+import { AccessTime } from "@mui/icons-material";
 import {
   Box,
   Card,
   CardActionArea,
-  CardContent,
   CardMedia,
-  Divider,
   Typography,
   useMediaQuery,
   useTheme,

@@ -1,4 +1,3 @@
-import { FridgeIngredient } from "../../api/types/userfridge";
 import {
   Avatar,
   Box,
@@ -8,10 +7,9 @@ import {
   ListItemText,
   Typography,
 } from "@mui/material";
-import AddRemoveButton from "../../components/buttons/AddRemoveButton";
+import { FridgeIngredient } from "../../api/types/userfridge";
 import { getImageUrl } from "../../utils/getImageUrl";
 import { toTitleCase } from "../../utils/toTitleCase";
-import { ExpirationBar } from "./ExpirationBar";
 
 type FridgeItemProps = {
   ingredient: FridgeIngredient;

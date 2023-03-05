@@ -1,16 +1,14 @@
 import express from "express";
 import { UpdateWriteOpResult } from "mongoose";
+import { isAuthenticated } from "../middleware/isAuthenticated";
 import GroceryList, { GroceryIngredient } from "../models/grocerylist";
 import { GroceryListDocument } from "../models/grocerylist";
 
 const router = express.Router();
 
-router.get("/", async (req, res) => {
-  if (!req.user) {
-    res.sendStatus(401);
-    return;
-  }
+router.use(isAuthenticated);
 
+router.get("/", async (req, res) => {
   GroceryList.findOne(
     { userId: req.user.id },
     async (err: Error, doc: GroceryListDocument) => {
@@ -30,11 +28,6 @@ router.get("/", async (req, res) => {
 });
 
 router.post("/", async (req, res) => {
-  if (!req.user) {
-    res.sendStatus(401);
-    return;
-  }
-
   const contents = req.body as GroceryIngredient[];
   GroceryList.updateOne(
     { userId: req.user.id },

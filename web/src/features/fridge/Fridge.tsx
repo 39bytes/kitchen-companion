@@ -4,7 +4,6 @@ import { Box, Fab, Paper, styled, useTheme } from "@mui/material";
 import Fade from "@mui/material/Fade";
 import { useSnackbar } from "notistack";
 import { useEffect, useMemo, useState } from "react";
-import { CenteredSpinner } from "src/components/CenteredSpinner";
 import Layout from "src/components/layouts/layout/Layout";
 import { LoadingScreen } from "src/components/LoadingScreen";
 import { useAppDispatch, useAppSelector } from "src/hooks/reduxHooks";

@@ -1,6 +1,5 @@
 import { styled } from "@mui/material";
-import { useEffect, useState } from "react";
-import { useLocation } from "react-router-dom";
+import { useState } from "react";
 import { SideNav } from "./SideNav";
 import { TopNav } from "./TopNav";
 

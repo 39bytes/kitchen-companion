@@ -11,7 +11,6 @@ import ScrollToTop from "./components/ScrollToTop";
 import { Login } from "./features/auth/Login";
 import { Register } from "./features/auth/Register";
 import Fridge from "./features/fridge/Fridge";
-import GroceryList from "./features/grocery-list/GroceryList";
 import { AddRecipe } from "./features/recipes/AddRecipe";
 import { EditRecipe } from "./features/recipes/EditRecipe";
 import { Recipes } from "./features/recipes/Recipes";
@@ -91,14 +90,6 @@ function App() {
                 }
               />
             </Route>
-            <Route
-              path="/grocery"
-              element={
-                <RequireAuth redirectTo="/login">
-                  <GroceryList />
-                </RequireAuth>
-              }
-            />
           </Routes>
         </BrowserRouter>
       </AuthProvider>

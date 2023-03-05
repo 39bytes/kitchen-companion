@@ -1,4 +1,5 @@
 import express from "express";
+import { isAuthenticated } from "../middleware/isAuthenticated";
 import RecipeModel, {
   Recipe,
   RecipeByIngredientResult,
@@ -8,17 +9,14 @@ import { getFromSpoonacular } from "./api";
 
 const router = express.Router();
 
+router.use(isAuthenticated);
+
 /**
  * Get all recipes saved by the user.
  * @route GET /recipes
  */
 
 router.get("/", async (req, res) => {
-  if (!req.user) {
-    res.sendStatus(401);
-    return;
-  }
-
   RecipeModel.find({ userId: req.user.id }, (err: Error, docs: Recipe[]) => {
     if (err) {
       res.status(500).send(err);
@@ -36,11 +34,6 @@ router.get("/", async (req, res) => {
  */
 
 router.get("/recommendations", async (req, res) => {
-  if (!req.user) {
-    res.sendStatus(401);
-    return;
-  }
-
   UserFridge.findOne(
     { userId: req.user.id },
     async (err: Error, doc: UserFridgeDocument) => {
@@ -68,11 +61,6 @@ router.get("/recommendations", async (req, res) => {
  */
 
 router.post("/addRecipe", async (req, res) => {
-  if (!req.user) {
-    res.sendStatus(401);
-    return;
-  }
-
   RecipeModel.create(
     { ...req.body, userId: req.user.id },
     (err: Error, doc: Recipe) => {
@@ -95,11 +83,6 @@ router.post("/addRecipe", async (req, res) => {
  */
 
 router.post("/updateRecipe", async (req, res) => {
-  if (!req.user) {
-    res.sendStatus(401);
-    return;
-  }
-
   RecipeModel.findOneAndUpdate(
     { _id: req.body._id, userId: req.user.id },
     { $set: { ...req.body } },
@@ -123,11 +106,6 @@ router.post("/updateRecipe", async (req, res) => {
  */
 
 router.post("/deleteRecipe", async (req, res) => {
-  if (!req.user) {
-    res.sendStatus(401);
-    return;
-  }
-
   const recipeId = req.body.id;
 
   RecipeModel.deleteOne(

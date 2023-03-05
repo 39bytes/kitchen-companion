@@ -109,8 +109,8 @@ app.get("/", (req, res) => {
   res.send("Hello World!");
 });
 
-app.use("/api", ApiRoute);
 app.use("/auth", AuthRoute);
+app.use("/api", ApiRoute);
 app.use("/fridge", FridgeRoute);
 app.use("/recipes", RecipesRoute);
 

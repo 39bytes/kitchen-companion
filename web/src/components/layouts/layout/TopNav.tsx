@@ -1,14 +1,5 @@
-import { Search, Menu } from "@mui/icons-material";
-import {
-  Avatar,
-  Badge,
-  Box,
-  IconButton,
-  Stack,
-  SvgIcon,
-  Tooltip,
-  useMediaQuery,
-} from "@mui/material";
+import { Menu } from "@mui/icons-material";
+import { Box, IconButton, Stack, SvgIcon, useMediaQuery } from "@mui/material";
 import { alpha, useTheme } from "@mui/material/styles";
 import { SIDENAV_WIDTH, TOPNAV_HEIGHT } from "./Layout";
 

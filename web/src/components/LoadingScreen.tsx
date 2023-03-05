@@ -1,7 +1,5 @@
-import { Box, styled, useTheme } from "@mui/material";
+import { Box, LinearProgress, styled } from "@mui/material";
 import logoImg from "../assets/icon.png";
-import { LinearProgress } from "@mui/material";
-import { TOPNAV_HEIGHT } from "./layouts/layout/Layout";
 
 const StyledImage = styled("img")`
   width: 32px;

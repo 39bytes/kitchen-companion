@@ -31,14 +31,6 @@ export const fetchSavedRecipes = createAsyncThunk(
   }
 );
 
-// export const addRecipe = createAsyncThunk(
-//   "recipes/recipeAdded",
-//   async (recipe: Recipe) => {
-//     const res = await client.post("/recipes/addRecipe", recipe);
-//     return res.data as Recipe;
-//   }
-// );
-
 export const addRecipe = createAsyncThunk(
   "recipes/recipeSaved",
   async (recipe: Partial<Recipe>) => {

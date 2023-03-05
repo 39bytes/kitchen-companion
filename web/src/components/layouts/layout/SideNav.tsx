@@ -1,23 +1,11 @@
-import PropTypes from "prop-types";
-import {
-  Box,
-  Button,
-  Divider,
-  Drawer,
-  Stack,
-  SvgIcon,
-  Typography,
-  useMediaQuery,
-} from "@mui/material";
+import { Logout } from "@mui/icons-material";
+import { Box, Divider, Drawer, Stack, useMediaQuery } from "@mui/material";
+import { useTheme } from "@mui/system";
+import { useLocation } from "react-router-dom";
+import { client } from "../../../api/api";
 import { Logo } from "./Logo";
 import navData from "./navData";
 import { SideNavItem } from "./SideNavItem";
-import { useTheme } from "@mui/system";
-import { useLocation } from "react-router-dom";
-import { Link } from "react-router-dom";
-import { Scrollbar } from "./Scrollbar";
-import { Logout } from "@mui/icons-material";
-import { client } from "../../../api/api";
 
 type SideNavProps = {
   open: boolean;

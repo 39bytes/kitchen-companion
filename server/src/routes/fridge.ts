@@ -1,5 +1,6 @@
 import express from "express";
 import mongoose, { Error } from "mongoose";
+import { isAuthenticated } from "../middleware/isAuthenticated";
 import UserFridge, {
   FridgeIngredient,
   UpdateIngredientPayload,
@@ -8,12 +9,9 @@ import UserFridge, {
 
 const router = express.Router();
 
-router.get("/", async (req, res) => {
-  if (!req.user) {
-    res.sendStatus(401);
-    return;
-  }
+router.use(isAuthenticated);
 
+router.get("/", async (req, res) => {
   UserFridge.findOne(
     { userId: req.user.id },
     async (err: Error, doc: UserFridgeDocument) => {
@@ -33,11 +31,6 @@ router.get("/", async (req, res) => {
 });
 
 router.post("/", async (req, res) => {
-  if (!req.user) {
-    res.sendStatus(401);
-    return;
-  }
-
   const contents = req.body as FridgeIngredient[];
   UserFridge.findOneAndUpdate(
     { userId: req.user.id },
@@ -54,11 +47,6 @@ router.post("/", async (req, res) => {
 });
 
 router.post("/addIngredient", async (req, res) => {
-  if (!req.user) {
-    res.sendStatus(401);
-    return;
-  }
-
   const ingredientData = req.body as FridgeIngredient;
   const ingredientId = new mongoose.Types.ObjectId();
   const newIngredient: FridgeIngredient = {
@@ -82,11 +70,6 @@ router.post("/addIngredient", async (req, res) => {
 });
 
 router.post("/updateIngredient", async (req, res) => {
-  if (!req.user) {
-    res.sendStatus(401);
-    return;
-  }
-
   // Just replace the ingredient instead of updating fields
   const data = req.body as UpdateIngredientPayload;
 
@@ -110,11 +93,6 @@ router.post("/updateIngredient", async (req, res) => {
 });
 
 router.post("/deleteIngredient", async (req, res) => {
-  if (!req.user) {
-    res.sendStatus(401);
-    return;
-  }
-
   const { id } = req.body as { id: string };
 
   UserFridge.updateOne(

@@ -1,10 +1,4 @@
-import {
-  Kitchen,
-  Restaurant,
-  Search,
-  Calculate,
-  FormatListBulleted,
-} from "@mui/icons-material";
+import { Kitchen, Restaurant, Search } from "@mui/icons-material";
 
 const navData = [
   {
@@ -21,16 +15,6 @@ const navData = [
     title: "Recommendations",
     path: "/recommendations",
     icon: <Search />,
-  },
-  {
-    title: "Grocery List",
-    path: "/grocery",
-    icon: <FormatListBulleted />,
-  },
-  {
-    title: "Unit Converter",
-    path: "/converter",
-    icon: <Calculate />,
   },
 ];
 

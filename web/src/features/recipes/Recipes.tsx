@@ -3,8 +3,6 @@ import {
   Box,
   Button,
   ButtonBase,
-  Collapse,
-  Grow,
   styled,
   Typography,
   useMediaQuery,
@@ -13,17 +11,12 @@ import {
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { DishType, DishTypes } from "src/api/types/recipe";
-import { CenteredSpinner } from "src/components/CenteredSpinner";
 import Layout from "src/components/layouts/layout/Layout";
 import { LoadingScreen } from "src/components/LoadingScreen";
 import { useAppDispatch, useAppSelector } from "src/hooks/reduxHooks";
 import { toTitleCase } from "src/utils/toTitleCase";
 import { RecipeCard } from "./RecipeCard";
-import {
-  fetchSavedRecipes,
-  selectAllRecipes,
-  selectRecipeByDishType,
-} from "./recipesSlice";
+import { fetchSavedRecipes, selectRecipeByDishType } from "./recipesSlice";
 
 const StyledButton = styled(Button)(({ theme }) => ({
   textTransform: "none",

@@ -1,6 +1,7 @@
 import axios from "axios";
 import express from "express";
 import { getExpirationOrDefault } from "../expiration";
+import { isAuthenticated } from "../middleware/isAuthenticated";
 import { RecipeByIngredientResult, RecipeIngredient } from "../models/recipe";
 import { Ingredient } from "../models/userfridge";
 import { ProcessIngredientResults } from "../utils/process-ingredient-results";
@@ -9,6 +10,8 @@ import { ProcessIngredientResults } from "../utils/process-ingredient-results";
  * Wrapper endpoints for Spoonacular API.
  */
 const router = express.Router();
+
+router.use(isAuthenticated);
 
 type IngredientSearchResponse = {
   results: Ingredient[];

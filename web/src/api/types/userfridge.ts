@@ -1,7 +1,5 @@
 import { Types } from "mongoose";
 
-// export type FridgeSection = "pantry" | "fridge" | "freezer";
-
 export interface Ingredient {
   id: number;
   name: string;

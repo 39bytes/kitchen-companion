@@ -12,7 +12,7 @@ export const Logo = () => {
   return (
     <Box
       component={Link}
-      to="/"
+      to="/fridge"
       sx={{
         display: "inline-flex",
         height: 32,

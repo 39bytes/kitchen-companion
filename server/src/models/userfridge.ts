@@ -11,7 +11,6 @@ export interface Ingredient {
 
 export interface FridgeIngredient extends Ingredient {
   _id: Types.ObjectId;
-  // expirationData?: ExpirationData;
   quantity: number;
   unit: string;
   dateAdded: number;
@@ -35,7 +34,6 @@ const FridgeIngredientSchema = new Schema<FridgeIngredient>({
   image: { type: String, required: true },
   aisle: { type: String, required: true },
   possibleUnits: [String],
-  // expirationData: ExpirationDataSchema,
   quantity: { type: Number, required: true },
   unit: { type: String, required: true },
   dateAdded: Number,

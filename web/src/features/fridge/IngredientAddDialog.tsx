@@ -1,20 +1,11 @@
-import {
-  Box,
-  Dialog,
-  DialogTitle,
-  IconButton,
-  MenuItem,
-  Select,
-  TextField,
-} from "@mui/material";
-import { Form, Formik } from "formik";
-import { Check, X } from "react-feather";
+import { Box, Dialog, DialogTitle } from "@mui/material";
+import { Formik } from "formik";
+import { SlideTransition } from "src/components/SlideTransition";
 import { useAppDispatch } from "src/hooks/reduxHooks";
 import * as Yup from "yup";
 import { Ingredient } from "../../api/types/userfridge";
 import { toTitleCase } from "../../utils/toTitleCase";
 import { addNewIngredient } from "./fridgeSlice";
-import { SlideTransition } from "src/components/SlideTransition";
 import { IngredientForm } from "./IngredientForm";
 
 export const ingredientValidationSchema = Yup.object({

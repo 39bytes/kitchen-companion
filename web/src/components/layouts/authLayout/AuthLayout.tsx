@@ -8,7 +8,7 @@ const AuthLayout = ({ children }: AuthLayoutProps) => {
   return (
     <>
       <Container
-        maxWidth="md"
+        maxWidth="sm"
         sx={{
           height: "100vh",
           display: "flex",

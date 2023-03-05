@@ -5,7 +5,6 @@ import {
   GiCheeseWedge,
   GiCube,
   GiFlour,
-  GiIceCube,
   GiKetchup,
   GiMeat,
   GiMilkCarton,

@@ -2,7 +2,6 @@ import { Box, Fade, IconButton, Tooltip, Typography } from "@mui/material";
 import { useEffect } from "react";
 import { RefreshCcw } from "react-feather";
 import { useNavigate } from "react-router-dom";
-import { CenteredSpinner } from "src/components/CenteredSpinner";
 import Layout from "src/components/layouts/layout/Layout";
 import { LoadingScreen } from "src/components/LoadingScreen";
 import { useAppDispatch, useAppSelector } from "src/hooks/reduxHooks";

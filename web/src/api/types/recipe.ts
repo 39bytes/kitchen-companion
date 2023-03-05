@@ -1,5 +1,3 @@
-import { Types } from "mongoose";
-
 export type RecipeByIngredientResult = {
   id: number;
   title: string;
@@ -24,8 +22,6 @@ export interface Recipe {
   instructions: string;
   instructionsList: string[];
 }
-
-export interface CustomRecipe {}
 
 export interface RecipeIngredient {
   id: number;

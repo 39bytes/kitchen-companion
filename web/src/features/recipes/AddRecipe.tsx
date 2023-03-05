@@ -1,8 +1,9 @@
+import { faCarrot } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Remove } from "@mui/icons-material";
 import {
   Box,
   Button,
-  Dialog,
   FormGroup,
   IconButton,
   InputAdornment,
@@ -13,17 +14,15 @@ import {
   Typography,
 } from "@mui/material";
 import { FieldArray, Form, Formik } from "formik";
-import { faCarrot } from "@fortawesome/free-solid-svg-icons";
+import { useNavigate } from "react-router-dom";
 import { client } from "src/api/api";
 import { DishType, DishTypes, Recipe } from "src/api/types/recipe";
+import Layout from "src/components/layouts/layout/Layout";
 import { useAppDispatch } from "src/hooks/reduxHooks";
 import { useAutoField } from "src/hooks/useAutoField";
+import { toTitleCase } from "src/utils/toTitleCase";
 import * as Yup from "yup";
 import { addRecipe } from "./recipesSlice";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { useNavigate } from "react-router-dom";
-import Layout from "src/components/layouts/layout/Layout";
-import { toTitleCase } from "src/utils/toTitleCase";
 
 export const recipeValidationSchema = Yup.object({
   title: Yup.string().required("Recipe name is required"),

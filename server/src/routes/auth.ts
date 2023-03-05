@@ -1,8 +1,7 @@
-import express from "express";
 import bcrypt from "bcrypt";
-import mongoose from "mongoose";
+import express from "express";
+import passport from "passport";
 import User, { UserDocument } from "../models/user";
-import passport, { use } from "passport";
 
 const router = express.Router();
 
