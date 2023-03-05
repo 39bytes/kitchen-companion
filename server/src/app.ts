@@ -46,6 +46,7 @@ app.use(
 );
 
 app.use(flash());
+app.set("trust proxy", 1);
 app.use(
   session({
     secret: process.env.SESSION_SECRET,
@@ -53,7 +54,8 @@ app.use(
     saveUninitialized: false,
     cookie: {
       maxAge: 365 * 24 * 60 * 60 * 1000,
-      sameSite: "lax",
+      sameSite: "none",
+      secure: true,
     },
     store: MongoStore.create({ mongoUrl: process.env.MONGO_URL }),
   })
