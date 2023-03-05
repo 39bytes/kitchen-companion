@@ -31,7 +31,7 @@ export const Login = () => {
         },
       });
       if (res.data.success) {
-        window.location.href = "/fridge";
+        //window.location.href = "/fridge";
       } else {
         setError(res.data.errors);
       }
